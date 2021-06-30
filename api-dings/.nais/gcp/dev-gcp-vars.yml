@@ -1,0 +1,16 @@
+namespace: plattformsikkerhet
+team: plattformsikkerhet
+ingresses:
+  - https://api-dings.dev-gcp.nais.io
+env:
+  - name: APPLICATION_PORT
+    value: 8080
+  - name: OIDC_ISSUER_NAME
+    value: tokenDings
+  - name: MOCK_ENABLED
+    value: false
+  - name: GCP_ENABLED
+    value: true
+replicas:
+  min: 1
+  max: 1

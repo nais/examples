@@ -1,0 +1,48 @@
+AZURE_APP_TENANT_ID: 966ac572-f5b7-4bbe-aa88-c76419c0f851
+AZURE_APP_CLIENT_ID: 863d14f3-68cb-411b-838f-acbedbbea447
+ACCEPTED_AUDIENCE: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
+DOWNSTREAM_CLIENT_ID: a1fd9dc1-2590-4e10-86a1-bc611c96dc17
+AAD_ISSUER_URI: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AAD_ISSUER_URI}/v2.0
+          #The client_id of this application
+          accepted-audience: ${ACCEPTED_AUDIENCE}
+      client:
+        registration:
+          example-onbehalfof:
+            provider: aad
+            client-id: ${AZURE_APP_CLIENT_ID}
+            client-secret: ${AZURE_APP_CLIENT_SECRET}
+            authorization-grant-type: urn:ietf:params:oauth:grant-type:jwt-bearer
+            scope: api://${DOWNSTREAM_CLIENT_ID}/.default
+        provider:
+          aad:
+            token-uri: ${AAD_ISSUER_URI}/oauth2/v2.0/token
+            jwk-set-uri: ${AAD_ISSUER_URI}/discovery/v2.0/keys
+
+downstream:
+  resource:
+    url: http://localhost:1111/
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
+server:
+  error:
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

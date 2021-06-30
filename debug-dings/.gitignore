@@ -1,0 +1,13 @@
+# Idea project files
+*.iml
+.idea/
+
+# Gradle files
+out/
+build/
+.gradle/
+
+# Generated sourcez
+src/generated
+.DS_Store
+xfiles

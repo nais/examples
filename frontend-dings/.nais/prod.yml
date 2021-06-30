@@ -1,0 +1,10 @@
+ingresses:
+  - https://frontend-dings.intern.nav.no
+host:
+  - api-dings.prod-fss-pub.nais.io
+fss-cluster: prod-fss
+env:
+  NODE_ENV: production
+  API_DINGS_AUDIENCE: prod-fss:plattformsikkerhet:api-dings
+  API_DINGS_URL: https://api-dings.prod-fss-pub.nais.io
+slack_alert_channel: "plattformsikkerhet-alerts-prod"

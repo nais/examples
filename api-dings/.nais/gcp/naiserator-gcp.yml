@@ -1,0 +1,47 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: api-dings
+  namespace: {{namespace}}
+  labels:
+    team: {{team}}
+spec:
+  image: {{image}}
+  accessPolicy:
+    inbound:
+      rules:
+        - application: debug-dings
+  ingresses:
+    {{#each ingresses}}
+     - "{{this}}"
+     {{/each}}
+  liveness:
+    path: /isAlive
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 30
+  port: 8080
+  readiness:
+    path: /isReady
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 30
+  replicas:
+    min: {{replicas.min}}
+    max: {{replicas.max}}
+  resources:
+    limits:
+      cpu: 800m
+      memory: 3Gi
+    requests:
+      cpu: 600m
+      memory: 3Gi
+  cpuThresholdPercentage: 80
+  tokenx:
+    enabled: true
+  env:
+  {{#each env}}
+    - name: "{{this.name}}"
+      value: "{{this.value}}"
+    {{/each}}
+

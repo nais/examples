@@ -1,0 +1,50 @@
+AZURE_APP_TENANT_ID: 966ac572-f5b7-4bbe-aa88-c76419c0f851
+ACCEPTED_AUDIENCE: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
+DOWNSTREAM_CLIENT_ID: a1fd9dc1-2590-4e10-86a1-bc611c96dc17
+TOKEN_X_CLIENT_ID: some-client-id
+TOKEN_X_CLIENT_JWK: '{"p":"0tiGCr2r-2YVaxMGS9m47u005zJpyrjQ6hUM_moMlsypAvX96PcL8fPZL8PqOuVXX1Qjq-o1dN_QfLKhRA4DQWcn8_8k-0DvkCubyLydU3aB5u0hXstQ0wGhaPISHpAsIKTCmFF3DYeJ-DSaVP_ZRYgBNFIN2Sy2S9Ato5MECvU","kty":"RSA","q":"ndRMwB4JI5e3Wm8lU6WTPYZfT7SvitnN1vAMU0XivYNTqFJ3rSki-fgzTPPhfIjAWuihFPdJBFVt_uJFm64xY98a8XNkX-5ofn9GWrDEqVCTb6qd75SlxowVv8OWaARzyrEW3LsU-WobVHbNPJ8der0dkx8Jyv7NZWAaxSQV54s","d":"DYDj09FTYHmFTABOuGFueIh92rf8L6s9u3-CgNEMgxDofphACfTEj7b_QJhV0bp-13QLT2nXDyHSTJxTSLjrM6U26u_TfYiO5blaE1UjtJY_L-tA9hi53VeD4iT6asJZTy9--8QjNPkUNLCU1JL4BmAa5KhwTpzkmKiiHkMNM0BbbAmzP4bPXzuHLKZH3ZahhfpocpMlYMwwOLttC2-ffClg1Eqwn6Lct8fAUgpQi_3IDVslW0KlVa9Q0lpSy3h-F7TN0QOK1sx3nwVLc5TKAjBaDsS9HLHZD82pBqhnx05LI0GXY1t7gMvduWlKfImTzbxWMHpxSNcyujecTSZowQ","e":"AQAB","use":"sig","kid":"lcuDxZAOuYRWP39kj_MBuh7sRTSFUY7qIaD0awrG_pE","qi":"Fa1XXxbnGgQ4bTKi1twJJlm8thIgcAdZQ5GF7PXJg78fNCfc-r5kwyGP3NH5fApE6mraDeNRjwB3IUvRjjvDTa_say2ElNwQQybtRX05AAAcKtVlpt5805ZKz9eMwUtTCotZhzUMT1Dc1Nn_B1g0seBnsrqAc0EGmzfnyj-O4FA","dp":"f-wil02wlJzBDe_C-C4mh7-fQ05Q5U_wYLVY5trMvIl7WXKKFNgehTOfZ92DtSwEMLBJ3DoDKN_KDH4MXc_qpbnCgcUhWNdzAZOTttzIzyStd8ATaQIODZeFqLiFyclLHJsZ_XQfuTOsv8yafkukNQ1pPaczA7qe96xcpEvEPik","alg":"RS256","dq":"Y0v-PaCn_0ykfrEOuuGhEURJEsyK5MDDUEcWeg2t6a2GJJA92yPWbY5KOE_3vXIMEyXoslgiCCf3XDTftmKRkFP9j4sZy4EjHPLWQJiWIjAfklG1q9XJtnDL_in_ptGmSA_CYn0RZRnst-dGmK1CzsXMpZMRhjVo5C7iqMVbQqE","n":"gf2kuhokKpmi8-CEFkQ-WBocZeXJicFUyNiEX8uOcZ0py69UAzBgboki4UzzcWwESOhWxFR5RJ7jXOcHG9VuRc517ZpDSPOINUFFXYa7ejUWMSA4mvywgpvfRdK_UDKw8P05R2mM06OxGb_7YXV-ZWHQpi3pZxOslICOP138oI2S1VOEgwrQZzJjv3FIZ3ndgiqRCTofRasgQ86hqcsKJs6HssgyVxBmwc0EdM-5eNwEDo_pIZG_nObjIJoOlJ7lDmrQAcd4c-fKgw8NzQ2qnVuW74rO4Uciym7-J7lQHu45m4RsguDQ9O5X_5kM4GUqbz2cTet8lbkSaFLh0y4GBw"}'
+
+no.nav.security.jwt:
+  issuer:
+    aad:
+      discoveryurl: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/v2.0/.well-known/openid-configuration
+      accepted_audience: ${ACCEPTED_AUDIENCE}
+  client:
+    registration:
+      example-onbehalfof:
+        token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
+        grant-type: urn:ietf:params:oauth:grant-type:jwt-bearer
+        scope: api://${DOWNSTREAM_CLIENT_ID}/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-secret: ${AZURE_APP_CLIENT_SECRET}
+          client-auth-method: client_secret_basic
+      example-tokenexchange:
+        token-endpoint-url: https://tokendings.dev-gcp.nais.io/token
+        grant-type: urn:ietf:params:oauth:grant-type:token-exchange
+        authentication:
+          client-id: ${TOKEN_X_CLIENT_ID}
+          client-jwk: ${TOKEN_X_CLIENT_JWK}
+          client-auth-method: private_key_jwt
+        token-exchange:
+          audience: ${TOKEN_X_AUDIENCE}
+
+downstream:
+  resource:
+    url: http://localhost:1111/
+
+logging.level.org.springframework: INFO
+logging.level.no.nav: DEBUG
+
+server:
+  error:
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

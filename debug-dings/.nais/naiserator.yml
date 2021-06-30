@@ -1,0 +1,61 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: debug-dings
+  namespace: {{namespace}}
+  labels:
+    team: {{team}}
+spec:
+  image: {{image}}
+  accessPolicy:
+    outbound:
+      external:
+      {{#each outbound-host}}
+        - host: "{{this}}"
+      {{/each}}
+      rules:
+        - application: api-dings
+        - application: api-dings
+          namespace: {{namespace}}
+          cluster: {{fss-cluster}}
+        - application: digihot-proxy
+          namespace: teamdigihot
+          cluster: {{fss-cluster}}
+  ingresses:
+    {{#each ingresses}}
+      - "{{this}}"
+    {{/each}}
+  liveness:
+    path: /isAlive
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 30
+  port: 8080
+  prometheus:
+    enabled: true
+    path: /prometheus
+  readiness:
+    path: /isReady
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 30
+  replicas:
+    min: {{replicas.min}}
+    max: {{replicas.max}}
+  resources:
+    limits:
+      cpu: 800m
+      memory: 3Gi
+    requests:
+      cpu: 600m
+      memory: 3Gi
+  cpuThresholdPercentage: 80
+  tokenx:
+    enabled: true
+  envFrom:
+    - secret: dingser-idporten
+  env:
+  {{#each env}}
+    - name: "{{this.name}}"
+      value: "{{this.value}}"
+  {{/each}}

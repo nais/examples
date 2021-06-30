@@ -1,0 +1,60 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-dings
+  namespace: plattformsikkerhet
+  labels:
+    team: plattformsikkerhet
+spec:
+  image: {{ image }}
+  accessPolicy:
+    outbound:
+      external:
+      {{#each host}}
+        - host: "{{this}}"
+      {{/each}}
+      rules:
+        - application: frontend-dings-redis
+  port: 3000
+  replicas:
+    min: 1
+    max: 1
+    cpuThresholdPercentage: 50
+  liveness:
+    path: /internal/isalive
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /internal/isready
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  tokenx:
+    enabled: true
+  idporten:
+    enabled: true
+
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+
+  env:
+  {{#each env}}
+    - name: "{{@key}}"
+      value: "{{this}}"
+  {{/each}}
+    - name: REDIS_HOST
+      value: frontend-dings-redis
+
+  envFrom:
+    - secret: session-encrypt-key
+    - secret: redis-password
