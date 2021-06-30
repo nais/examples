@@ -15,10 +15,12 @@ name: "CodeQL"
 on:
   push:
     branches: [ main ]
+    paths:
+      - frontend-dings/*
   pull_request:
     branches: [ main ]
-  paths:
-    - frontend-dings/*
+    paths:
+      - frontend-dings/*
   schedule:
     - cron: '20 16 * * 2'
 
