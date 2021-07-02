@@ -10,6 +10,7 @@ env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
 defaults:
+  working-directory: ./frontend-dings
   run:
     working-directory: ./frontend-dings
 
