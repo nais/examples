@@ -9,6 +9,10 @@ env:
   TEAM: plattformsikkerhet
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
+defaults:
+  run:
+    working-directory: ./frontend-dings
+
 jobs:
   build:
     if: "github.ref == 'refs/heads/main'"
