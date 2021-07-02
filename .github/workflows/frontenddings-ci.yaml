@@ -3,7 +3,7 @@ name: frontend-dings main
 on:
   push:
     paths:
-      - frontend-dings/**
+      - 'frontend-dings/**'
 env:
   APP: frontend-dings
   TEAM: plattformsikkerhet
