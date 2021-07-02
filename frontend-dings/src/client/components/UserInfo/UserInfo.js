@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import './UserInfo.css'
+import 'url:./UserInfo.css'
 import extractSubject from '../../tokeninterpreter'
 
 const UserInfo = () => {

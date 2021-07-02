@@ -1,5 +1,9 @@
 import extractPersonId from './tokeninterpreter'
 
+beforeAll(() => {
+    global.atob = require('atob')
+})
+
 test('single cookie present', () => {
     const subject = extractPersonId(singleCookie)
     expect(subject).toEqual('12345678910')

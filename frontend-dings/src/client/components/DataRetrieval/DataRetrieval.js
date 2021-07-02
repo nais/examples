@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import loadStuffFromApi from '../../io'
-import './DataRetrieval.css'
+import 'url:./DataRetrieval.css'
 
 const DataRetrieval = () => {
     const [myData, setMyData] = useState("initial state")
