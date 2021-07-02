@@ -1,9 +1,7 @@
-name: main
+name: frontend-dings main
 
 on:
   push:
-    branches:
-      - main
     paths:
       - frontend-dings/**
 env:
@@ -13,6 +11,7 @@ env:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
