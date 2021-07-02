@@ -10,7 +10,6 @@ env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
 defaults:
-  working-directory: ./frontend-dings
   run:
     working-directory: ./frontend-dings
 
@@ -62,8 +61,8 @@ jobs:
           env:
             APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
             CLUSTER: dev-gcp
-            RESOURCE: .nais/nais.yml,.nais/redis.yml
-            VARS: .nais/dev.yml
+            RESOURCE: ./frontend-dings/.nais/nais.yml,./frontend-dings/.nais/redis.yml
+            VARS: ./frontend-dings/.nais/dev.yml
 
   deploy-prod-gcp:
     name: Deploy to prod-gcp
@@ -76,5 +75,5 @@ jobs:
           env:
             APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
             CLUSTER: prod-gcp
-            RESOURCE: .nais/nais.yml,.nais/redis.yml
-            VARS: .nais/prod.yml
+            RESOURCE: ./frontend-dings/.nais/nais.yml,./frontend-dings/.nais/redis.yml
+            VARS: ./frontend-dings/.nais/prod.yml
