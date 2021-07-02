@@ -1,12 +1,18 @@
-name: Build, push, and deploy to GCP
+name: api-dings master
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'api-dings/**'
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+defaults:
+  run:
+    working-directory: ./api-dings
 
 jobs:
   build:
