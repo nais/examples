@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - frontend-dings/*
+      - frontend-dings/**
 env:
   APP: frontend-dings
   TEAM: plattformsikkerhet
