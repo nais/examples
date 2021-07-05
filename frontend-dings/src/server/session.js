@@ -4,26 +4,34 @@ import * as config from "./config.js"
 import RedisStore from "connect-redis"
 
 export const setupSession = () => {
-    const options = {
-        cookie: {
-            maxAge: config.session.maxAgeMs,
-            sameSite: 'lax',
-            httpOnly: true,
-        },
-        secret: config.session.secret,
-        name: 'frontend-dings',
-        resave: false,
-        saveUninitialized: false,
-        unset: 'destroy',
+    try {
+        const options = {
+            cookie: {
+                maxAge: config.session.maxAgeMs,
+                sameSite: 'lax',
+                httpOnly: true,
+            },
+            secret: config.session.secret,
+            name: 'frontend-dings',
+            resave: false,
+            saveUninitialized: false,
+            unset: 'destroy',
+        }
+        if (process.env.NODE_ENV !== 'development') {
+            options.cookie.secure = true
+            options.store = setupRedis()
+        }
+        return session(options)   
+    } catch (error) {
+        console.error(error)
     }
-    if (process.env.NODE_ENV !== 'development') {
-        options.cookie.secure = true
-        options.store = setupRedis()
-    }
-    return session(options)
 }
 
 const setupRedis = () => {
+    console.log(`redis host: ${config.session.redisHost}`)
+    if (!config.session.redisPassword || config.session.redisPassword.trim().length === 0) {
+        console.error('redis password is missing')
+    }
     const store = RedisStore(session)
     const client = redis.createClient({
         host: config.session.redisHost,
