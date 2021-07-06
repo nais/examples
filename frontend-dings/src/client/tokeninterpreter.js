@@ -6,7 +6,7 @@ const extractPersonId = (cookies) => {
 }
 
 const idTokenFromCookies = (cookies) => 
-    cookies.split(';')
+    cookies.split('; ')
            .filter((part) => part.startsWith('dings-id'))
            .map((cookie) => cookie.substring(cookie.indexOf('=') + 1))
 

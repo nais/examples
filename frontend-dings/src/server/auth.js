@@ -60,9 +60,9 @@ export const exchangeToken = async (session, servicename) => {
     // additional claims not set by openid-client
     const additionalClaims = {
         clientAssertionPayload: {
-            'nbf': Math.floor(Date.now() / 1000),
+            nbf: Math.floor(Date.now() / 1000),
             // TokenX only allows a single audience
-            'aud': [ tokenxMetadata.token_endpoint ],
+            aud: [ tokenxMetadata.metadata.token_endpoint ],
         }
     }
 
@@ -86,7 +86,7 @@ export const exchangeToken = async (session, servicename) => {
 export const refresh = (oldTokenSet) => {
     const additionalClaims = {
         clientAssertionPayload: {
-            'aud': idportenMetadata.issuer
+            aud: idportenMetadata.metadata.issuer
         }
     }
     return idportenClient.refresh(new TokenSet(oldTokenSet), additionalClaims)
