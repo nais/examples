@@ -21,6 +21,8 @@ export const setup = async (idpConfig, txConfig, appConf) => {
 
 export const authUrl = (session) => {
     const codeChallenge = generators.codeChallenge(session.codeVerifier)
+    const state = req.session.state
+    const nonce = req.session.nonce
 
     return idportenClient.authorizationUrl({
         scope: idportenConfig.scope,
@@ -28,6 +30,8 @@ export const authUrl = (session) => {
         response_type: 'code',
         response_mode: 'query',
         code_challenge: codeChallenge,
+        state: state,
+        nonce: nonce,
         code_challenge_method: 'S256',
         nonce: session.nonce,
         resource: "https://nav.no",
