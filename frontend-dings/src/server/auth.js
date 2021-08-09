@@ -1,4 +1,4 @@
-import {Issuer, TokenSet} from 'openid-client'
+import {Issuer, TokenSet, generators} from 'openid-client'
 import logger from 'winston-logstash-format'
 
 let tokenxConfig = null
@@ -20,13 +20,15 @@ export const setup = async (idpConfig, txConfig, appConf) => {
 }
 
 export const authUrl = (session) => {
+    const code_challenge = generators.codeChallenge(code_verifier)
+
     return idportenClient.authorizationUrl({
         scope: idportenConfig.scope,
         redirect_uri: idportenConfig.redirectUri,
         response_type: 'code',
         response_mode: 'query',
-        nonce: session.nonce,
-        state: session.state,
+        code_challenge,
+        code_challenge_method: 'S256',
         resource: "https://nav.no",
         acr_values: "Level4",
     })
@@ -34,8 +36,7 @@ export const authUrl = (session) => {
 
 export const validateOidcCallback = async (req) => {
     const params = idportenClient.callbackParams(req)
-    const nonce = req.session.nonce
-    const state = req.session.state
+    const codeVerifier = req.session.codeVerifier
     const additionalClaims = {
         clientAssertionPayload: {
             aud: idportenMetadata.metadata.issuer
@@ -43,7 +44,7 @@ export const validateOidcCallback = async (req) => {
     }
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, {nonce, state}, additionalClaims)
+        .callback(idportenConfig.redirectUri, params, { codeVerifier }, additionalClaims)
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
