@@ -20,14 +20,14 @@ export const setup = async (idpConfig, txConfig, appConf) => {
 }
 
 export const authUrl = (session) => {
-    const code_challenge = generators.codeChallenge(code_verifier)
+    const codeChallenge = generators.codeChallenge(session.codeVerifier)
 
     return idportenClient.authorizationUrl({
         scope: idportenConfig.scope,
         redirect_uri: idportenConfig.redirectUri,
         response_type: 'code',
         response_mode: 'query',
-        code_challenge,
+        codeChallenge,
         code_challenge_method: 'S256',
         resource: "https://nav.no",
         acr_values: "Level4",
