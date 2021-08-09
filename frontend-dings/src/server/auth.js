@@ -27,7 +27,7 @@ export const authUrl = (session) => {
         redirect_uri: idportenConfig.redirectUri,
         response_type: 'code',
         response_mode: 'query',
-        codeChallenge,
+        code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         resource: "https://nav.no",
         acr_values: "Level4",
