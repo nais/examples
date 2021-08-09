@@ -29,6 +29,7 @@ export const authUrl = (session) => {
         response_mode: 'query',
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
+        nonce: session.nonce,
         resource: "https://nav.no",
         acr_values: "Level4",
     })

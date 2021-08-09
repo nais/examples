@@ -34,6 +34,7 @@ app.get(['/internal/isalive', '/internal/isready'], async (req, res) => {
 app.get("/login", async (req, res) => { // lgtm [js/missing-rate-limiting]
   const session = req.session
   session.codeVerifier = generators.codeVerifier()
+  session.nonce = generators.nonce()
   res.redirect(auth.authUrl(session))
 })
 
@@ -43,6 +44,7 @@ app.get("/oauth2/callback", async (req, res) => {
       .then((tokens) => {
          session.tokens = tokens
          session.codeVerifier = null
+         session.nonce = null
           res.cookie('dings-id', `${tokens.id_token}`, {
               secure: config.app.useSecureCookies,
               sameSite: "lax",
