@@ -45,7 +45,7 @@ export const validateOidcCallback = async (req) => {
     }
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, { codeVerifier }, additionalClaims)
+        .callback(idportenConfig.redirectUri, params, { code_verifier: codeVerifier }, additionalClaims)
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
