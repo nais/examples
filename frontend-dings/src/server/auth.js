@@ -38,6 +38,8 @@ export const authUrl = (session) => {
 export const validateOidcCallback = async (req) => {
     const params = idportenClient.callbackParams(req)
     const codeVerifier = req.session.codeVerifier
+    const state = req.session.state
+    const nonce = req.session.nonce
     const additionalClaims = {
         clientAssertionPayload: {
             aud: idportenMetadata.metadata.issuer
@@ -45,7 +47,7 @@ export const validateOidcCallback = async (req) => {
     }
 
     return idportenClient
-        .callback(idportenConfig.redirectUri, params, { code_verifier: codeVerifier }, additionalClaims)
+        .callback(idportenConfig.redirectUri, params, { state: state, nonce: nonce, code_verifier: codeVerifier }, additionalClaims)
         .catch((err) => Promise.reject(`error in oidc callback: ${err}`))
         .then(async (tokenSet) => {
             return tokenSet
