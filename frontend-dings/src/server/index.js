@@ -34,11 +34,17 @@ app.get(['/internal/isalive', '/internal/isready'], async (req, res) => {
 app.get("/login", async (req, res) => { // lgtm [js/missing-rate-limiting]
   const session = req.session
   session.codeVerifier = generators.codeVerifier()
+  if (session.codeVerifier) {
+    console.log('codeVerifier has been set')
+  }
   res.redirect(auth.authUrl(session))
 })
 
 app.get("/oauth2/callback", async (req, res) => {
   const session = req.session
+  if (session.codeVerifier) {
+    console.log('codeVerifier is available in callback')
+  }
   auth.validateOidcCallback(req)
       .then((tokens) => {
          session.tokens = tokens
