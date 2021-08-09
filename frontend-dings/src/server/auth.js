@@ -21,8 +21,8 @@ export const setup = async (idpConfig, txConfig, appConf) => {
 
 export const authUrl = (session) => {
     const codeChallenge = generators.codeChallenge(session.codeVerifier)
-    const state = req.session.state
-    const nonce = req.session.nonce
+    const state = session.state
+    const nonce = session.nonce
 
     return idportenClient.authorizationUrl({
         scope: idportenConfig.scope,
