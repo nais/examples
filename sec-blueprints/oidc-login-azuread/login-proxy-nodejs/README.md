@@ -1,4 +1,9 @@
 # login-proxy-nodejs
+
+> **NB**: En mer produksjonsklar løsning kan finnes her:
+> 
+> https://github.com/navikt/oidc-auth-proxy
+
 Eksempel på en barebones [Express](https://expressjs.com/)-applikasjon som håndterer innlogging med bruk av OpenID Connect 
 og authorization code flow for å autentisere brukeren og få tak i et access token via on-behalf-of-flyten som kan brukes 
 mot andre APIer.
