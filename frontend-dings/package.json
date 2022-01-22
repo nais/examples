@@ -32,7 +32,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",
     "express-session": "^1.17.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "openid-client": "^4.7.2",
     "redis": "^3.1.1",
     "winston-logstash-format": "^0.2.0"
