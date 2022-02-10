@@ -29,7 +29,3 @@ kaller et annet API med et nytt token ved bruk av `OAuth 2.0 On Behalf Of flow`:
 
 * [daemon-clientcredentials-springsecurity](daemon-clientcredentials-springsecurity)
 * [daemon-clientcredentials-tokensupport](daemon-clientcredentials-tokensupport)
-
-## Ende til ende med OAuth 2.0
-
-Se oppsettet i [docker](../docker) mappa for hvordan kjøre opp en kjede av applikasjoner som kommuniserer og benytter de ulike OAuth 2.0 flytene
