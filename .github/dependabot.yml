@@ -24,13 +24,13 @@ updates:
       interval: "monthly"
     reviewers:
       - "@nais/core-dependabot-reviwer"
-   - package-ecosystem: "gradle"
+  - package-ecosystem: "gradle"
     directory: "/api-dings"
     schedule:
       interval: "monthly"
     reviewers:
       - "@nais/features-dependabot-reviwer"
-   - package-ecosystem: "gradle"
+  - package-ecosystem: "gradle"
     directory: "/debug-dings"
     schedule:
       interval: "monthly"
