@@ -13,7 +13,7 @@ val apacheCommonsVersion = "3.11"
 val logstashEncoderVersion = "6.4"
 val logbackVersion = "1.2.3"
 val ioPrometheusVersion = "0.9.0"
-val kotlinloggingVersion = "2.0.3"
+val kotlinloggingVersion = "3.0.4"
 // Test
 val spek = "2.0.13"
 val kluentVersion = "1.61"
