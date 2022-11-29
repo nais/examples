@@ -10,7 +10,7 @@ val nimbusJoseVersion = "8.20"
 val caffeineVersion = "2.8.6"
 // Log
 val apacheCommonsVersion = "3.11"
-val logstashEncoderVersion = "6.4"
+val logstashEncoderVersion = "7.2"
 val logbackVersion = "1.2.3"
 val ioPrometheusVersion = "0.9.0"
 val kotlinloggingVersion = "2.0.3"
