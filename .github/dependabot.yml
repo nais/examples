@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/features-dependabot-reviwer"
+  - package-ecosystem: "docker"
+    directory: "/api-dings"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/features-dependabot-reviwer"
+  - package-ecosystem: "docker"
+    directory: "/debug-dings"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/features-dependabot-reviwer"
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/core-dependabot-reviwer"
+   - package-ecosystem: "gradle"
+    directory: "/api-dings"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/features-dependabot-reviwer"
+   - package-ecosystem: "gradle"
+    directory: "/debug-dings"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "@nais/features-dependabot-reviwer"
