@@ -1,6 +1,6 @@
 // Common
 val kotlinVersion = "1.4.10"
-val ktorVersion = "1.4.1"
+val ktorVersion = "1.6.8"
 val kotlinxVersion = "1.4.1"
 val jacksonVersion = "2.11.2"
 val konfigVersion = "1.6.10.0"
