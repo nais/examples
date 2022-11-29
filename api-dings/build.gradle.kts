@@ -20,7 +20,7 @@ plugins {
     java
     id("org.jmailen.kotlinter") version "2.3.2"
     id("com.github.ben-manes.versions") version "0.28.0"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
