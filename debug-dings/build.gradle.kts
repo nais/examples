@@ -16,7 +16,7 @@ val ioPrometheusVersion = "0.9.0"
 val kotlinloggingVersion = "2.0.3"
 // Test
 val spek = "2.0.13"
-val kluentVersion = "1.61"
+val kluentVersion = "1.72"
 val wiremockVersion = "2.27.2"
 val platformRunner = "1.7.0"
 val mockOauth = "0.2.1"
