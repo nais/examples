@@ -1,7 +1,7 @@
 namespace: plattformsikkerhet
 team: plattformsikkerhet
 ingresses:
-  - https://api-dings.dev-gcp.nais.io
+  - https://api-dings.dev-gcp.nav.cloud.nais.io
 env:
   - name: APPLICATION_PORT
     value: 8080
