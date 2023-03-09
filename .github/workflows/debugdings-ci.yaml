@@ -1,9 +1,8 @@
 name: debug-dings main
 
-on:
-  push:
-    paths:
-      - 'debug-dings/**'
+on: [ push ]
+    #paths:
+    #  - 'debug-dings/**'
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
