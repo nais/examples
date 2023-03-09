@@ -1,6 +1,6 @@
 name: debug-dings main
 
-on: 
+on:
   push:
     paths:
       - 'debug-dings/**'
@@ -59,21 +59,15 @@ jobs:
         id: 'google'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.SALSA_CREDENTIALS }}
 
       - name: NAIS SLSA Provenance Action
-        uses: nais/salsa@v0.0.1-alpha
+        uses: nais/salsa-action@v0.0.1-beta
         with:
+          ecosystem: 'gradle'
           image: ${{ env.IMAGE }}
-
-      # For test output
-      - name: Upload provenance
-        uses: actions/upload-artifact@v3
-        with:
-          path: |
-            ./salsa.provenance
-            ./salsa.raw.txt
-            ./salsa.att
+          key: ${{ secrets.SALSA_KMS_KEY }}
+          context: /debug-dings
 
   deploy-dev-gcp:
     name: Deploy to dev-gcp
