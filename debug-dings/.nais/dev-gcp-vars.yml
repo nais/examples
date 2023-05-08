@@ -1,12 +1,12 @@
 namespace: plattformsikkerhet
 team: plattformsikkerhet
 ingresses:
-  - https://debug-dings.dev-gcp.nav.cloud.nais.io
+  - https://debug-dings.debug-dings.intern.dev.nav.no
 env:
   - name: APPLICATION_PROFILE
     value: NON_PROD
   - name: APPLICATION_REDIRECT_URL
-    value: "https://debug-dings.dev-gcp.nav.cloud.nais.io/oauth"
+    value: "https://debug-dings.intern.dev.nav.no/oauth"
 replicas:
   min: 1
   max: 1
