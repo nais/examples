@@ -1,8 +1,10 @@
 name: debug-dings main
 
-on: [ push ]
-    #paths:
-    #  - 'debug-dings/**'
+on:
+  push:
+    paths:
+      - .github/workflows/debugdings-ci.yaml
+      - debug-dings/**
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
