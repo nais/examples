@@ -1,28 +1,39 @@
+"user strict";
+
+import { setup } from "./telemetry";
+setup("example-express-server");
+
+// Require in rest of modules
 import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-import { registerInstrumentations } from "@opentelemetry/instrumentation";
-import { ExpressInstrumentation } from "@opentelemetry/instrumentation-express";
-import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
-import { exporter, counter, histogram } from "./metrics";
+import { authMiddleware } from "./middleware";
+import { getCatsController } from "./routes";
+import { default as axios } from "axios";
 
-dotenv.config();
-
+// Setup express
 const app: Express = express();
-const port = process.env.PORT || 8080;
+const PORT = 8080;
 
-// Register instrumentations
-registerInstrumentations({
-  instrumentations: [new HttpInstrumentation(), new ExpressInstrumentation()],
+app.use(express.json());
+app.get("/health", (req, res) => res.status(200).send("HEALTHY")); // endpoint that is called by framework/cluster
+app.get("/run_test", async (req, res) => {
+  // Calls another endpoint of the same API, somewhat mimicking an external API call
+  const createdCat = await axios.post(
+    `http://localhost:${PORT}/cats`,
+    {
+      name: "Tom",
+      friends: ["Jerry"],
+    },
+    {
+      headers: {
+        Authorization: "secret_token",
+      },
+    }
+  );
+
+  return res.status(201).send(createdCat.data);
 });
+app.use("/cats", authMiddleware, getCatsController());
 
-app.get("/", (req: Request, res: Response) => {
-  counter.add(1, { route: "/" });
-  const start = Date.now();
-  res.send("Express + TypeScript Server");
-  const end = Date.now();
-  histogram.record(end - start, { route: "/" });
-});
-
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Application listening on http://localhost:${PORT}`);
 });
