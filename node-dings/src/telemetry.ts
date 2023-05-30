@@ -1,137 +1,146 @@
-"use strict";
+'use strict'
 
-import { Sampler, SpanKind } from "@opentelemetry/api";
+import { type Sampler, SamplingDecision, SpanKind } from '@opentelemetry/api'
 
-const opentelemetry = require("@opentelemetry/api");
-
-// Not functionally required but gives some insight what happens behind the scenes
-const { diag, DiagConsoleLogger, DiagLogLevel } = opentelemetry;
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
-
-import { AlwaysOnSampler } from "@opentelemetry/core";
-import { registerInstrumentations } from "@opentelemetry/instrumentation";
-import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
-import { SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { JaegerExporter } from "@opentelemetry/exporter-jaeger";
-import { ZipkinExporter } from "@opentelemetry/exporter-zipkin";
-import { Resource } from "@opentelemetry/resources";
+import { AlwaysOnSampler } from '@opentelemetry/core'
+import { registerInstrumentations } from '@opentelemetry/instrumentation'
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 import {
-  ConsoleMetricExporter,
-  MeterProvider,
-  PeriodicExportingMetricReader,
-} from "@opentelemetry/sdk-metrics";
+  ConsoleSpanExporter,
+  SimpleSpanProcessor
+} from '@opentelemetry/sdk-trace-base'
+import { Resource } from '@opentelemetry/resources'
+import { MeterProvider } from '@opentelemetry/sdk-metrics'
 import {
   SemanticAttributes,
-  SemanticResourceAttributes,
-} from "@opentelemetry/semantic-conventions";
-import { SpanAttributes } from "@opentelemetry/api/build/src/trace/attributes";
+  SemanticResourceAttributes
+} from '@opentelemetry/semantic-conventions'
+import { type SpanAttributes } from '@opentelemetry/api/build/src/trace/attributes'
+import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express'
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
+import { PrometheusExporter } from '@opentelemetry/exporter-prometheus'
 
-const Exporter = (process.env.EXPORTER || "").toLowerCase().startsWith("z")
-  ? ZipkinExporter
-  : JaegerExporter;
-import { ExpressInstrumentation } from "@opentelemetry/instrumentation-express";
-import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
-const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
+// Not functionally required but gives some insight what happens behind the scenes
+import opentelemetry, {
+  diag,
+  DiagConsoleLogger,
+  DiagLogLevel
+} from '@opentelemetry/api'
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO)
 
-const getResource = (serviceName: string) => {
-  const serviceVersion = process.env.SERVICE_VERSION || "0.0.0";
+// getResource returns a Resource with the service name and version
+const getResource = (serviceName: string): Resource => {
+  const serviceVersion = process.env.SERVICE_VERSION ?? '0.0.0'
 
   return new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
-    [SemanticResourceAttributes.SERVICE_VERSION]: serviceVersion,
-  });
-};
+    [SemanticResourceAttributes.SERVICE_VERSION]: serviceVersion
+  })
+}
 
 // setupMetrics returns an instance of MeterProvider configured with a
 // PrometheusExporter and a ConsoleMetricExporter
-export const setupMetrics = (serviceName: string) => {
+export const setupMetrics = (serviceName: string): MeterProvider => {
   // Create a provider for activating and tracking metrics
   const metricProvider = new MeterProvider({
-    resource: getResource(serviceName),
-  });
+    resource: getResource(serviceName)
+  })
 
   // Export metrics as Prometheus format
-  const { endpoint, port } = PrometheusExporter.DEFAULT_OPTIONS;
+  const { endpoint, port } = PrometheusExporter.DEFAULT_OPTIONS
   const prometheusExporter = new PrometheusExporter({ endpoint, port }, () => {
-    console.log(`Prometheus listening on http://localhost:${port}${endpoint}`);
-  });
+    console.log(`Prometheus listening on http://localhost:${port}${endpoint}`)
+  })
 
   // Periodically export metrics to the Prometheus exporter
-  metricProvider.addMetricReader(prometheusExporter);
+  metricProvider.addMetricReader(prometheusExporter)
 
   // return opentelemetry.metrics.getMeter(serviceName);
-  return metricProvider;
-};
+  return metricProvider
+}
 
 // setupTracing returns an instance of NodeTracerProvider configured with a
 // SimpleSpanProcessor and Jaeger Exporter
-export const setupTracing = (serviceName: string) => {
+export const setupTracing = (serviceName: string): NodeTracerProvider => {
   // Create a provider for activating and tracking spans
   const tracerProvider = new NodeTracerProvider({
     resource: getResource(serviceName),
-    sampler: filterSampler(ignoreHealthCheck, new AlwaysOnSampler()),
-  });
+    sampler: filterSampler(ignoreHealthCheck, new AlwaysOnSampler())
+  })
 
-  const exporter = new Exporter({
-    serviceName,
-  });
+  // const options = {
+  //   serviceName: process.env.OTEL_SERVICE_NAME,
+  //   tags: [], // optional
+  //   // You can use the default UDPSender
+  //   // host: 'localhost', // optional
+  //   // port: 6832, // optional
+  //   // OR you can use the HTTPSender as follows
+  //   // 14250 : model.proto not working
+  //   endpoint: process.env.OTEL_EXPORTER_JAEGER_ENDPOINT,
+  //   maxPacketSize: 65000 // optional
+  // }
 
-  tracerProvider.addSpanProcessor(new SimpleSpanProcessor(exporter));
+  // tracerProvider.addSpanProcessor(new BatchSpanProcessor(new JaegerExporter(options)));
+  tracerProvider.addSpanProcessor(
+    new SimpleSpanProcessor(new ConsoleSpanExporter())
+  )
 
   // Initialize the OpenTelemetry APIs to use the NodeTracerProvider bindings
-  tracerProvider.register();
+  tracerProvider.register()
 
   // return opentelemetry.trace.getTracer(serviceName);
-  return tracerProvider;
-};
+  return tracerProvider
+}
 
-export const setup = (serviceName: string) => {
-  const metricsProvider = setupMetrics(serviceName);
-  const tracerProvider = setupTracing(serviceName);
+export const setup = (
+  serviceName: string
+): { metricsProvider: MeterProvider, tracerProvider: NodeTracerProvider } => {
+  const metricsProvider = setupMetrics(serviceName)
+  const tracerProvider = setupTracing(serviceName)
 
   // opentelemetry.trace.setGlobalTracerProvider(tracerProvider);
-  opentelemetry.metrics.setGlobalMeterProvider(metricsProvider);
+  opentelemetry.metrics.setGlobalMeterProvider(metricsProvider)
 
   registerInstrumentations({
-    tracerProvider: tracerProvider,
+    tracerProvider,
     meterProvider: metricsProvider,
     instrumentations: [
       // Express instrumentation expects HTTP layer to be instrumented
-      HttpInstrumentation,
-      ExpressInstrumentation,
-    ],
-  });
+      new HttpInstrumentation(),
+      new ExpressInstrumentation()
+    ]
+  })
 
-  return { metricsProvider, tracerProvider };
-};
+  return { metricsProvider, tracerProvider }
+}
 
 type FilterFunction = (
   spanName: string,
   spanKind: SpanKind,
   attributes: SpanAttributes
-) => boolean;
+) => boolean
 
-function filterSampler(filterFn: FilterFunction, parent: Sampler): Sampler {
+function filterSampler (filterFn: FilterFunction, parent: Sampler): Sampler {
   return {
-    shouldSample(ctx, tid, spanName, spanKind, attr, links) {
+    shouldSample (ctx, tid, spanName, spanKind, attr, links) {
       if (!filterFn(spanName, spanKind, attr)) {
-        return { decision: opentelemetry.SamplingDecision.NOT_RECORD };
+        return { decision: SamplingDecision.NOT_RECORD }
       }
-      return parent.shouldSample(ctx, tid, spanName, spanKind, attr, links);
+      return parent.shouldSample(ctx, tid, spanName, spanKind, attr, links)
     },
-    toString() {
-      return `FilterSampler(${parent.toString()})`;
-    },
-  };
+    toString () {
+      return `FilterSampler(${parent.toString()})`
+    }
+  }
 }
 
-function ignoreHealthCheck(
+function ignoreHealthCheck (
   spanName: string,
   spanKind: SpanKind,
   attributes: SpanAttributes
-) {
+): boolean {
   return (
-    spanKind !== opentelemetry.SpanKind.SERVER ||
-    attributes[SemanticAttributes.HTTP_ROUTE] !== "/health"
-  );
+    spanKind !== SpanKind.SERVER ||
+    attributes[SemanticAttributes.HTTP_ROUTE] !== '/health'
+  )
 }

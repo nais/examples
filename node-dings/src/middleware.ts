@@ -1,18 +1,19 @@
-import { RequestHandler } from "express";
-import opentelemetry from "@opentelemetry/api";
-import { count } from "console";
+'use strict'
 
-const meter = opentelemetry.metrics.getMeter("app.middleware");
-const authFailuresCounter = meter.createCounter("auth.failures", {
-  description: "Authorization failures",
-});
+import { type RequestHandler } from 'express'
+import opentelemetry from '@opentelemetry/api'
+
+const meter = opentelemetry.metrics.getMeter('app.middleware')
+const authFailuresCounter = meter.createCounter('auth.failures', {
+  description: 'Authorization failures'
+})
 
 export const authMiddleware: RequestHandler = (req, res, next) => {
-  const { authorization } = req.headers;
-  if (authorization && authorization.includes("secret_token")) {
-    next();
+  const { authorization } = req.headers
+  if (authorization?.includes('secret_token') ?? false) {
+    next()
   } else {
-    authFailuresCounter.add(1);
-    res.sendStatus(401);
+    authFailuresCounter.add(1)
+    res.sendStatus(401)
   }
-};
+}
