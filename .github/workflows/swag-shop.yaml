@@ -104,5 +104,5 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: swag-shop/.nais/nais.yml
-          VARS: swag-shop/.nais/dev.yml
+          RESOURCE: swag-shop/.nais/nais.yaml
+          VARS: swag-shop/.nais/dev.yaml
