@@ -5,6 +5,7 @@ metadata:
   namespace: "frontendplattform"
   labels:
     "team": "frontendplattform"
+  annotations:
     "start.nais.io/created-by": "Hans Kristian Flaatten"
     "start.nais.io/creationTimestamp": "2023-06-01T05:35:11.960109347"
 spec:
