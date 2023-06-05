@@ -91,9 +91,9 @@ jobs:
           platforms: linux/amd64
 
   deploy:
+    runs-on: ubuntu-latest
     needs: [docker]
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: nais/deploy/actions/deploy@v1
