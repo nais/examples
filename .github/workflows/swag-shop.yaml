@@ -82,7 +82,7 @@ jobs:
             type=raw,value=${{ steps.version.outputs.version }}
       - uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./swag-shop
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
