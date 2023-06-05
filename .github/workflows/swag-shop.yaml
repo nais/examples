@@ -1,0 +1,45 @@
+name: Swag Shop
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/swag-shop.yaml
+      - swag-shop/**
+  pull_request:
+    branches: [ main ]
+    paths:
+      - .github/workflows/swag-shop.yaml
+      - swag-shop/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Test
+      run: npm run test
+
+    - name: Lint
+      run: npm run lint
