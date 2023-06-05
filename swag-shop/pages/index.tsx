@@ -36,17 +36,13 @@ const Home: NextPage = () => {
           {swags.map((swag) => (
             <div key={swag.id} className="group relative">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
-                {swags.map((swag) => (
-                  <div key={swag.id} className="group relative">
-                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
-                      <Image
-                        src={swag.images[0].src}
-                        alt={swag.images[0].alt}
-                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                      />
-                    </div>
-                  </div>
-                ))}
+                <Image
+                  src={swag.images[0].src}
+                  alt={swag.images[0].alt}
+                  width="1200"
+                  height="1200"
+                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                />
               </div>
               <div className="mt-4 flex justify-between">
                 <div>
