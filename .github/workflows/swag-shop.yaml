@@ -1,0 +1,104 @@
+name: Swag Shop
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/swag-shop.yaml
+      - swag-shop/**
+  pull_request:
+    branches: [ main ]
+    paths:
+      - .github/workflows/swag-shop.yaml
+      - swag-shop/**
+
+defaults:
+  run:
+    working-directory: ./swag-shop
+
+env:
+  GHCR_REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.yarn
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build
+      run: yarn build
+
+    #- name: Test
+    #  run: yarn test
+
+    - name: Lint
+      run: yarn lint
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [build]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: version
+        run: echo "version=$(date +'%Y%m%d-%H%M%S')-$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: |
+            ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/swag-shop
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=sha
+            type=raw,value=${{ steps.version.outputs.version }}
+      - uses: docker/build-push-action@v4
+        with:
+          context: ./swag-shop
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yml
+          VARS: .nais/dev.yml
