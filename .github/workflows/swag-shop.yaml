@@ -26,13 +26,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache node modules
-      uses: actions/cache@v3
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
       with:
-        path: ~/.yarn
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-yarn-
 
     - name: Use Node.js 16.x
       uses: actions/setup-node@v3
@@ -100,5 +104,5 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: .nais/nais.yml
-          VARS: .nais/dev.yml
+          RESOURCE: swag-shop/.nais/nais.yml
+          VARS: swag-shop/.nais/dev.yml
