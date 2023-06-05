@@ -106,4 +106,4 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: swag-shop/.nais/nais.yaml
           VARS: swag-shop/.nais/dev.yaml
-          IMAGE: ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/swag-shop/${{ needs.docker.outputs.version }}
+          IMAGE: ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/swag-shop:${{ needs.docker.outputs.version }}
