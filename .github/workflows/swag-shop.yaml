@@ -12,6 +12,10 @@ on:
       - .github/workflows/swag-shop.yaml
       - swag-shop/**
 
+defaults:
+  run:
+    working-directory: swag-shop
+
 jobs:
   build:
     runs-on: ubuntu-latest
