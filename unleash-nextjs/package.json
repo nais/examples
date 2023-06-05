@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@unleash/nextjs": "1.0.0",
+    "@unleash/proxy": "^0.16.3",
     "@vercel/examples-ui": "1.0.5",
     "next": "13.4.1",
     "react": "18.2.0",

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addBasePath } from "next/dist/client/add-base-path";
-import { flagsClient, evaluateFlags, randomSessionId } from "@unleash/nextjs";
+import { flagsClient, evaluateFlags, randomSessionId, Context } from "@unleash/nextjs";
 import { UNLEASH_API_PROXY_DEFINITIONS, UNLEASH_COOKIE_NAME } from "./utils";
 
 export const config = {
@@ -12,7 +12,9 @@ export default async function middleware(req: NextRequest) {
   const sessionId =
     req.cookies.get(UNLEASH_COOKIE_NAME)?.value || randomSessionId();
 
-  const context = { sessionId, environment: "development" }; // You can extend context with other server-side properties
+  const userId = "1337"; // You can use a user ID from your database here
+
+  const context: Context = { sessionId, userId, environment: "development" }; // You can extend context with other server-side properties
 
   // Grab definitions from an endpoint cached on the edge
   const protocol = req.url.startsWith("https") ? "https://" : "http://";
