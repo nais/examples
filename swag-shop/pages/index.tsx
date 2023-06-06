@@ -25,7 +25,7 @@ const Home: NextPage = () => {
         nais swag shop
       </Heading>
       <GuidePanel>
-        nais swag shop er en demoapplikasjon laget for å teste ut ny frontend-funksjonalitet i NAIS og skal være et eksempel for hvordan komme i gang med frontendutvikling i NAV.
+        nais swag shop er en demoapplikasjon laget for å teste ut ny frontend-funksjonalitet i NAIS og skal være et eksempel for hvordan komme i gang med frontendutvikling i NAV. Du finner kildekoden på <a href="https://github.com/nais/examples/tree/main/swag-shop#readme" className="text-blue-500 hover:text-blue-700">GitHub</a>.
       </GuidePanel>
       <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-900">Anbefalt for deg</h2>
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">

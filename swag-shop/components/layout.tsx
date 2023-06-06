@@ -21,8 +21,11 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
               <Dropdown.Menu.GroupedList.Heading>
                 Dokumentasjon
               </Dropdown.Menu.GroupedList.Heading>
+              <Dropdown.Menu.GroupedList.Item as="a" href="https://docs.nais.io/">
+                docs.nais.no
+              </Dropdown.Menu.GroupedList.Item>
               <Dropdown.Menu.GroupedList.Item as="a" href="https://aksel.nav.no/">
-                Aksel.nav.no
+                aksel.nav.no
               </Dropdown.Menu.GroupedList.Item>
             </Dropdown.Menu.GroupedList>
           </Dropdown.Menu>
