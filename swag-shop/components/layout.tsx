@@ -5,7 +5,7 @@ import Head from "next/head";
 
 const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
-    <div>
+    <div className="h-full bg-white">
       <Head>
         <title>nais swag shop</title>
       </Head>
@@ -28,7 +28,9 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           </Dropdown.Menu>
         </Dropdown>
       </Header>
-      <main className="layout">{children}</main>
+      <main className="flex min-h-full flex-1 flex-col justify-center px-6 py-4 lg:px-8">
+        <div className="mx-auto max-w-4xl">{children}</div>
+      </main>
     </div>
   );
 };
