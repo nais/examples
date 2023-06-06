@@ -5,7 +5,10 @@ const colors = require('tailwindcss/colors')
 // doesn't know about dynamic classes and will purge them by default
 const colorClasses = [
   'red-900',
+  'red-950',
   'blue-900',
+  'blue-950',
+  'gray-400',
   'gray-900',
 ];
 
@@ -13,6 +16,7 @@ module.exports = {
   content: ["./pages/**/*.{tsx,jsx}", "./components/**/*.{tsx,jsx}"],
   safelist: [
     ...colorClasses.map(color => `bg-${color}`),
+    ...colorClasses.map(color => `ring-${color}`),
   ],
   theme: {
     extend: {

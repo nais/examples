@@ -35,7 +35,7 @@ export const swags: Swag[] = [
     ],
     colors: [
       { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
-      { name: 'Blue', class: 'bg-blue-900', selectedClass: 'ringeblue-950' },
+      { name: 'Blue', class: 'bg-blue-900', selectedClass: 'ring-blue-950' },
       { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
     ],
     sizes: [
