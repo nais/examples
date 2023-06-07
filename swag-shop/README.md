@@ -20,6 +20,18 @@ graph LR
   Backend -->|Payment| PaymentService
 ```
 
+## Observerbarhet
+
+NAIS Swag Shop benytter [OpenTelemetry](https://opentelemetry.io/) standarden for å samle inn metrikker og sporing av forespørsler.
+
+### Next.js Backend
+
+Next.js har støtte for OpenTelemetry gjennom `experimental.instrumentationHook = true`. Dette gjør at Next.js vil kalle en funksjon som heter `instrument` for hver forespørsel. Denne funksjonen kan brukes til å instrumentere applikasjonen med OpenTelemetry. Mer informasjon om dette finnes i [dokumentasjonen til Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/open-telemetry).
+
+### Next.js Frontend
+
+For å instrumentere frontend bruker vi [Grafana Faro](https://grafana.com/oss/faro/). Mer om det senere...
+
 ## Utvikling
 
 ### Komme i gang
