@@ -1,0 +1,17 @@
+@import "@navikt/ds-css";
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.layout {
+  margin: 1rem auto;
+  max-width: 75ch;
+  display: grid;
+  gap: 1.5rem;
+  justify-items: flex-start;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
