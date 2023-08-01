@@ -9,7 +9,7 @@ val nimbusOIDC = "8.19"
 val nimbusJoseVersion = "8.20"
 val caffeineVersion = "2.8.6"
 // Log
-val apacheCommonsVersion = "3.11"
+val apacheCommonsVersion = "3.13.0"
 val logstashEncoderVersion = "6.4"
 val logbackVersion = "1.2.3"
 val ioPrometheusVersion = "0.9.0"
