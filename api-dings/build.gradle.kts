@@ -16,7 +16,7 @@ object Versions {
 val mainClassName = "no.nav.dings.ApiDingsKt"
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.9.10"
     java
     id("org.jmailen.kotlinter") version "2.3.2"
     id("com.github.ben-manes.versions") version "0.28.0"
