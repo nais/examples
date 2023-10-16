@@ -1,38 +1,63 @@
 version: 2
 updates:
+  # github-actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "@nais/features-dependabot-reviwer"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+  # docker
   - package-ecosystem: "docker"
     directory: "/api-dings"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "@nais/features-dependabot-reviwer"
+  - package-ecosystem: "docker"
+    directory: "/job-dings"
+    schedule:
+      interval: "monthly"
   - package-ecosystem: "docker"
     directory: "/debug-dings"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "@nais/features-dependabot-reviwer"
-  - package-ecosystem: "gradle"
-    directory: "/"
+  - package-ecosystem: "docker"
+    directory: "/swag-shop"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "@nais/core-dependabot-reviwer"
-  - package-ecosystem: "gradle"
-    directory: "/api-dings"
-    schedule:
-      interval: "monthly"
-    reviewers:
-      - "@nais/features-dependabot-reviwer"
+  # gradle
   - package-ecosystem: "gradle"
     directory: "/debug-dings"
     schedule:
       interval: "monthly"
-    reviewers:
-      - "@nais/features-dependabot-reviwer"
+    groups:
+      debug-dings-gradle:
+        patterns:
+          - "*"
+  - package-ecosystem: "gradle"
+    directory: "/api-dings"
+    schedule:
+      interval: "monthly"
+    groups:
+      api-dings-gradle:
+        patterns:
+          - "*"
+  - package-ecosystem: "gradle"
+    directory: "/job-dings"
+    schedule:
+      interval: "monthly"
+    groups:
+      debug-dings-gradle:
+        patterns:
+          - "*"
+  # npm
+  - package-ecosystem: "npm"
+    directory: "/swag-shop"
+    schedule:
+      interval: "monthly"
+    groups:
+      swag-shop-npm:
+        patterns:
+          - "*"
+
