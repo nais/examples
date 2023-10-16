@@ -1,35 +1,35 @@
 // Common
-val kotlinVersion = "1.4.10"
-val ktorVersion = "1.4.1"
-val kotlinxVersion = "1.4.1"
-val jacksonVersion = "2.11.2"
+val kotlinVersion = "1.9.10"
+val ktorVersion = "1.6.8"
+val kotlinxVersion = "1.7.3"
+val jacksonVersion = "2.15.3"
 val konfigVersion = "1.6.10.0"
 // Oauth2
-val nimbusOIDC = "8.19"
-val nimbusJoseVersion = "8.20"
-val caffeineVersion = "2.8.6"
+val nimbusOIDC = "11.2"
+val nimbusJoseVersion = "9.36"
+val caffeineVersion = "3.1.8"
 // Log
-val apacheCommonsVersion = "3.11"
-val logstashEncoderVersion = "6.4"
-val logbackVersion = "1.2.3"
-val ioPrometheusVersion = "0.9.0"
-val kotlinloggingVersion = "2.0.3"
+val apacheCommonsVersion = "3.13.0"
+val logstashEncoderVersion = "7.4"
+val logbackVersion = "1.4.11"
+val ioPrometheusVersion = "0.16.0"
+val kotlinloggingVersion = "3.0.5"
 // Test
 val spek = "2.0.13"
-val kluentVersion = "1.61"
-val wiremockVersion = "2.27.2"
-val platformRunner = "1.7.0"
-val mockOauth = "0.2.1"
-val junitJupiterVersion = "5.7.0"
+val kluentVersion = "1.73"
+val wiremockVersion = "3.0.1"
+val platformRunner = "1.10.0"
+val mockOauth = "2.0.0"
+val junitJupiterVersion = "5.10.0"
 
 val mainClassName = "no.nav.dings.DebugKt"
 
 plugins {
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.9.10"
     java
-    id("org.jmailen.kotlinter") version "3.2.0"
-    id("com.github.ben-manes.versions") version "0.36.0"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.jmailen.kotlinter") version "4.0.0"
+    id("com.github.ben-manes.versions") version "0.49.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
