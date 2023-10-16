@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
@@ -61,16 +61,16 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: docker/login-action@v2
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
         with:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: version
         run: echo "version=$(date +'%Y%m%d-%H%M%S')-$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/metadata-action@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/metadata-action@v5
         id: metadata
         with:
           images: |
@@ -84,7 +84,7 @@ jobs:
             type=semver,pattern=v{{major}}
             type=sha
             type=raw,value=${{ steps.version.outputs.version }}
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v5
         with:
           context: ./swag-shop
           push: ${{ github.ref == 'refs/heads/main' }}
@@ -99,7 +99,7 @@ jobs:
     needs: [docker]
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
