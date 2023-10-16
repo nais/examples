@@ -16,11 +16,11 @@ object Versions {
 val mainClassName = "no.nav.dings.ApiDingsKt"
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.9.10"
     java
-    id("org.jmailen.kotlinter") version "2.3.2"
-    id("com.github.ben-manes.versions") version "0.28.0"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("org.jmailen.kotlinter") version "4.0.0"
+    id("com.github.ben-manes.versions") version "0.49.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
