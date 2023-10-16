@@ -7,7 +7,8 @@ on:
       - db-dings/**
 
 env:
-  IMAGE: ghcr.io/${{ github.repository }}/db-dings:${{ github.sha }}
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/${{ github.repository }}/db-dings
 
 defaults:
   run:
@@ -15,7 +16,7 @@ defaults:
 
 jobs:
   build:
-    name: Build and push Docker container
+    name: Build and test Java application
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,64 +27,58 @@ jobs:
           cache: 'gradle'
           check-latest: true
 
-      - run: ./gradlew clean test
-      - run: ./gradlew bootJar -x test
+      - run: ./gradlew clean build
 
-      - name: Login to GitHub Docker Registry
-        uses: docker/login-action@v3
-        if: github.ref == 'refs/heads/main'
+  docker:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        run: docker build --pull --tag ${IMAGE} .
-
-      - name: Push Docker image
-        if: github.ref == 'refs/heads/main'
-        run: docker push ${IMAGE}
-
-      - name: 'Authenticate to Google Cloud'
-        id: 'google'
-        uses: 'google-github-actions/auth@v1'
-        if: github.ref == 'refs/heads/main'
+      - id: version
+        run: echo "version=$(date +'%Y%m%d-%H%M%S')-$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/metadata-action@v5
+        id: metadata
         with:
-          credentials_json: ${{ secrets.SALSA_CREDENTIALS }}
-
-      - name: NAIS SLSA Provenance Action
-        uses: nais/salsa-action@v0.0.1-beta
-        if: github.ref == 'refs/heads/main'
+          images: |
+            ${{ env.IMAGE }}
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=sha
+            type=raw,value=${{ steps.version.outputs.version }}
+      - uses: docker/build-push-action@v5
         with:
-          ecosystem: 'gradle'
-          image: ${{ env.IMAGE }}
-          key: ${{ secrets.SALSA_KMS_KEY }}
-          context: /debug-dings
+          context: ./db-dings
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
 
   deploy-dev-gcp:
     name: Deploy to dev-gcp
-    needs: build
+    needs: [build, docker]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v1
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: .nais/naiserator.yml
-          VARS: .nais/dev-gcp-vars.yml
-
-  deploy-prod-gcp:
-    name: Deploy to prod-gcp
-    needs: deploy-dev-gcp
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-gcp
-          RESOURCE: .nais/naiserator.yml
-          VARS: .nais/prod-gcp-vars.yml
+          RESOURCE: db-dings/.nais/nais.yaml
+          VARS: db-dings/.nais/dev.yaml
+          IMAGE: ${{ env.IMAGE }}:${{ needs.docker.outputs.version }}
