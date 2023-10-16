@@ -1,0 +1,47 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: "db-dings"
+  namespace: "frontendplattform"
+  labels:
+    "team": "frontendplattform"
+spec:
+  image: {{image}}
+  port: 8080
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: nais
+  liveness:
+    path: "/internal/health"
+    port: 8080
+    initialDelay: 20
+    timeout: 60
+  readiness:
+    path: "/internal/health"
+    port: 8080
+    initialDelay: 20
+    timeout: 60
+  replicas:
+    min: 2
+    max: 2
+    cpuThresholdPercentage: 50
+  prometheus:
+    enabled: true
+    path: "/internal/prometheus"
+  resources:
+    limits:
+      memory: "512Mi"
+    requests:
+      cpu: "10m"
+      memory: "256Mi"
+  gcp:
+    sqlInstances:
+      - name: db-dings
+        type: POSTGRES_14
+        databases:
+          - name: db-dings
+            envVarPrefix: DB
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
