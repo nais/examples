@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/heroes")
-class WebController {
+class HeroController {
   @Autowired lateinit var repository: HeroRepository
 
   @RequestMapping("/") fun findAll() = repository.findAll()
