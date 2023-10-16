@@ -11,15 +11,7 @@ updates:
           - "*"
   # docker
   - package-ecosystem: "docker"
-    directory: "/api-dings"
-    schedule:
-      interval: "monthly"
-  - package-ecosystem: "docker"
-    directory: "/job-dings"
-    schedule:
-      interval: "monthly"
-  - package-ecosystem: "docker"
-    directory: "/debug-dings"
+    directory: "/db-dings"
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
@@ -28,27 +20,11 @@ updates:
       interval: "monthly"
   # gradle
   - package-ecosystem: "gradle"
-    directory: "/debug-dings"
+    directory: "/db-dings"
     schedule:
       interval: "monthly"
     groups:
-      debug-dings-gradle:
-        patterns:
-          - "*"
-  - package-ecosystem: "gradle"
-    directory: "/api-dings"
-    schedule:
-      interval: "monthly"
-    groups:
-      api-dings-gradle:
-        patterns:
-          - "*"
-  - package-ecosystem: "gradle"
-    directory: "/job-dings"
-    schedule:
-      interval: "monthly"
-    groups:
-      debug-dings-gradle:
+      db-dings-gradle:
         patterns:
           - "*"
   # npm
@@ -60,4 +36,3 @@ updates:
       swag-shop-npm:
         patterns:
           - "*"
-

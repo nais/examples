@@ -30,10 +30,9 @@ spec:
     path: "/internal/prometheus"
   resources:
     limits:
-      cpu: "200m"
       memory: "512Mi"
     requests:
-      cpu: "200m"
+      cpu: "10m"
       memory: "256Mi"
   gcp:
     sqlInstances:
