@@ -56,6 +56,13 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.2.6.tgz#d21ace437cc919cdd8f1640302fa8851e65e75c0"
   integrity sha512-EvYTiXet5XqweYGClEmpu3BoxmsQ4hkj3QaYA6qEnigCWffTP3vNRwBReTdrwDwo7OoJ3wM8Uoe9Uk4n+d4hfg==
 
+"@floating-ui/core@^1.4.2":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.5.0.tgz#5c05c60d5ae2d05101c3021c1a2a350ddc027f8c"
+  integrity sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==
+  dependencies:
+    "@floating-ui/utils" "^0.1.3"
+
 "@floating-ui/dom@^1.2.7":
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.9.tgz#b9ed1c15d30963419a6736f1b7feb350dd49c603"
@@ -63,12 +70,27 @@
   dependencies:
     "@floating-ui/core" "^1.2.6"
 
+"@floating-ui/dom@^1.5.1":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.5.3.tgz#54e50efcb432c06c23cd33de2b575102005436fa"
+  integrity sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==
+  dependencies:
+    "@floating-ui/core" "^1.4.2"
+    "@floating-ui/utils" "^0.1.3"
+
 "@floating-ui/react-dom@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-2.0.0.tgz#7514baac526c818892bbcc84e1c3115008c029f9"
   integrity sha512-Ke0oU3SeuABC2C4OFu2mSAwHIP5WUiV98O9YWoHV4Q5aT6E9k06DV0Khi5uYspR8xmmBk08t8ZDcz3TR3ARkEg==
   dependencies:
     "@floating-ui/dom" "^1.2.7"
+
+"@floating-ui/react-dom@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-2.0.2.tgz#fab244d64db08e6bed7be4b5fcce65315ef44d20"
+  integrity sha512-5qhlDvjaLmAst/rKb3VdlCinwTF4EYMiVxuuc/HVUjs46W0zgtbMmAZ1UTsDrRTxRmUEzl92mOtWbeeXL26lSQ==
+  dependencies:
+    "@floating-ui/dom" "^1.5.1"
 
 "@floating-ui/react@0.24.1":
   version "0.24.1"
@@ -78,6 +100,20 @@
     "@floating-ui/react-dom" "^2.0.0"
     aria-hidden "^1.1.3"
     tabbable "^6.0.1"
+
+"@floating-ui/react@0.25.4":
+  version "0.25.4"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react/-/react-0.25.4.tgz#82507e14460aee70f435ad2fd717ea182b6d5c61"
+  integrity sha512-lWRQ/UiTvSIBxohn0/2HFHEmnmOVRjl7j6XcRJuLH0ls6f/9AyHMWVzkAJFuwx0n9gaEeCmg9VccCSCJzbEJig==
+  dependencies:
+    "@floating-ui/react-dom" "^2.0.2"
+    "@floating-ui/utils" "^0.1.1"
+    tabbable "^6.0.1"
+
+"@floating-ui/utils@^0.1.1", "@floating-ui/utils@^0.1.3":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.1.6.tgz#22958c042e10b67463997bd6ea7115fe28cbcaf9"
+  integrity sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==
 
 "@headlessui/react@^1.7.17":
   version "1.7.17"
@@ -152,10 +188,10 @@
   resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-3.4.2.tgz#fa858e1a5fb0557d61b62ad7cdf0d75e26fc89d7"
   integrity sha512-9fj+Jb4UrX3SDDzqJpKP3fvizdxtACIFNXgDiPaP/N/61pbeY4tZz/zrtWGtExLpDeg7dAyaiFH/hfo7nBg6nw==
 
-"@navikt/aksel-icons@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-4.0.0.tgz#df5ca613a431e17acbf2a63dff7c73c4a6deec76"
-  integrity sha512-Lz1h45z26U+D4HdaiM3MevyNTwrJlOBGDcu7ZxNnESeUYRchr5+7Th53nc8hBEjxOv/FOADLncthLd8aVcNDDA==
+"@navikt/aksel-icons@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-5.7.0.tgz#30fecac47d4e3e01529b12506a4c7ee76cdf343d"
+  integrity sha512-biP32qaEpfGe39TzdNrXeNtN+2pqtVwha1XN3QKHxZIW1h2jfE+qoUSVPjp9XDRXo7c+9zg1gVMcFmECiynfcQ==
 
 "@navikt/ds-css-internal@latest":
   version "3.4.3"
@@ -163,9 +199,9 @@
   integrity sha512-VusM4uwHZoQWiX8N/1zD6ycgNFIzYQ40TXhlP7tqpdH6sVwwzFPWCWXaZtpyjUfHxU9WyNEDYoeRAECkC0qfzg==
 
 "@navikt/ds-css@latest":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-css/-/ds-css-4.0.0.tgz#7e197cbd0d29b547fd795f01f0477620c7fb1846"
-  integrity sha512-ugd0YfIOpMhuwHPtN3mKAfMrSZianAcTfFtYXkrqg43DF/EZPI4rE7moOfony3WLSeeCEHoL97/2vbXEjVmzQQ==
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-css/-/ds-css-5.7.0.tgz#fb19011ef176f5f4f516159b7819272cff510342"
+  integrity sha512-WfbuU1ozVnwHAllx5MRdPD4veCoC3v2yILqHgkv+Q8nDb0hwEK8LPVbPsDMUlCmEj0lGNMqRsKwPxGVaZwCQLg==
 
 "@navikt/ds-icons@latest":
   version "3.4.3"
@@ -198,23 +234,28 @@
     react-modal "3.15.1"
 
 "@navikt/ds-react@latest":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-react/-/ds-react-4.0.0.tgz#ca96d5030a37a857ef0d021a732e89b3dd381334"
-  integrity sha512-/OF1AWDAPJSU4VbCHrUdsW7cmVysBm7UZkU4yqWnROMavBRN/h20wTogiLfoUu1W4hi8lsZCiLqrIA4jv7kcYA==
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-react/-/ds-react-5.7.0.tgz#688d0de53c7e89311cd3c23537b6aa6c494d06ef"
+  integrity sha512-PrBZDclvR2SGg5R9n+Q0simNuaUbk1HQzPV7CGN+IJOvkUWlgM1gOAMtDLjPA2+e1fx9+Y4IqhETeMeXai7GmA==
   dependencies:
-    "@floating-ui/react" "0.24.1"
-    "@navikt/aksel-icons" "^4.0.0"
+    "@floating-ui/react" "0.25.4"
+    "@navikt/aksel-icons" "^5.7.0"
+    "@navikt/ds-tokens" "^5.7.0"
     "@radix-ui/react-tabs" "1.0.0"
     "@radix-ui/react-toggle-group" "1.0.0"
     clsx "^1.2.1"
     date-fns "2.29.3"
     react-day-picker "8.3.4"
-    react-modal "3.15.1"
 
 "@navikt/ds-tailwind@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@navikt/ds-tailwind/-/ds-tailwind-5.7.0.tgz#38f7ba6c50c9b60cc6ef21c8c15de7d795bea975"
   integrity sha512-+wXvsXa14jdRRf92EkjS0A8SLWu5rymJYMAafgaODS9Y0pMR6M96Myq2f7fftMw0dX+UlRdRN8nXfLWGzEKTJw==
+
+"@navikt/ds-tokens@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-tokens/-/ds-tokens-5.7.0.tgz#a78c1ceebdd8a9f5060c89878df5087c9d3ad391"
+  integrity sha512-pw1D6R60CmB0oiJfBIiq+OeHNkWpKfqMRPo80WwJCYICaBWr3wZe25vfKLXIOYAsibdCeFc4pmCmucIgYXoVqg==
 
 "@next/env@13.5.4":
   version "13.5.4"
