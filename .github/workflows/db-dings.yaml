@@ -11,6 +11,7 @@ on:
     paths:
       - .github/workflows/db-dings.yaml
       - db-dings/**
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
