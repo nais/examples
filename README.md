@@ -4,7 +4,7 @@ A collection of example apps demonstrating features and concepts in and around N
 
 | Example                | Language | Description                                               |
 | ---------------------- | -------- | --------------------------------------------------------- |
-| [db-dings](db-dings)   | Kotlin   | A simple app that connects to a database                  |
+| [db-dings](db-dings)   | Kotlin   | A simple Spring Boot app that connects to a database      |
 | [swag-shop](swag-shop) | Next.js  | A simple webshop using NAV design system and Tailwind CSS |
 
 ## License
