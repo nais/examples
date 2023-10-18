@@ -1,6 +1,6 @@
 # Spring Boot with PostgreSQL
 
-This is a simple example application that demonstrates how to use Kotlin, Spring Boot, and PostgreSQL together. The application provides a REST API for managing heroes, which are stored in a PostgreSQL database.
+This is a simple example application that demonstrates how to use Kotlin, Spring Boot, and PostgreSQL together. The application provides a REST API for managing products and reviews, which are stored in a PostgreSQL database.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ This will start the application on port 8080 on localhost.
 Test the API using a tool like `curl` or `httpie`:
 
 ```shell
-http localhost:8080/api/heroes
+http localhost:8080/api/products
 ```
 
 This should return an empty JSON array.
@@ -58,23 +58,25 @@ This should return an empty JSON array.
 
 The API provides the following endpoints:
 
-* `GET /api/heroes`: Returns a list of all heroes.
-* `GET /api/heroes/{id}`: Returns the hero with the specified ID.
-* `POST /api/heroes`: Creates a new hero.
-* `PUT /api/heroes/{id}`: Updates the hero with the specified ID.
-* `DELETE /api/heroes/{id}`: Deletes the hero with the specified ID.
+* `GET /api/products`: Returns a list of all products.
+* `GET /api/products/{id}`: Returns the product with the specified ID.
+* `POST /api/products`: Creates a new product.
+* `PUT /api/products/{id}`: Updates the product with the specified ID.
+* `DELETE /api/products/{id}`: Deletes the product with the specified ID.
 
-The request and response bodies are in JSON format. Here's an example of a hero object:
+The request and response bodies are in JSON format. Here's an example of a product object:
 
 ```json
 {
-  "firstName": "Luke",
-  "lastName": "Skywalker",
-  "species": "HUMAN"
+    "name": "Lightsaber",
+    "description": "An elegant weapon for a more civilized age.",
+    "category": "OTHER",
+    "price": 1000.00,
+    "images": []
 }
 ```
 
-The species field can be one of the following values: `HUMAN`, `WOOKIEE`, or `YODA_SPECIES`.
+The species field can be one of the following values: `TEE_SHIRT`, `HOODIE`, `CAP`, `OTHER`.
 
 ## License
 
