@@ -94,22 +94,50 @@ class ProductController {
   @RequestMapping("/generate")
   fun save(): String {
 
-    val product =
-        Product(
-            "Test Product",
-            "A test product",
-            Product.Category.TEE_SHIRT,
-            13.37,
-            emptyList(),
-            mutableListOf<Rating>(),
-            1L
+    val products =
+        arrayOf(
+            mapOf(
+                "name" to "A T-Shirt",
+                "description" to "A test product",
+                "category" to "TEE_SHIRT",
+            ),
+            mapOf(
+                "name" to "A Hoodie",
+                "description" to "A test product",
+                "category" to "HOODIE",
+            ),
+            mapOf(
+                "name" to "A Cap",
+                "description" to "A test product",
+                "category" to "CAP",
+            ),
+            mapOf(
+                "name" to "Light saber",
+                "description" to "Jedi weapon of choice",
+                "category" to "OTHER",
+            ),
         )
 
-    productRepository.save(product)
-    ratingRepository.save(Rating(5, "Great product", product))
-    ratingRepository.save(Rating(1, "Bad product", product))
-    ratingRepository.save(Rating(3, "Average product", product))
-    ratingRepository.save(Rating(4, "Good product", product))
+    for (it in products) {
+      println(it)
+      val randomPrice = (0..100).random()
+      val product =
+          Product(
+              it["name"] as String,
+              it["description"] as String,
+              Product.Category.valueOf(it["category"] as String),
+              randomPrice.toDouble(),
+              emptyList(),
+              mutableListOf<Rating>(),
+          )
+
+      productRepository.save(product)
+      ratingRepository.save(Rating((3..5).random(), "Great product", product))
+      ratingRepository.save(Rating((1..3).random(), "Bad product", product))
+      ratingRepository.save(Rating((1..5).random(), "Average product", product))
+      ratingRepository.save(Rating((3..5).random(), "Good product", product))
+      ratingRepository.save(Rating((1..3).random(), "Bad product", product))
+    }
 
     return "Done"
   }

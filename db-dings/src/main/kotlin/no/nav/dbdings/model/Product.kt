@@ -24,6 +24,7 @@ data class Product(
   enum class Category {
     TEE_SHIRT,
     HOODIE,
+    SCARF,
     CAP,
     OTHER,
   }
