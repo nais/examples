@@ -11,7 +11,7 @@ COPY --chown=gradle:gradle src ./src/
 RUN ./gradlew --no-daemon assemble
 
 FROM gcr.io/distroless/java17:nonroot
-COPY --from=build --chown=nonroot:nonroot /home/gradle/src/build/libs/db-dings-*.jar /app/db-dings.jar
+COPY --from=build --chown=nonroot:nonroot /home/gradle/src/build/libs/shop-backend-*.jar /app/shop-backend.jar
 WORKDIR /app
 # TLS Config works around an issue in OpenJDK... See: https://github.com/kubernetes-client/java/issues/854
-ENTRYPOINT ["java", "-Djdk.tls.client.protocols=TLSv1.2", "-jar", "/app/db-dings.jar"]
+ENTRYPOINT ["java", "-Djdk.tls.client.protocols=TLSv1.2", "-jar", "/app/shop-backend.jar"]

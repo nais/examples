@@ -1,4 +1,4 @@
-# Spring Boot with PostgreSQL
+# Spring Boot API with PostgreSQL
 
 This is a simple example application that demonstrates how to use Kotlin, Spring Boot, and PostgreSQL together. The application provides a REST API for managing products and reviews, which are stored in a PostgreSQL database.
 
@@ -23,7 +23,7 @@ To get started, follow these steps:
 1. Navigate to the project directory:
 
     ```shell
-    cd db-dings
+    cd shop-backend
     ```
 
 1. Start the PostgreSQL database:
@@ -63,6 +63,8 @@ The API provides the following endpoints:
 * `POST /api/products`: Creates a new product.
 * `PUT /api/products/{id}`: Updates the product with the specified ID.
 * `DELETE /api/products/{id}`: Deletes the product with the specified ID.
+* `GET /api/products/{id}/reviews`: Returns a list of all reviews for the product with the specified ID.
+* `POST /api/products/{id}/reviews`: Creates a new review for the product with the specified ID.
 
 The request and response bodies are in JSON format. Here's an example of a product object:
 
