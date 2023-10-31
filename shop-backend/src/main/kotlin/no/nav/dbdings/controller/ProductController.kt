@@ -1,9 +1,9 @@
 package no.nav.shopbackend.controller
 
-import no.nav.ShopBackend.model.Product
-import no.nav.ShopBackend.model.Rating
-import no.nav.ShopBackend.repo.ProductRepository
-import no.nav.ShopBackend.repo.RatingRepository
+import no.nav.shopbackend.model.Product
+import no.nav.shopbackend.model.Rating
+import no.nav.shopbackend.repo.ProductRepository
+import no.nav.shopbackend.repo.RatingRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus

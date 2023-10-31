@@ -1,10 +1,10 @@
 package no.nav.shopbackend.controller
 
 import java.util.Optional
-import no.nav.ShopBackend.model.Product
-import no.nav.ShopBackend.model.Rating
-import no.nav.ShopBackend.repo.ProductRepository
-import no.nav.ShopBackend.repo.RatingRepository
+import no.nav.shopbackend.model.Product
+import no.nav.shopbackend.model.Rating
+import no.nav.shopbackend.repo.ProductRepository
+import no.nav.shopbackend.repo.RatingRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
