@@ -1,4 +1,4 @@
-package no.nav.dbdings.model
+package no.nav.shopbackend.model
 
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

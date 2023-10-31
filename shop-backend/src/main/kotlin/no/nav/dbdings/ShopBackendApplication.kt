@@ -1,10 +1,10 @@
-package no.nav.dbdings
+package no.nav.shopbackend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication class DbDingsApplication
+@SpringBootApplication class ShopBackendApplication
 
 fun main(args: Array<String>) {
-  runApplication<DbDingsApplication>(*args)
+  runApplication<ShopBackendApplication>(*args)
 }

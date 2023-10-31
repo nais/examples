@@ -1,9 +1,9 @@
-package no.nav.dbdings.controller
+package no.nav.shopbackend.controller
 
-import no.nav.dbdings.model.Product
-import no.nav.dbdings.model.Rating
-import no.nav.dbdings.repo.ProductRepository
-import no.nav.dbdings.repo.RatingRepository
+import no.nav.ShopBackend.model.Product
+import no.nav.ShopBackend.model.Rating
+import no.nav.ShopBackend.repo.ProductRepository
+import no.nav.ShopBackend.repo.RatingRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
