@@ -23,7 +23,7 @@ To get started, follow these steps:
 1. Navigate to the project directory:
 
     ```shell
-    cd shop-backend
+    cd sentiment-api
     ```
 
 1. Start the PostgreSQL database:
