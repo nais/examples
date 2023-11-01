@@ -93,5 +93,5 @@ jobs:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: sentiment-api/.nais/nais.yaml
-          VARS: sentiment-api/.nais/dev.yaml
+          # VARS: sentiment-api/.nais/dev.yaml
           IMAGE: ${{ env.IMAGE }}:${{ needs.docker.outputs.version }}
