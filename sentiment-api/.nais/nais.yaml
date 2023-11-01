@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: "shop-backend"
+  name: "sentiment-api"
   namespace: "frontendplattform"
   labels:
     "team": "frontendplattform"
@@ -35,17 +35,12 @@ spec:
       cpu: "10m"
       memory: "256Mi"
   accessPolicy:
-    outbound:
+    inbound:
       rules:
-        - application: sentiment-api
+        - application: shop-backend
   gcp:
-    sqlInstances:
-      - name: shop-backend
-        type: POSTGRES_14
-        databases:
-          - name: shop-backend
-            envVarPrefix: DB
-  ingresses:
-  {{#each ingresses as |url|}}
-    - {{url}}
-  {{/each}}
+    permissions:
+      - resource:
+          apiVersion: resourcemanager.cnrm.cloud.google.com/v1beta1
+          kind: Project
+        role: roles/automl.predictor

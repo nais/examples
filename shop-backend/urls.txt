@@ -1,0 +1,7 @@
+http://localhost:8080/
+http://localhost:8080/api/products/
+http://localhost:8080/api/products/1
+http://localhost:8080/api/products/2
+http://localhost:8080/api/products/3
+http://localhost:8080/api/products/4
+

@@ -1,4 +1,4 @@
-package no.nav.dbdings.model
+package no.nav.shopbackend.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType

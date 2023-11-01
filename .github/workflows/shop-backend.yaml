@@ -1,16 +1,16 @@
-name: db-dings
+name: shop-backend
 
 on:
   push:
     branches: [ main ]
     paths:
-      - .github/workflows/db-dings.yaml
-      - db-dings/**
+      - .github/workflows/shop-backend.yaml
+      - shop-backend/**
   pull_request:
     branches: [ main ]
     paths:
-      - .github/workflows/db-dings.yaml
-      - db-dings/**
+      - .github/workflows/shop-backend.yaml
+      - shop-backend/**
   workflow_dispatch:
 
 concurrency:
@@ -19,11 +19,11 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE: ghcr.io/${{ github.repository }}/db-dings
+  IMAGE: ghcr.io/${{ github.repository }}/shop-backend
 
 defaults:
   run:
-    working-directory: ./db-dings
+    working-directory: ./shop-backend
 
 jobs:
   build:
@@ -39,7 +39,7 @@ jobs:
           cache: 'gradle'
           check-latest: true
 
-      - run: ./gradlew clean build
+      - run: ./gradlew clean build --info
 
   docker:
     name: Build and push Docker image
@@ -72,7 +72,7 @@ jobs:
             type=raw,value=${{ steps.version.outputs.version }}
       - uses: docker/build-push-action@v5
         with:
-          context: ./db-dings
+          context: ./shop-backend
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
@@ -91,6 +91,6 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: db-dings/.nais/nais.yaml
-          VARS: db-dings/.nais/dev.yaml
+          RESOURCE: shop-backend/.nais/nais.yaml
+          VARS: shop-backend/.nais/dev.yaml
           IMAGE: ${{ env.IMAGE }}:${{ needs.docker.outputs.version }}

@@ -11,7 +11,11 @@ updates:
           - "*"
   # docker
   - package-ecosystem: "docker"
-    directory: "/db-dings"
+    directory: "/shop-backend"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/sentiment-api"
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
@@ -20,11 +24,19 @@ updates:
       interval: "monthly"
   # gradle
   - package-ecosystem: "gradle"
-    directory: "/db-dings"
+    directory: "/sentiment-api"
     schedule:
       interval: "monthly"
     groups:
-      db-dings-gradle:
+      sentiment-api-gradle:
+        patterns:
+          - "*"
+  - package-ecosystem: "gradle"
+    directory: "/shop-backend"
+    schedule:
+      interval: "monthly"
+    groups:
+      shop-backend-gradle:
         patterns:
           - "*"
   # npm

@@ -1,6 +1,6 @@
-package no.nav.dbdings.repo
+package no.nav.shopbackend.repo
 
-import no.nav.dbdings.model.Product
+import no.nav.shopbackend.model.Product
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
