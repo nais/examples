@@ -5,6 +5,9 @@ metadata:
   namespace: "frontendplattform"
   labels:
     "team": "frontendplattform"
+  annotations:
+    "nais.io/run-as-group": "65532"
+    "nais.io/run-as-user": "65532"
 spec:
   image: {{image}}
   port: 8080
