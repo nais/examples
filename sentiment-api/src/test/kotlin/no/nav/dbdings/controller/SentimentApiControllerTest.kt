@@ -1,5 +1,6 @@
 package no.nav.sentimentapi.controller
 
+import com.google.api.gax.core.NoCredentialsProvider
 import com.google.cloud.language.v1.AnalyzeSentimentResponse
 import com.google.cloud.language.v1.Document
 import com.google.cloud.language.v1.LanguageServiceClient
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class SentimentApiControllerTest(@Autowired private val mockMvc: MockMvc) {
 
   @MockBean private lateinit var languageServiceClient: LanguageServiceClient
+  @MockBean private lateinit var credentialsProvider: NoCredentialsProvider
 
   @Test
   fun `analyzeSentiment should return sentiment score and magnitude`() {
