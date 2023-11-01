@@ -13,8 +13,9 @@ import org.jetbrains.annotations.NotNull
 data class Rating(
     @field:NotNull val stars: Int,
     val comment: String?,
+    val sentiment: String?,
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id") val product: Product?,
     @Id @GeneratedValue(strategy = GenerationType.AUTO) val id: Long = -1
 ) {
-  private constructor() : this(-1, "", null, -1L)
+  private constructor() : this(-1, "", "", null, -1L)
 }

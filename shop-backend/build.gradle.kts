@@ -24,6 +24,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+	implementation("com.squareup.okhttp3:okhttp")
+	testImplementation("com.squareup.okhttp3:mockwebserver")
+
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-registry-prometheus")
 

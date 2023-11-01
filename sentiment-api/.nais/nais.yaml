@@ -17,9 +17,9 @@ spec:
     - name: GOOGLE_CLOUD_PROJECT
       value: $(GCP_TEAM_PROJECT_ID)
     - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /var/run/secrets/service-account.json
   filesFrom:
     - secret: sentiment-api
-      value: /var/run/secrets/service-account.json
   liveness:
     path: "/internal/health"
     port: 8080

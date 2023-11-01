@@ -4,6 +4,7 @@ import no.nav.shopbackend.model.Product
 import no.nav.shopbackend.model.Rating
 import no.nav.shopbackend.repo.ProductRepository
 import no.nav.shopbackend.repo.RatingRepository
+import no.nav.shopbackend.service.SentimentService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProductController {
   @Autowired lateinit var productRepository: ProductRepository
   @Autowired lateinit var ratingRepository: RatingRepository
+  @Autowired lateinit var sentimentService: SentimentService
 
   @GetMapping
   fun findAll(
@@ -85,8 +87,21 @@ class ProductController {
     val product = productRepository.findById(id)
     return product
         .map {
-          val rating = rating.copy(product = it)
-          ResponseEntity.ok(ratingRepository.save(rating))
+          if (rating.comment != null) {
+            var sentiment = "unknown"
+
+            try {
+              sentiment = sentimentService.getSentiment(rating.comment).sentiment
+            } catch (e: Exception) {
+              println("Failed to get sentiment for comment: ${rating.comment} with error: $e")
+            }
+
+            ResponseEntity.ok(
+                ratingRepository.save(rating.copy(product = it, sentiment = sentiment))
+            )
+          } else {
+            ResponseEntity.ok(ratingRepository.save(rating.copy(product = it)))
+          }
         }
         .orElse(ResponseEntity.notFound().build())
   }
@@ -132,11 +147,11 @@ class ProductController {
           )
 
       productRepository.save(product)
-      ratingRepository.save(Rating((3..5).random(), "Great product", product))
-      ratingRepository.save(Rating((1..3).random(), "Bad product", product))
-      ratingRepository.save(Rating((1..5).random(), "Average product", product))
-      ratingRepository.save(Rating((3..5).random(), "Good product", product))
-      ratingRepository.save(Rating((1..3).random(), "Bad product", product))
+      ratingRepository.save(Rating((3..5).random(), "Great product", "positive", product))
+      ratingRepository.save(Rating((1..3).random(), "Bad product", "negative", product))
+      ratingRepository.save(Rating((1..5).random(), "Average product", "neutral", product))
+      ratingRepository.save(Rating((3..5).random(), "Good product", "neutral", product))
+      ratingRepository.save(Rating((1..3).random(), "Bad product", "negative", product))
     }
 
     return "Done"
