@@ -20,6 +20,7 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   IMAGE: ghcr.io/${{ github.repository }}/sentiment-api
+  GOOGLE_APPLICATION_CREDENTIALS: src/test/kotlin/no/nav/sentimentapi/resources/mock-google-credentials.json
 
 defaults:
   run:

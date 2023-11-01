@@ -5,12 +5,13 @@ import com.google.cloud.language.v1.Document.Type.PLAIN_TEXT
 import com.google.cloud.language.v1.LanguageServiceClient
 import org.jsoup.Jsoup
 import org.jsoup.safety.Safelist
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class SentimentApiController(private val languageServiceClient: LanguageServiceClient) {
+class SentimentApiController(@Autowired val languageServiceClient: LanguageServiceClient) {
 
   @PostMapping("/api/sentiment")
   fun analyzeSentiment(@RequestBody text: String): Map<String, Any> {
