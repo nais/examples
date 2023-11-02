@@ -11,9 +11,26 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
+  observability:
+    tracing:
+      enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: nais
+    - name: OTEL_METRICS_EXPORTER
+      value: prometheus
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_EXPORTER_METRICS_ENABLED
+      value: "false"
+    - name: OTEL_METRICS_EXEMPLAR_FILTER
+      value: ALWAYS_ON
+    - name: OTEL_SERVICE_NAME
+      value: shop-backend
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=frontendplattform
   liveness:
     path: "/internal/health"
     port: 8080

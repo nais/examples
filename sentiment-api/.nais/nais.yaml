@@ -11,6 +11,9 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
+  observability:
+    tracing:
+      enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: nais
@@ -18,6 +21,20 @@ spec:
       value: $(GCP_TEAM_PROJECT_ID)
     - name: GOOGLE_APPLICATION_CREDENTIALS
       value: /var/run/secrets/service-account.json
+    - name: OTEL_METRICS_EXPORTER
+      value: prometheus
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_EXPORTER_METRICS_ENABLED
+      value: "false"
+    - name: OTEL_METRICS_EXEMPLAR_FILTER
+      value: ALWAYS_ON
+    - name: OTEL_SERVICE_NAME
+      value: sentiment-api
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: service.namespace=frontendplattform
   filesFrom:
     - secret: sentiment-api
   liveness:
