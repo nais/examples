@@ -76,9 +76,13 @@ class ProductController {
   }
 
   @GetMapping("/{id:\\d+}/ratings")
-  fun findRatingsByProductId(@PathVariable id: Long): ResponseEntity<MutableList<Rating>> {
-    val product = productRepository.findById(id)
-    return product.map { ResponseEntity.ok(it.ratings) }.orElse(ResponseEntity.notFound().build())
+  fun findRatingsByProductId(@PathVariable id: Long): ResponseEntity<List<Rating>> {
+    val ratings = ratingRepository.findByProductId(id)
+    return if (ratings.isNotEmpty()) {
+      ResponseEntity.ok(ratings)
+    } else {
+      ResponseEntity.notFound().build()
+    }
   }
 
   @PostMapping("/{id:\\d+}/ratings")
