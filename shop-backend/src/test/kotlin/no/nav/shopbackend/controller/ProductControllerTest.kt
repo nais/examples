@@ -77,8 +77,12 @@ class ProductControllerTest {
             .andReturn()
 
     val expected =
-        """{"content":[{"name":"Test Product","description":"A test product","category":"TEE_SHIRT","price":13.37,"images":[],"id":1,"averageRating":3.25}],"pageable":"INSTANCE","totalPages":1,"totalElements":1,"last":true,"size":1,"number":0,"sort":{"empty":true,"sorted":false,"unsorted":true},"empty":true},"empty":false}"""
-    assertEquals(expected, result.response.contentAsString)
+        """{"content":[{"name":"Test Product","description":"A test product","category":"TEE_SHIRT","price":13.37,"images":[],"id":1,"averageRating":3.25}],"pageable":"INSTANCE","totalPages":1,"totalElements":1,"last":true,"numberOfElements":1,"first":true,"size":1,"number":0,"sort":{"unsorted":true,"sorted":false,"empty":true},"empty":false}"""
+    val mapper = ObjectMapper()
+    val expectedJson = mapper.readTree(expected)
+    val actualJson = mapper.readTree(result.response.contentAsString)
+
+    assertEquals(expectedJson, actualJson)
   }
 
   @Test
