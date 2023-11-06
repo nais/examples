@@ -4,7 +4,7 @@ A collection of example apps demonstrating features and concepts in and around N
 
 | Example                        | Language | Description                                                          |
 | ------------------------------ | -------- | -------------------------------------------------------------------- |
-| [shop-frontend](swag-shop)     | Next.js  | A simple webshop using [NAV's design system][aksel] and Tailwind CSS |
+| [shop-frontend](shop-frontend) | Next.js  | A simple webshop using [NAV's design system][aksel] and Tailwind CSS |
 | [shop-backend](shop-backend)   | Kotlin   | A simple Spring Boot API with a PostgreSQL database                  |
 | [sentiment-api](sentiment-api) | Kotlin   | A simple Spring Boot API with Google Cloud Sentiment Analysis        |
 

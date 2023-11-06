@@ -49,6 +49,7 @@ export const swags: Swag[] = [
     breadcrumbs: [
       { id: 1, name: 'Swag', href: '/' },
     ],
+    reviews: [],
   },
   {
     id: 2,
@@ -98,6 +99,7 @@ export const swags: Swag[] = [
     breadcrumbs: [
       { id: 1, name: 'Swag', href: '/' },
     ],
+    reviews: [],
   },
   {
     id: 3,
@@ -147,6 +149,7 @@ export const swags: Swag[] = [
     breadcrumbs: [
       { id: 1, name: 'Swag', href: '/' },
     ],
+    reviews: [],
   },
   {
     id: 4,
@@ -192,6 +195,7 @@ export const swags: Swag[] = [
     breadcrumbs: [
       { id: 1, name: 'Swag', href: '/' },
     ],
+    reviews: [],
   },
   {
     id: 5,
@@ -235,6 +239,7 @@ export const swags: Swag[] = [
     breadcrumbs: [
       { id: 1, name: 'Swag', href: '/' },
     ],
+    reviews: [],
   },
 ]
 

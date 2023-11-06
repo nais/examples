@@ -27,5 +27,5 @@ export interface Swag {
   reviews: {
     average: number;
     total: number;
-  };
+  }[] | null;
 }

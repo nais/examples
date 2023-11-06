@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
-    directory: "/swag-shop"
+    directory: "/shop-frontend"
     schedule:
       interval: "monthly"
   # gradle
@@ -41,10 +41,10 @@ updates:
           - "*"
   # npm
   - package-ecosystem: "npm"
-    directory: "/swag-shop"
+    directory: "/shop-frontend"
     schedule:
       interval: "monthly"
     groups:
-      swag-shop-npm:
+      shop-frontend-npm:
         patterns:
           - "*"
