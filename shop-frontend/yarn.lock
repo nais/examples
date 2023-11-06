@@ -206,10 +206,10 @@
   resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-3.4.2.tgz#fa858e1a5fb0557d61b62ad7cdf0d75e26fc89d7"
   integrity sha512-9fj+Jb4UrX3SDDzqJpKP3fvizdxtACIFNXgDiPaP/N/61pbeY4tZz/zrtWGtExLpDeg7dAyaiFH/hfo7nBg6nw==
 
-"@navikt/aksel-icons@^5.7.2":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-5.7.2.tgz#38619136dc4d27d55d2e5003ffa139168a5dcf86"
-  integrity sha512-n46qhpW+KxhNTRGOkidSDOaa2AancHEPUPJe2y5zwXicrXMWz9F97rsPogEqblX7zt0ltl1Kqw5oAIZTl8aXog==
+"@navikt/aksel-icons@^5.9.2":
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@navikt/aksel-icons/-/aksel-icons-5.9.2.tgz#482bb83a2bc6b4e954700e278c28614c108117e3"
+  integrity sha512-5XQI4wzZAlB6CoHDXZrjUqMx+7iUiOPoqFY3H9kT/NwfCdmUSPUFfmiPZHzpV7OzS4S61Joo1GhZ31ZZSIuz3Q==
 
 "@navikt/ds-css-internal@latest":
   version "3.4.3"
@@ -217,9 +217,9 @@
   integrity sha512-VusM4uwHZoQWiX8N/1zD6ycgNFIzYQ40TXhlP7tqpdH6sVwwzFPWCWXaZtpyjUfHxU9WyNEDYoeRAECkC0qfzg==
 
 "@navikt/ds-css@latest":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-css/-/ds-css-5.7.2.tgz#3b37f026826667a2ca165ca593fcaa781bca27b6"
-  integrity sha512-Tr+5ZREbXUJwEWpNXUe/6cx0B91NLRHYVwoKFJ1Do50FjEYscfAxhWgrFwrl/RFxcjMF9mIaI9MwC+CibzukWA==
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-css/-/ds-css-5.9.2.tgz#1ec33efe65cd9a20d1a5e9e5a119702626c568d7"
+  integrity sha512-uzXl4qgzJ934XGRG29rU3Te6jJ5pEiQEsgqOMKKuPMV8RBB2NP1x125bocvDfwEx5CVvr3WzCvxFnlYfFStDVw==
 
 "@navikt/ds-icons@latest":
   version "3.4.3"
@@ -252,13 +252,13 @@
     react-modal "3.15.1"
 
 "@navikt/ds-react@latest":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-react/-/ds-react-5.7.2.tgz#b4c6b236df3c86d0d3f10140e2f779b166293045"
-  integrity sha512-O5k5vQNSC8S4rH1pJunS583hcCYdGcpKOvgUWiD4Fb6CpCCNAjgzQoiutJCGzd1m+yy95lsUePYHRofMtlxV8Q==
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-react/-/ds-react-5.9.2.tgz#0a0bf183f7cfd7f1932694e3d1829227ce6e6f33"
+  integrity sha512-ElZvGW/dAylj9PHoOwdABuJVA1Pgx7+Rh4UR9auWQJTs97jklSJ5w78qC3W9SJAi5rVy+I5raFHGY3mW/m/lwA==
   dependencies:
     "@floating-ui/react" "0.25.4"
-    "@navikt/aksel-icons" "^5.7.2"
-    "@navikt/ds-tokens" "^5.7.2"
+    "@navikt/aksel-icons" "^5.9.2"
+    "@navikt/ds-tokens" "^5.9.2"
     "@radix-ui/react-tabs" "1.0.0"
     "@radix-ui/react-toggle-group" "1.0.0"
     clsx "^1.2.1"
@@ -270,10 +270,10 @@
   resolved "https://registry.yarnpkg.com/@navikt/ds-tailwind/-/ds-tailwind-5.9.2.tgz#8e90ed3b79386b820a6b151bf13edd392b92dcc4"
   integrity sha512-m59t4YNRq5MMvV+pCVI6iyqyHPkjKRf1wsJ6oSOxFLww6xuR+d0Mgh9fiXObpzLRgqsIw3idGitAujXSI888ug==
 
-"@navikt/ds-tokens@^5.7.2":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-tokens/-/ds-tokens-5.7.2.tgz#34bb3982f8da115331fa50c6a3a0c69499a072eb"
-  integrity sha512-jRPyyb2I/9efxscrFbsVJ9o0wHwqtqya02xtcukmVkhyrc3CgCy3Ac1CJmKLxXmCALAdQ4B0a/qXohYlyS0Y5A==
+"@navikt/ds-tokens@^5.9.2":
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-tokens/-/ds-tokens-5.9.2.tgz#f410260891058d4d3ec19f1c2c175274c3b637ca"
+  integrity sha512-MzDHuUE0adzgDfat/CStgHSBtvbIxCpY82VNlJ6qLoC7T/rlDCKAaktjLTD1JHPizlawOqJgQp3tOG2vHJKE6A==
 
 "@next/env@14.0.1":
   version "14.0.1"
