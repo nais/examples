@@ -11,6 +11,9 @@ metadata:
 spec:
   image: {{image}}
   port: 3000
+  observability:
+    tracing:
+      enabled: true
   env:
     - name: "NODE_ENV"
       value: "production"
@@ -28,10 +31,6 @@ spec:
       value: "false"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
-    - name: OTEL_EXPORTER_OTLP_ENDPOINT
-      value: "http://otel-collector:4317"
-    #- name: NODE_OPTIONS
-    #  value: "--require @opentelemetry/auto-instrumentations-node/register"
   liveness:
     path: "/"
     port: 3000
