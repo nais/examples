@@ -4,7 +4,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   serverRuntimeConfig: {
-    backendApiUrl: process.env.BACKEND_API_URL,
+    // Standalone mode resolves all variables at build time
+    // https://github.com/vercel/next.js/discussions/34894
+    backendApiUrl: process.env.BACKEND_API_URL || "http://shop-backend",
   },
   experimental: {
     // Enable OpenTelemetry instrumentation for Next.js
