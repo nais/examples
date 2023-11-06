@@ -31,10 +31,6 @@ spec:
       value: "false"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
-    - name: OTEL_SERVICE_NAME
-      value: sentiment-api
-    - name: OTEL_RESOURCE_ATTRIBUTES
-      value: service.namespace=frontendplattform
   filesFrom:
     - secret: sentiment-api
   liveness:

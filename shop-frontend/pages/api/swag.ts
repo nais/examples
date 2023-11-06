@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Swag } from "../../types";
+import { Swag } from "../../types/swag";
 
 export const swags: Swag[] = [
   {

@@ -4,13 +4,13 @@ on:
   push:
     branches: [ main ]
     paths:
-      - .github/workflows/swag-shop.yaml
-      - swag-shop/**
+      - .github/workflows/shop-frontend.yaml
+      - shop-frontend/**
   pull_request:
     branches: [ main ]
     paths:
-      - .github/workflows/swag-shop.yaml
-      - swag-shop/**
+      - .github/workflows/shop-frontend.yaml
+      - shop-frontend/**
   workflow_dispatch:
 
 concurrency:
@@ -19,7 +19,7 @@ concurrency:
 
 defaults:
   run:
-    working-directory: ./swag-shop
+    working-directory: ./shop-frontend
 
 env:
   GHCR_REGISTRY: ghcr.io
@@ -79,7 +79,7 @@ jobs:
         id: metadata
         with:
           images: |
-            ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/swag-shop
+            ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/shop-frontend
           tags: |
             type=schedule
             type=ref,event=branch
@@ -91,7 +91,7 @@ jobs:
             type=raw,value=${{ steps.version.outputs.version }}
       - uses: docker/build-push-action@v5
         with:
-          context: ./swag-shop
+          context: ./shop-frontend
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
@@ -109,6 +109,6 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_FRONTEND_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: swag-shop/.nais/nais.yaml
-          VARS: swag-shop/.nais/dev.yaml
-          IMAGE: ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/swag-shop:${{ needs.docker.outputs.version }}
+          RESOURCE: shop-frontend/.nais/nais.yaml
+          VARS: shop-frontend/.nais/dev.yaml
+          IMAGE: ${{ env.GHCR_REGISTRY }}/${{ github.repository }}/shop-frontend:${{ needs.docker.outputs.version }}

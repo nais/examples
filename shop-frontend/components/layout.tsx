@@ -7,10 +7,10 @@ const Layout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <div className="h-full bg-white">
       <Head>
-        <title>nais swag shop</title>
+        <title>nais web shop</title>
       </Head>
       <Header>
-        <Header.Title as="h1">nais swag shop</Header.Title>
+        <Header.Title as="h1">nais web shop</Header.Title>
         <Dropdown>
           <Header.Button as={Dropdown.Toggle} className="ml-auto">
             <System style={{ fontSize: "1.5rem" }} title="Systemer og oppslagsverk" />

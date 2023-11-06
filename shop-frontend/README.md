@@ -1,6 +1,6 @@
 # NAIS Swag Shop
 
-NAIS Swag Shop er en eksempel nettbutikk for å bestille NAIS Swag til bruk på konferanser, arrangementer og lignende.
+NAIS Web Shoper en eksempel nettbutikk for å bestille NAIS Swag til bruk på konferanser, arrangementer og lignende.
 
 ![NAIS Swag Shop](./public/images/nais-swag-shop.png)
 
@@ -17,7 +17,7 @@ NAIS Swag Shop er en eksempel nettbutikk for å bestille NAIS Swag til bruk på 
 graph LR
   Frontend -->|API| Backend
   Backend -->|Database| PostgreSQL
-  Backend -->|Payment| PaymentService
+  Backend -->|Review| SentimentAPI[Sentiment API]
 ```
 
 ## Utvikling
@@ -31,4 +31,4 @@ graph LR
 
 ## Lisens
 
-NAIS Swag Shop er lisensiert under [MIT-lisensen](../LICENSE).
+NAIS Web Shoper lisensiert under [MIT-lisensen](../LICENSE).

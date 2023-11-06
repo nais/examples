@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: "shop-backend"
+  name: "swag-shop"
   namespace: "frontendplattform"
   labels:
     "team": "frontendplattform"
@@ -10,13 +10,14 @@ metadata:
     "nais.io/run-as-user": "65532"
 spec:
   image: {{image}}
-  port: 8080
-  observability:
-    tracing:
-      enabled: true
+  port: 3000
   env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: nais
+    - name: "NODE_ENV"
+      value: "production"
+    - name: "NEXT_TELEMETRY_DISABLED"
+      value: "1"
+    - name: "BACKEND_API_URL"
+      value: "http://shop-backend"
     - name: OTEL_METRICS_EXPORTER
       value: prometheus
     - name: OTEL_LOGS_EXPORTER
@@ -27,14 +28,18 @@ spec:
       value: "false"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector:4317"
+    #- name: NODE_OPTIONS
+    #  value: "--require @opentelemetry/auto-instrumentations-node/register"
   liveness:
-    path: "/internal/health"
-    port: 8080
+    path: "/"
+    port: 3000
     initialDelay: 20
     timeout: 60
   readiness:
-    path: "/internal/health"
-    port: 8080
+    path: "/"
+    port: 3000
     initialDelay: 20
     timeout: 60
   replicas:
@@ -42,28 +47,23 @@ spec:
     max: 1
   ttl: 24h
   prometheus:
-    enabled: true
-    path: "/internal/prometheus"
+    enabled: false
+    path: "/metrics"
   resources:
     limits:
-      memory: "512Mi"
+      cpu: "200m"
+      memory: "256Mi"
     requests:
-      cpu: "10m"
+      cpu: "200m"
       memory: "256Mi"
   accessPolicy:
-    inbound:
-      rules:
-        - application: shop-frontend
     outbound:
       rules:
-        - application: sentiment-api
-  gcp:
-    sqlInstances:
-      - name: shop-backend
-        type: POSTGRES_14
-        databases:
-          - name: shop-backend
-            envVarPrefix: DB
+        - application: shop-backend
+  filesFrom:
+    - emptyDir:
+        medium: Memory
+      mountPath: /app/.next/cache
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}

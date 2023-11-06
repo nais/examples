@@ -24,4 +24,8 @@ export interface Swag {
     href: string;
   }[];
   price: string;
+  reviews: {
+    average: number;
+    total: number;
+  };
 }
