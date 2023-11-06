@@ -26,7 +26,7 @@ dependencies {
 	implementation("io.micrometer:micrometer-registry-prometheus")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("com.google.cloud:google-cloud-language:2.30.0")
+	implementation("com.google.cloud:google-cloud-language:2.31.0")
 	implementation("org.jsoup:jsoup:1.16.2")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
