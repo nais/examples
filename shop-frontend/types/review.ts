@@ -14,3 +14,9 @@ export interface Review {
     avatarSrc: string;
   }] | [],
 }
+
+export interface ReviewPost {
+  name: string;
+  review: string;
+  rating: number;
+}

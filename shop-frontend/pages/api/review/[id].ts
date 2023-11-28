@@ -7,44 +7,77 @@ const { serverRuntimeConfig: c } = getConfig();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
+  const reviewApiUrl = `${c.backendApiUrl}/api/products/${id}/ratings`
 
-  const response = await trace
-    .getTracer('shop-frontend')
-    .startActiveSpan('fetchGithubStars', async (span) => {
-      try {
-        return await fetch(`${c.backendApiUrl}/api/products/${id}/ratings`);
-      } finally {
-        span.end()
-      }
-    })
-  const json = await response.json();
+  if (req.method === "POST") {
+    // sanitize input
+    const body = JSON.parse(req.body);
+    const { name, review, rating } = body;
 
-  if (response.status == 200) {
-    res.status(200).json({
-      average: json.reduce((acc: number, review: any) => acc + review.stars, 0) / json.length,
-      totalCount: json.length,
-      counts: json.reduce((acc: any, review: any) => {
-        const { stars } = review;
-        const index = 5 - stars;
-        acc[index].count++;
-        return acc;
-      }, [
-        { rating: 5, count: 0 },
-        { rating: 4, count: 0 },
-        { rating: 3, count: 0 },
-        { rating: 2, count: 0 },
-        { rating: 1, count: 0 },
-      ]),
-      featured:  json.slice(0, 5).map((review: any) => ({
-        id: review.id,
-        rating: review.stars,
-        content: `${review.comment} [sentiment = ${review.sentiment}]`,
-        author: 'Emily Selman',
-        avatarSrc: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80'
-      })),
-    });
+    try {
+      const response = await fetch(reviewApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          comment: review,
+          stars: rating
+        })
+      });
+      const json = await response.json();
+      res.status(200).json(json);
+    } catch (error) {
+      log(error);
+      res.status(500).json({ message: "Internal server error" });
+      return;
+    }
+  } else if (req.method === "GET") {
+    try {
+      const response = await fetch(`${c.backendApiUrl}/api/products/${id}/ratings`);
+      const reviews = await response.json();
+
+      res.status(200).json({
+        average: reviews.reduce((acc: number, review: any) => acc + review.stars, 0) / reviews.length,
+        totalCount: reviews.length,
+        counts: reviews.reduce((acc: any, review: any) => {
+          const { stars } = review;
+          const index = 5 - stars;
+          acc[index].count++;
+          return acc;
+        }, [
+          { rating: 5, count: 0 },
+          { rating: 4, count: 0 },
+          { rating: 3, count: 0 },
+          { rating: 2, count: 0 },
+          { rating: 1, count: 0 },
+        ]),
+        featured: reviews.reverse().slice(0, 5).map((review: any) => ({
+          id: review.id,
+          rating: review.stars,
+          content: `${review.comment} [sentiment = ${review.sentiment}]`,
+          author: 'Emily Selman',
+          avatarSrc: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80'
+        })),
+      });
+    } catch (error) {
+      log(error);
+      res.status(200).json({
+        average: 0,
+        totalCount: 0,
+        counts: [
+          { rating: 5, count: 0 },
+          { rating: 4, count: 0 },
+          { rating: 3, count: 0 },
+          { rating: 2, count: 0 },
+          { rating: 1, count: 0 },
+        ],
+        featured: [],
+      });
+      return;
+    }
   } else {
-    log(`Error fetching reviews for product ${id}: ${JSON.stringify(json)}`);
-    res.status(200).json([]);
+    res.status(405).json({ message: "Method not allowed" });
   }
 }
