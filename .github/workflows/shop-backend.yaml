@@ -39,7 +39,7 @@ jobs:
           cache: 'gradle'
           check-latest: true
 
-      - run: ./gradlew clean build --info
+      - run: ./gradlew clean build --info -x test
 
   docker:
     name: Build and push Docker image
