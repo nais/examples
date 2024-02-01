@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.2.1"
+	id("org.springframework.boot") version "3.2.2"
 	id("io.spring.dependency-management") version "1.1.4"
 	kotlin("jvm") version "1.9.22"
 	kotlin("plugin.spring") version "1.9.22"
@@ -26,7 +26,7 @@ dependencies {
 	implementation("io.micrometer:micrometer-registry-prometheus")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("com.google.cloud:google-cloud-language:2.33.0")
+	implementation("com.google.cloud:google-cloud-language:2.35.0")
 	implementation("org.jsoup:jsoup:1.17.2")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
