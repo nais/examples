@@ -12,8 +12,9 @@ spec:
   image: {{image}}
   port: 3000
   observability:
-    tracing:
+    autoInstrumentation:
       enabled: true
+      runtime: sdk
   env:
     - name: "NODE_ENV"
       value: "production"

@@ -12,8 +12,9 @@ spec:
   image: {{image}}
   port: 8080
   observability:
-    tracing:
+    autoInstrumentation:
       enabled: true
+      runtime: "java"
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: nais
