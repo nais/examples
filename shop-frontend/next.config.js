@@ -11,7 +11,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     // Standalone mode resolves all variables at build time
     appName: process.env.APP_NAME || "shop-frontend-browser",
-    faroUrl: process.env.FARO_API_URL || "https://telemetry.dev-gcp.nav.cloud.nais.io/collect",
+    faroUrl: process.env.FARO_API_URL || "https://telemetry.ekstern.dev.nav.no/collect",
   },
   experimental: {
     // Enable OpenTelemetry instrumentation for Next.js
