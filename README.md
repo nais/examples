@@ -11,23 +11,28 @@ A collection of example apps demonstrating features and concepts in and around N
 A high-level overview of the example apps and their dependencies:
 
 ```mermaid
+---
+config:
+    flowchart:
+        defaultRenderer: elk
+---
 graph LR
-  subgraph Browser Client
-    A((React.js))
+  subgraph Browser
+    A(React.js)
   end
 
-  subgraph Shop Frontend
-    B((Next.js))
+  subgraph Frontend
+    B(Next.js)
   end
 
-  subgraph Shop Backend
-    C((Spring Boot))
-    D((PostgreSQL))
+  subgraph Backend
+    C(Spring Boot)
+    D(PostgreSQL)
   end
 
   subgraph Sentiment API
-    E((Spring Boot))
-    F((Google Cloud<br>Sentiment API))
+    E(Spring Boot)
+    F(Google Cloud<br>Sentiment API)
   end
 
   A --> B
