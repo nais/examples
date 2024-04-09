@@ -55,6 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           { rating: 3, count: 0 },
           { rating: 2, count: 0 },
           { rating: 1, count: 0 },
+          { rating: 0, count: 0 },
         ]),
         featured: reviews.reverse().slice(0, 5).map((review: any) => ({
           id: review.id,
