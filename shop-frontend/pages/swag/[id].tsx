@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState, useEffect, Fragment } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/layout";
-import { Swag } from "../../types/swag";
+import { Swag as SwagType } from "../../types/swag";
 import { Review, ReviewPost } from "../../types/review";
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
@@ -16,7 +16,7 @@ function classNames(...classes: string[]) {
 }
 
 const Swag: NextPage = () => {
-  const [swag, setSwag] = useState<Swag | null>(null);
+  const [swag, setSwag] = useState<SwagType | null>(null);
   const [reviews, setReviews] = useState<Review | null>(null);
   const [selectedColor, setSelectedColor] = useState(swag?.colors[0] ?? { name: '', class: '', selectedClass: '' });
   const [selectedSize, setSelectedSize] = useState(swag?.sizes[2] ?? { name: '', inStock: false });
