@@ -15,11 +15,11 @@ const nextConfig = {
     faroUrl: process.env.FARO_API_URL || "https://telemetry.ekstern.dev.nav.no/collect",
     faroAppName: process.env.FARO_APP_NAME || "shop-frontend-browser",
   },
-  experimental: {
-    // Enable OpenTelemetry instrumentation for Next.js
-    // https://nextjs.org/docs/pages/building-your-application/optimizing/open-telemetry
-    instrumentationHook: true,
-  },
+  //experimental: {
+  //  // Enable OpenTelemetry instrumentation for Next.js
+  //  // https://nextjs.org/docs/pages/building-your-application/optimizing/open-telemetry
+  //  instrumentationHook: true,
+  //},
 }
 
 module.exports = nextConfig

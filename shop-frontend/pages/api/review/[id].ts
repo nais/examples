@@ -1,7 +1,7 @@
 import { log } from "console";
-import { getTraceparentHeader } from '../../../lib/otel'
 import { NextApiRequest, NextApiResponse } from "next";
 import getConfig from 'next/config';
+import { trace } from '@opentelemetry/api'
 
 const { serverRuntimeConfig: c } = getConfig();
 
@@ -14,28 +14,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const body = JSON.parse(req.body);
     const { name, review, rating } = body;
 
-    try {
-      const response = await fetch(reviewApiUrl, {
-        method: 'POST',
-        headers: {
-          get traceparent() {
-            return getTraceparentHeader();
-          },
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name,
-          comment: review,
-          stars: rating
-        })
+    return await trace
+      .getTracer('review')
+      .startActiveSpan('review.post', async (span) => {
+        try {
+          const response = await fetch(reviewApiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name,
+              comment: review,
+              stars: rating
+            })
+          });
+          const json = await response.json();
+          res.status(200).json(json);
+        } catch (error) {
+          span.recordException(error as Error);
+          log(error);
+          res.status(500).json({ message: "Internal server error" });
+          return;
+        } finally {
+          span.end();
+        }
       });
-      const json = await response.json();
-      res.status(200).json(json);
-    } catch (error) {
-      log(error);
-      res.status(500).json({ message: "Internal server error" });
-      return;
-    }
   } else if (req.method === "GET") {
     try {
       const response = await fetch(`${c.backendApiUrl}/api/products/${id}/ratings`);
