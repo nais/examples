@@ -14,7 +14,7 @@ spec:
   observability:
     autoInstrumentation:
       enabled: true
-      runtime: sdk
+      runtime: nodejs
   env:
     - name: "NODE_ENV"
       value: "production"
