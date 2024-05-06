@@ -17,10 +17,7 @@ export function getFaro(): Faro {
   faro = initializeFaro({
     url: publicRuntimeConfig.faroUrl,
     app: {
-      name: publicRuntimeConfig.appName,
-    },
-    user: {
-      id: '1337',
+      name: publicRuntimeConfig.faroAppName,
     },
     instrumentations: [
       ...getWebInstrumentations({
