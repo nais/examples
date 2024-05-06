@@ -7,7 +7,7 @@ const { publicRuntimeConfig } = getConfig()
 
 let faro: Faro | null = null
 export function initInstrumentation(): void {
-  if (typeof window === 'undefined' || faro !== null) return
+  if (typeof window === 'undefined' || faro !== null || publicRuntimeConfig.env !== "production") return
 
   getFaro()
 }
