@@ -8,7 +8,6 @@ import Layout from "../../components/layout";
 import { Swag as SwagType } from "../../types/swag";
 import { Review, ReviewPost } from "../../types/review";
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import { getReviews, postReview } from '../../lib/reviews';
 
 function classNames(...classes: string[]) {
