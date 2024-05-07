@@ -1,5 +1,4 @@
 import { log } from "console";
-import { getTraceparentHeader } from '../../../lib/otel'
 import { NextApiRequest, NextApiResponse } from "next";
 import getConfig from 'next/config';
 import { trace } from '@opentelemetry/api'
@@ -22,9 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const response = await fetch(reviewApiUrl, {
             method: 'POST',
             headers: {
-              get traceparent() {
-                return getTraceparentHeader();
-              },
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
