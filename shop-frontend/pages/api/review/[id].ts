@@ -17,6 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return await trace
       .getTracer('review')
       .startActiveSpan('review.post', async (span) => {
+        span.setAttribute('review.rating', rating);
+        span.addEvent('review.post.start')
         try {
           const response = await fetch(reviewApiUrl, {
             method: 'POST',
@@ -30,6 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             })
           });
           const json = await response.json();
+          span.setAttribute('review.id', json.id);
+          span.setAttribute('review.sentiment', json.sentiment);
           res.status(200).json(json);
         } catch (error) {
           span.recordException(error as Error);
@@ -37,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.status(500).json({ message: "Internal server error" });
           return;
         } finally {
+          span.addEvent('review.post.end');
           span.end();
         }
       });
