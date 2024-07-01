@@ -70,7 +70,7 @@ jobs:
             type=semver,pattern=v{{major}}
             type=sha
             type=raw,value=${{ steps.version.outputs.version }}
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         with:
           context: ./shop-backend
           push: ${{ github.ref == 'refs/heads/main' }}
