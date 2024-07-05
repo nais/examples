@@ -1,0 +1,2 @@
+ingresses:
+- "https://example-flaky-service.intern.dev.nav.no"

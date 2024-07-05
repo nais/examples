@@ -30,7 +30,7 @@ func init() {
 }
 
 func main() {
-	slog.Info("Starting server", "flakinessLevel", c.Server.Host, "port", c.Server.Port)
+	slog.Info("Starting server", "host", c.Server.Host, "port", c.Server.Port)
 
 	// Start a simple HTTP server
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

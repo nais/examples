@@ -54,4 +54,5 @@ jobs:
         TEAM: examples
         PRINT_PAYLOAD: "true"
         RESOURCE: "./flaky-service/.nais/unleash.yaml,./flaky-service/.nais/app.yaml"
-        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/flaky-service:${{ needs.build_push_sign.outputs.version }},namespace=nais
+        VARS: flaky-service/.nais/dev.yaml
+        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/flaky-service:${{ needs.build_push_sign.outputs.version }},namespace=examples

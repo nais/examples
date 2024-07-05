@@ -2,9 +2,9 @@ apiVersion: unleash.nais.io/v1
 kind: ApiToken
 metadata:
   name: flaky-service
-  namespace: examples
+  namespace: {{ namespace }}
   labels:
-    team: examples
+    team: {{ namespace }}
 spec:
     unleashInstance:
       apiVersion: unleash.nais.io/v1
