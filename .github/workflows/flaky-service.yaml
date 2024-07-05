@@ -33,7 +33,7 @@ jobs:
         with:
           context: ./flaky-service
           name: flaky-service
-          dockerfile: ./Dockerfile
+          dockerfile: ./flaky-service/Dockerfile
           google_service_account: gh-examples
           push: ${{ github.actor != 'dependabot[bot]' }}
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
