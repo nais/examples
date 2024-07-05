@@ -51,6 +51,7 @@ jobs:
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: dev-gcp
+        TEAM: examples
         PRINT_PAYLOAD: "true"
         RESOURCE: "./flaky-service/.nais/unleash.yaml,./flaky-service/.nais/app.yaml"
         VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/flaky-service:${{ needs.build_push_sign.outputs.version }},namespace=nais
