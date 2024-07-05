@@ -3,9 +3,9 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
   name: flaky-service
-  namespace: {{ namespace }}
+  namespace: examples
   labels:
-    team: {{ namespace }}
+    team: examples
 spec:
   image: {{ image }}
   port: 8080
