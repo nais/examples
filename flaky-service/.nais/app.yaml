@@ -1,0 +1,22 @@
+---
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: flaky-service
+  namespace: {{ namespace }}
+  labels:
+    team: {{ namespace }}
+spec:
+  image: {{ image }}
+  port: 8080
+  prometheus:
+    enabled: false
+  envFrom:
+    - secret: flaky-service-unleash-api-token
+  accessPolicy:
+    outbound:
+      external:
+        - host: nais-demo-unleash-api.nav.cloud.nais.io
+  replicas:
+    max: 1
+    min: 1
