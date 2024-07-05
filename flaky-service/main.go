@@ -51,8 +51,10 @@ func main() {
 		w.Write([]byte(`{"message": "Hello, World!"}`))
 	})
 
-	http.HandlerFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"status": "ok"}`))
 	})
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port), nil))
