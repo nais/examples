@@ -17,6 +17,16 @@ spec:
     outbound:
       external:
         - host: nais-demo-unleash-api.nav.cloud.nais.io
+  liveness:
+    path: /healthz
+  readiness:
+    path: /healthz
+  resources:
+    limits:
+      memory: 56Mi
+    requests:
+      memory: 24Mi
+      cpu: 10m
   replicas:
     max: 1
     min: 1
