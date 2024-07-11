@@ -50,7 +50,7 @@ func (c *Config) UnleashInit() {
 	}
 
 	unleash.Initialize(
-		unleash.WithListener(&unleash.DebugListener{}),
+		//unleash.WithListener(&unleash.DebugListener{}),
 		unleash.WithAppName(AppName),
 		unleash.WithEnvironment(c.Unleash.Env),
 		unleash.WithUrl(fmt.Sprintf("%s/api", c.Unleash.Url)),
@@ -63,6 +63,11 @@ func (c *Config) FlakinessLevel() int {
 	variant := unleash.GetVariant(c.Feature.FlakinessLevelToggleName, unleash.WithVariantFallback(api.GetDefaultVariant()))
 	if variant == nil {
 		slog.Info("Failed to get variant", "featureToggleName", c.Feature.FlakinessLevelToggleName)
+		return c.Feature.FlakinessLevelDefaultValue
+	}
+
+	if !variant.FeatureEnabled {
+		slog.Info("Flakiness level feature toggle not enabled, reverting to default value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "defaultValue", c.Feature.FlakinessLevelDefaultValue)
 		return c.Feature.FlakinessLevelDefaultValue
 	}
 

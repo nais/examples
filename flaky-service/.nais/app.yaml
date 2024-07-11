@@ -27,6 +27,10 @@ spec:
     requests:
       memory: 24Mi
       cpu: 10m
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: sdk
   replicas:
     max: 1
     min: 1

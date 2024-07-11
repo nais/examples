@@ -17,7 +17,23 @@ The service has only one endpoint:
 - Returns a `200 OK {"message": "hello, world"}` response for good requests.
 - Returns a `500 Server Error {"error": "server error"}` response for errors.
 
-## Adjusting Flakiness
+## Local Development
+
+Start Unleash:
+
+```shell
+docker-compose -f ../docker-compose.yml up unleash -d
+```
+
+The Unleash server URL is `http://localhost:4242` and the default user is `admin` with the password `unleash4all`.
+
+Start the flaky service:
+
+```shell
+make flaky-service
+```
+
+### Adjusting Flakiness
 
 The flakiness of the service can be adjusted using the Unleash feature toggle. The service checks the `flaky-service.flakiness-level` feature toggle variant to determine the flakiness limit. If the feature toggle is not pressent, the service defaults to a flakiness limit of `50%`.
 
