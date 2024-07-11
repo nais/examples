@@ -1,0 +1,40 @@
+services:
+  otel:
+    image: grafana/otel-lgtm
+    restart: always
+    ports:
+      - "4317:4317" # OTLP over gRPC
+      - "4318:4318" # OTLP over HTTP
+      - "3000:3000" # Grafana
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: unleash
+      POSTGRES_PASSWORD: unleash
+      POSTGRES_DB: unleash
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  unleash:
+    image: unleashorg/unleash-server:6
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_NAME: unleash
+      DATABASE_USERNAME: unleash
+      DATABASE_PASSWORD: unleash
+      DATABASE_SSL: false
+      CHECK_VERSION: false
+      SEND_TELEMETRY: false
+      INIT_ADMIN_API_TOKENS: "*:*.admin-token"
+      INIT_CLIENT_API_TOKENS: "default:development.client-token"
+    ports:
+      - "4242:4242"
+
+volumes:
+  db-data:
