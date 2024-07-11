@@ -7,23 +7,26 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Unleash/unleash-client-go/v3"
-	"github.com/Unleash/unleash-client-go/v3/api"
+	"github.com/Unleash/unleash-client-go/v4"
+	"github.com/Unleash/unleash-client-go/v4/api"
 )
 
 const (
-	AppName               = "flaky-service"
-	unleashDefaultProject = "default"
-	unleashDefaultEnv     = "development"
-	unleashDefaultType    = "client"
-
-	toggleFlakinessLevelName    = "flaky-service.flakiness-level"
-	toggleFlakinessLevelDefault = 50
+	AppName = "flaky-service"
 )
 
 type Config struct {
 	Server  *ServerConfig
 	Unleash *UnleashConfig
+	Feature *FeatureConfig
+}
+
+type FeatureConfig struct {
+	// Flakiness level feature toggle default value
+	FlakinessLevelDefaultValue int `env:"FEATURE_FLAKINESS_LEVEL_DEFAULT_VALUE, default=50"`
+
+	// Flakiness level feature toggle name in Unleash
+	FlakinessLevelToggleName string `env:"FEATURE_FLAKINESS_LEVEL_TOGGLE_NAME, default=flaky-service.flakiness-level"`
 }
 
 type ServerConfig struct {
@@ -40,14 +43,14 @@ type UnleashConfig struct {
 }
 
 func (c *Config) UnleashInit() {
+	project := "default"
 	projects := strings.Split(c.Unleash.Projects, ",")
-	project := unleashDefaultProject
 	if len(projects) > 0 {
 		project = projects[0]
 	}
 
 	unleash.Initialize(
-		// unleash.WithListener(&unleash.DebugListener{}),
+		unleash.WithListener(&unleash.DebugListener{}),
 		unleash.WithAppName(AppName),
 		unleash.WithEnvironment(c.Unleash.Env),
 		unleash.WithUrl(fmt.Sprintf("%s/api", c.Unleash.Url)),
@@ -57,22 +60,21 @@ func (c *Config) UnleashInit() {
 }
 
 func (c *Config) FlakinessLevel() int {
-	variant := unleash.GetVariant(toggleFlakinessLevelName, unleash.WithVariantFallback(api.GetDefaultVariant()))
-
+	variant := unleash.GetVariant(c.Feature.FlakinessLevelToggleName, unleash.WithVariantFallback(api.GetDefaultVariant()))
 	if variant == nil {
-		slog.Info("Failed to get variant", "featureToggleName", toggleFlakinessLevelName)
-		return toggleFlakinessLevelDefault
+		slog.Info("Failed to get variant", "featureToggleName", c.Feature.FlakinessLevelToggleName)
+		return c.Feature.FlakinessLevelDefaultValue
 	}
 
 	if variant.Payload.Type != "number" {
-		slog.Info("Invalid variant payload type", "featureToggleName", toggleFlakinessLevelName, "type", variant.Payload.Type, "value", variant.Payload.Value)
-		return toggleFlakinessLevelDefault
+		slog.Info("Invalid variant payload type", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value)
+		return c.Feature.FlakinessLevelDefaultValue
 	}
 
 	value, err := strconv.Atoi(variant.Payload.Value)
 	if err != nil {
-		slog.Info("Failed to parse variant value", "featureToggleName", toggleFlakinessLevelName, "type", variant.Payload.Type, "value", variant.Payload.Value, "error", err)
-		return toggleFlakinessLevelDefault
+		slog.Info("Failed to parse variant value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value, "error", err)
+		return c.Feature.FlakinessLevelDefaultValue
 	}
 	return value
 }
