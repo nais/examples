@@ -1,0 +1,58 @@
+name: flaky-frontend
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/flaky-frontend.yaml
+      - flaky-frontend/**
+  pull_request:
+    branches: [ main ]
+    paths:
+      - .github/workflows/flaky-frontend.yaml
+      - flaky-frontend/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
+
+jobs:
+  build_push_sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main
+        id: image
+        with:
+          context: ./flaky-frontend
+          name: flaky-frontend
+          dockerfile: ./flaky-frontend/Dockerfile
+          google_service_account: gh-examples
+          push: ${{ github.actor != 'dependabot[bot]' }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+    outputs:
+      version: ${{ steps.image.outputs.version }}
+  rollout:
+    permissions:
+      id-token: write
+    name: Deploy to NAIS
+    needs: ["build_push_sign"]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: nais/deploy/actions/deploy@v2
+      env:
+        CLUSTER: dev-gcp
+        TEAM: examples
+        PRINT_PAYLOAD: "true"
+        RESOURCE: "./flaky-frontend/.nais/unleash.yaml,./flaky-frontend/.nais/app.yaml"
+        VARS: flaky-frontend/.nais/dev.yaml
+        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/flaky-frontend:${{ needs.build_push_sign.outputs.version }},namespace=examples
