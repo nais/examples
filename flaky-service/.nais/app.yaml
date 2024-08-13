@@ -13,6 +13,17 @@ spec:
     enabled: false
   envFrom:
     - secret: flaky-service-unleash-api-token
+  env:
+    - name: OTEL_METRICS_EXPORTER
+      value: otlp
+    - name: OTEL_LOGS_EXPORTER
+      value: otlp
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_EXPORTER_METRICS_ENABLED
+      value: "true"
+    - name: OTEL_METRICS_EXEMPLAR_FILTER
+      value: ALWAYS_ON
   accessPolicy:
     outbound:
       external:
