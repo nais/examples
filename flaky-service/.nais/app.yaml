@@ -17,6 +17,9 @@ spec:
     outbound:
       external:
         - host: nais-demo-unleash-api.nav.cloud.nais.io
+    inbound:
+      rules:
+        - application: flaky-frontend
   liveness:
     path: /healthz
   readiness:
