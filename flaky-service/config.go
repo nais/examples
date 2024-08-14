@@ -59,26 +59,26 @@ func (c *Config) UnleashInit() {
 	)
 }
 
-func (c *Config) FlakinessLevel() int {
+func (c *Config) FlakinessLevel(logger *slog.Logger) int {
 	variant := unleash.GetVariant(c.Feature.FlakinessLevelToggleName, unleash.WithVariantFallback(api.GetDefaultVariant()))
 	if variant == nil {
-		slog.Info("Failed to get variant", "featureToggleName", c.Feature.FlakinessLevelToggleName)
+		logger.Info("Failed to get variant", "featureToggleName", c.Feature.FlakinessLevelToggleName)
 		return c.Feature.FlakinessLevelDefaultValue
 	}
 
 	if !variant.FeatureEnabled {
-		slog.Info("Flakiness level feature toggle not enabled, reverting to default value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "defaultValue", c.Feature.FlakinessLevelDefaultValue)
+		logger.Info("Flakiness level feature toggle not enabled, reverting to default value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "defaultValue", c.Feature.FlakinessLevelDefaultValue)
 		return c.Feature.FlakinessLevelDefaultValue
 	}
 
 	if variant.Payload.Type != "number" {
-		slog.Info("Invalid variant payload type", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value)
+		logger.Info("Invalid variant payload type", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value)
 		return c.Feature.FlakinessLevelDefaultValue
 	}
 
 	value, err := strconv.Atoi(variant.Payload.Value)
 	if err != nil {
-		slog.Info("Failed to parse variant value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value, "error", err)
+		logger.Info("Failed to parse variant value", "featureToggleName", c.Feature.FlakinessLevelToggleName, "type", variant.Payload.Type, "value", variant.Payload.Value, "error", err)
 		return c.Feature.FlakinessLevelDefaultValue
 	}
 	return value

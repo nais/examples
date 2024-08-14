@@ -15,6 +15,9 @@ spec:
     autoInstrumentation:
       enabled: true
       runtime: nodejs
+    logging:
+      destinations:
+        - id: loki
   env:
     - name: "NODE_ENV"
       value: "production"

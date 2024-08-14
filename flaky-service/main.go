@@ -6,6 +6,7 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
@@ -18,9 +19,12 @@ import (
 )
 
 var c Config
+var logger *slog.Logger
 
 func init() {
 	ctx := context.Background()
+
+	logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	err := godotenv.Load()
 	if err != nil {
@@ -32,11 +36,11 @@ func init() {
 	}
 
 	c.UnleashInit()
-	NewTelemetry(AutoTelemetryConfig())
+	NewTelemetry(AutoTelemetryConfig(), logger)
 }
 
 func main() {
-	slog.Info("Starting server", "host", c.Server.Host, "port", c.Server.Port)
+	logger.Info("Starting server", "host", c.Server.Host, "port", c.Server.Port)
 
 	mp := otel.GetMeterProvider()
 	meter := mp.Meter("flaky-service")
@@ -49,18 +53,26 @@ func main() {
 	mux.Handle("/",
 		otelhttp.WithRouteTag("/", http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {
-				ctx, span := trace.SpanFromContext(r.Context()).TracerProvider().Tracer("exampleTracer").Start(r.Context(), "doWork")
+				ctx, span := trace.SpanFromContext(r.Context()).
+					TracerProvider().
+					Tracer("exampleTracer").
+					Start(r.Context(), "doWork")
 				defer span.End()
 
+				traceid := span.SpanContext().TraceID().String()
+				logger := logger.With("traceid", traceid)
+
+				level := c.FlakinessLevel(logger)
+				logger.Info("Handling flaky request", "level", level)
+
 				w.Header().Set("Content-Type", "application/json")
-
-				level := c.FlakinessLevel()
-				slog.Info("Flakiness level", "level", level)
-
 				w.Header().Set("X-Flakiness-Level", fmt.Sprintf("%d", level))
 
 				if rand.Intn(100) < level {
-					span.RecordError(fmt.Errorf("you found me"))
+					err := fmt.Errorf("you found me")
+
+					logger.Error("Error handling request", "error", err)
+					span.RecordError(err)
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Write([]byte(`{"error": "Internal Server Error"}`))
 

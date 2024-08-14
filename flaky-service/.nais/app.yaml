@@ -45,6 +45,9 @@ spec:
     autoInstrumentation:
       enabled: true
       runtime: sdk
+    logging:
+      destinations:
+        - id: loki
   replicas:
     max: 1
     min: 1

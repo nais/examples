@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"log/slog"
 
+	"github.com/go-logr/logr"
 	"go.opentelemetry.io/contrib/exporters/autoexport"
 	"go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
@@ -29,7 +31,9 @@ func AutoTelemetryConfig() *TelemetryConfig {
 	}
 }
 
-func NewTelemetry(cfg *TelemetryConfig) (*Telemetry, error) {
+func NewTelemetry(cfg *TelemetryConfig, logger *slog.Logger) (*Telemetry, error) {
+	otel.SetLogger(logr.FromSlogHandler(logger.Handler()))
+
 	resourceAttr := cfg.Resource.Attributes()
 
 	resource := resource.NewWithAttributes(
