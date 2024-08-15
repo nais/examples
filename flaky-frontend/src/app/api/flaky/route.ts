@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
       }
     }
   }).child({ trace_id, span_id });
-  logger.info({ current_span: current_span, traceparent: request.headers.get('traceparent') });
-  logger.info('GET /api/flaky');
+  logger.info('GET /api/flaky', { traceparent: request.headers.get('traceparent') });
 
   logger.info('Calling flaky service');
   return await fetch(c.flakyServiceUrl, { cache: 'no-store' })
