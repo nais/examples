@@ -59,8 +59,8 @@ func main() {
 					Start(r.Context(), "doWork")
 				defer span.End()
 
-				traceid := span.SpanContext().TraceID().String()
-				logger := logger.With("traceid", traceid)
+				traceId := span.SpanContext().TraceID().String()
+				logger := logger.With("trace_id", traceId)
 
 				level := c.FlakinessLevel(logger)
 				logger.Info("Handling flaky request", "level", level)
