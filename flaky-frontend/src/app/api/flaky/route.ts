@@ -1,12 +1,12 @@
 import getConfig from 'next/config';
 import type { NextRequest } from 'next/server';
 import pino from 'pino';
-import api from '@opentelemetry/api'
+import { trace, context } from '@opentelemetry/api'
 
 const { serverRuntimeConfig: c } = getConfig();
 
 export async function GET(request: NextRequest) {
-  let current_span = api.trace.getSpan(api.context.active());
+  let current_span = trace.getSpan(context.active());
   let trace_id = current_span?.spanContext().traceId;
   let span_id = current_span?.spanContext().spanId;
 
