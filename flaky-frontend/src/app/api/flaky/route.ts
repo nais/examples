@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       }
     }
   }).child({ trace_id, span_id });
-  logger.info('Current span', current_span);
+  logger.info({ current_span: current_span, traceparent: request.headers.get('traceparent') });
   logger.info('GET /api/flaky');
 
   logger.info('Calling flaky service');
