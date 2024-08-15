@@ -8,6 +8,7 @@ const { serverRuntimeConfig: c } = getConfig();
 export async function GET(request: NextRequest) {
   let current_span = api.trace.getSpan(api.context.active());
   let trace_id = current_span?.spanContext().traceId;
+  let span_id = current_span?.spanContext().spanId;
 
   const logger = pino({
     base: undefined,
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
         }
       }
     }
-  }).child({ trace_id });
+  }).child({ trace_id, span_id });
   logger.info('GET /api/flaky');
 
   logger.info('Calling flaky service');

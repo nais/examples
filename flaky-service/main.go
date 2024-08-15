@@ -60,7 +60,8 @@ func main() {
 				defer span.End()
 
 				traceId := span.SpanContext().TraceID().String()
-				logger := logger.With("trace_id", traceId)
+				spanId := span.SpanContext().SpanID().String()
+				logger := logger.With("trace_id", traceId, "span_id", spanId)
 
 				level := c.FlakinessLevel(logger)
 				logger.Info("Handling flaky request", "level", level)
