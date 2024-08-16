@@ -1,34 +1,23 @@
 import getConfig from 'next/config';
-import type { NextRequest } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server';
 import pino from 'pino';
 import { trace, context } from '@opentelemetry/api'
+import { getLoggerWithTraceContext } from '@/lib/logger';
 
 const { serverRuntimeConfig: c } = getConfig();
 
 export async function GET(request: NextRequest) {
-  let current_span = trace.getSpan(context.active());
-  let trace_id = current_span?.spanContext().traceId;
-  let span_id = current_span?.spanContext().spanId;
+  const log = getLoggerWithTraceContext(context.active());
 
-  const logger = pino({
-    base: undefined,
-    formatters: {
-      level: (label) => {
-        return {
-          level: label
-        }
-      }
-    }
-  }).child({ trace_id, span_id });
-  logger.info('GET /api/flaky', { traceparent: request.headers.get('traceparent') });
+  log.info({ traceparent: request.headers.get('traceparent') }, 'GET /api/flaky');
 
-  logger.info('Calling flaky service');
+  log.info('Calling flaky service');
   return await fetch(c.flakyServiceUrl, { cache: 'no-store' })
-    .then((response) => {
-      logger.info('Flaky service response', response);
+    .then((response: Response) => {
+      log.info({ response: { status: response.status, statusText: response.statusText } }, 'Flaky service response');
       return response;
     }).catch((error) => {
-      logger.error('Flaky service error', error);
+      log.error({ error: { cause: error?.cause } }, 'Flaky service error');
       return new Response(
         JSON.stringify({
           error: error?.cause?.message || "Internal Server Error",
