@@ -1,7 +1,6 @@
 import getConfig from 'next/config';
 import type { NextRequest, NextResponse } from 'next/server';
-import pino from 'pino';
-import { trace, context } from '@opentelemetry/api'
+import { context } from '@opentelemetry/api'
 import { getLoggerWithTraceContext } from '@/lib/logger';
 
 const { serverRuntimeConfig: c } = getConfig();
