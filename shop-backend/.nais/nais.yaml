@@ -64,6 +64,7 @@ spec:
         databases:
           - name: shop-backend
             envVarPrefix: DB
+        tier: db-f1-micro
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
