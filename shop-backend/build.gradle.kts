@@ -29,7 +29,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
-	implementation("com.squareup.okhttp3:okhttp")
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-registry-prometheus")
