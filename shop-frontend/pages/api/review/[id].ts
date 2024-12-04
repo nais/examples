@@ -7,7 +7,12 @@ const { serverRuntimeConfig: c } = getConfig();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
+  const allowedIds = ['id1', 'id2', 'id3']; // Example allowed IDs
   const sanitizedId = typeof id === 'string' ? id.replace(/[^a-zA-Z0-9_-]/g, '') : '';
+  if (!allowedIds.includes(sanitizedId)) {
+    res.status(400).json({ message: "Invalid ID" });
+    return;
+  }
   const reviewApiUrl = `${c.backendApiUrl}/api/products/${sanitizedId}/ratings`
 
   if (req.method === "POST") {
