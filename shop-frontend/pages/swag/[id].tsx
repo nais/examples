@@ -56,9 +56,10 @@ const Swag: NextPage = () => {
       setReviews(await getReviews(validatedId));
     }
 
+    const validIds = ['validId1', 'validId2', 'validId3']; // Replace with actual valid IDs
+
     const validateId = (id: any): string | null => {
-      const idPattern = /^[a-zA-Z0-9_-]+$/;
-      return idPattern.test(id) ? id : null;
+      return validIds.includes(id) ? id : null;
     };
 
     if (id) {
