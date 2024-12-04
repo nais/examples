@@ -7,7 +7,8 @@ const { serverRuntimeConfig: c } = getConfig();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
-  const reviewApiUrl = `${c.backendApiUrl}/api/products/${id}/ratings`
+  const sanitizedId = typeof id === 'string' ? id.replace(/[^a-zA-Z0-9_-]/g, '') : '';
+  const reviewApiUrl = `${c.backendApiUrl}/api/products/${sanitizedId}/ratings`
 
   if (req.method === "POST") {
     // sanitize input
