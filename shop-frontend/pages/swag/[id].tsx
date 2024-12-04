@@ -46,19 +46,29 @@ const Swag: NextPage = () => {
   }
 
   useEffect(() => {
-    const fetchSwag = async () => {
-      const response = await fetch(`/api/swag/${id}`);
+    const fetchSwag = async (validatedId: string) => {
+      const response = await fetch(`/api/swag/${validatedId}`);
       const data = await response.json();
       setSwag(data);
     };
 
-    const fetchReviews = async (id: string) => {
-      setReviews(await getReviews(id));
+    const fetchReviews = async (validatedId: string) => {
+      setReviews(await getReviews(validatedId));
     }
 
+    const validateId = (id: any): string | null => {
+      const idPattern = /^[a-zA-Z0-9_-]+$/;
+      return idPattern.test(id) ? id : null;
+    };
+
     if (id) {
-      fetchSwag();
-      fetchReviews(id as string);
+      const validatedId = validateId(id);
+      if (validatedId) {
+        fetchSwag(validatedId);
+        fetchReviews(validatedId);
+      } else {
+        console.error("Invalid ID parameter");
+      }
     }
   }, [id]);
 
