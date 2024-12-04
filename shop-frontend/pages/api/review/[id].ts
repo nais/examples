@@ -53,7 +53,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
   } else if (req.method === "GET") {
     try {
-      const response = await fetch(`${c.backendApiUrl}/api/products/${id}/ratings`);
+      if (!allowedIds.includes(sanitizedId)) {
+        res.status(400).json({ message: "Invalid ID" });
+        return;
+      }
+      const response = await fetch(`${c.backendApiUrl}/api/products/${sanitizedId}/ratings`);
       const reviews = await response.json();
 
       res.status(200).json({
