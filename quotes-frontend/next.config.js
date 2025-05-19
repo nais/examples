@@ -1,6 +1,11 @@
 module.exports = {
   output: 'standalone',
   reactStrictMode: true,
+  serverExternalPackages: ['@navikt/next-logger', 'next-logger', 'pino', 'pino-roll'],
+  experimental: {
+    optimizePackageImports: ['@navikt/ds-react', '@navikt/aksel-icons'],
+    authInterrupts: true,
+  },
   images: {
     remotePatterns: [
       {
