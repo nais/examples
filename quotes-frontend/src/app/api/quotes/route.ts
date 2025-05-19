@@ -5,12 +5,14 @@ import { quotes } from '@/data/quotes';
 
 import logger from '@/utils/logger';
 
+type QuoteError = Error & { code?: string };
+
 function getRandomQuote(): Quote {
   const isFailture = Math.random() < 0.1;
 
   if (isFailture) {
-    const error = new Error('Database connection lost while fetching a random quote');
-    (error as any).code = 'ECONNREFUSED';
+    const error: QuoteError = new Error('Database connection lost while fetching a random quote');
+    error.code = 'ECONNREFUSED';
     throw error;
   }
 
