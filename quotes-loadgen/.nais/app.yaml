@@ -11,6 +11,8 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
+  command:
+    - "load"
   observability:
     autoInstrumentation:
       enabled: true
