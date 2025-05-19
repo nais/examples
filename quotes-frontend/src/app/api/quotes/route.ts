@@ -5,16 +5,28 @@ import { quotes } from '@/data/quotes';
 
 import logger from '@/utils/logger';
 
-export async function GET() {
+function getRandomQuote(): Quote {
   const isFailture = Math.random() < 0.1;
+
   if (isFailture) {
-    logger.error('Internal Server Error occurred while fetching a random quote');
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const error = new Error('Database connection lost while fetching a random quote');
+    (error as any).code = 'ECONNREFUSED';
+    throw error;
   }
 
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  logger.info({ event: 'GET_RANDOM_QUOTE', quote: randomQuote }, 'Random quote fetched successfully');
-  return NextResponse.json(randomQuote);
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  return quotes[randomIndex];
+}
+
+export async function GET() {
+  try {
+    const randomQuote = getRandomQuote();
+    logger.info({ event: 'GET_RANDOM_QUOTE', quote: randomQuote }, 'Random quote fetched successfully');
+    return NextResponse.json(randomQuote);
+  } catch (error) {
+    logger.error({ event: 'GET_RANDOM_QUOTE_ERROR', error }, 'Error fetching random quote');
+    return NextResponse.json({ error: 'Failed to fetch random quote.' }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
