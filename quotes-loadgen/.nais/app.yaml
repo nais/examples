@@ -12,6 +12,7 @@ spec:
   image: {{image}}
   port: 8080
   command:
+    - "/loadgen"
     - "load"
   observability:
     autoInstrumentation:
@@ -22,7 +23,7 @@ spec:
         - id: loki
   env:
     - name: "LOADGEN_URLS"
-      value: "api/quotes"
+      value: "/api/quotes"
     - name: "LOADGEN_HOSTNAME"
       value: "example-quotes-frontend.intern.dev.nav.no"
     - name: "LOADGEN_PROTOCOL"
