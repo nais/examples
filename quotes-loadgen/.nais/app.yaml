@@ -67,5 +67,5 @@ spec:
       memory: "56Mi"
   accessPolicy:
     outbound:
-      rules:
+      external:
         - host: example-quotes-frontend.intern.dev.nav.no
