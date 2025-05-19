@@ -1,0 +1,71 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: "quotes-loadgen"
+  namespace: "examples"
+  labels:
+    "team": "examples"
+  annotations:
+    "nais.io/run-as-group": "65532"
+    "nais.io/run-as-user": "65532"
+spec:
+  image: {{image}}
+  port: 8080
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: sdk
+    logging:
+      destinations:
+        - id: loki
+  env:
+    - name: "LOADGEN_URLS"
+      value: "api/quotes"
+    - name: "LOADGEN_HOSTNAME"
+      value: "example-quotes-frontend.intern.dev.nav.no"
+    - name: "LOADGEN_PROTOCOL"
+      value: "https"
+    - name: "LOADGEN_RPS"
+      value: "1"
+    - name: "LOADGEN_DURATION"
+      value: "0" # 0 means infinite
+    - name: "LOADGEN_METRICS"
+      value: "true"
+    - name: "LOADGEN_METRICS_PORT"
+      value: "8080"
+    - name: OTEL_METRICS_EXPORTER
+      value: otlp
+    - name: OTEL_LOGS_EXPORTER
+      value: otlp
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_EXPORTER_METRICS_ENABLED
+      value: "true"
+    - name: OTEL_METRICS_EXEMPLAR_FILTER
+      value: ALWAYS_ON
+  liveness:
+    path: "/metrics"
+    port: 8080
+    initialDelay: 0
+    timeout: 10
+  readiness:
+    path: "/metrics"
+    port: 8080
+    initialDelay: 0
+    timeout: 10
+  replicas:
+    min: 1
+    max: 1
+  prometheus:
+    enabled: true
+    path: "/metrics"
+  resources:
+    limits:
+      memory: "56Mi"
+    requests:
+      cpu: "50m"
+      memory: "56Mi"
+  accessPolicy:
+    outbound:
+      rules:
+        - host: example-quotes-frontend.intern.dev.nav.no
