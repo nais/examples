@@ -28,4 +28,8 @@ module.exports = {
       },
     ];
   },
+  publicRuntimeConfig: {
+    githubUrl: 'https://github.com/nais/examples/tree/main/quotes-frontend',
+    grafanaLogsUrl: "https://grafana.nav.cloud.nais.io/a/grafana-lokiexplore-app/explore/service/quotes-frontend/logs?from=now-1h&to=now&var-ds=P7BE696147D279490&var-filters=service_name%7C%3D%7Cquotes-frontend"
+  },
 };
