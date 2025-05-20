@@ -5,6 +5,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.statuspages.* // Added import for StatusPages
@@ -37,6 +38,16 @@ fun Application.module() {
   // Conditionally install StatusPages to prevent DuplicatePluginException
   if (pluginOrNull(StatusPages) == null) {
     install(StatusPages) {
+      exception<BadRequestException> { call, cause ->
+        call.application.log.warn("Bad request for ${call.request.path()}: ${cause.message}")
+        call.respond(
+                HttpStatusCode.BadRequest,
+                mapOf(
+                        "error" to "BAD_REQUEST",
+                        "message" to (cause.message ?: "Invalid or missing request body.")
+                )
+        )
+      }
       exception<SerializationException> { call, cause ->
         call.application.log.warn(
                 "Request deserialization failed for ${call.request.path()}: ${cause.message}"
