@@ -1,30 +1,21 @@
 import { NextResponse } from 'next/server';
-import { Quote } from '@/types/quote';
-import { v4 as uuidv4 } from 'uuid';
-import { quotes } from '@/data/quotes';
-
+import { getQuotes, createQuote, getQuoteById } from '@/utils/apiClient';
 import logger from '@/utils/logger';
-
-type QuoteError = Error & { code?: string };
-
-function getRandomQuote(): Quote {
-  const isFailture = Math.random() < 0.1;
-
-  if (isFailture) {
-    const error: QuoteError = new Error('Database connection lost while fetching a random quote');
-    error.code = 'ECONNREFUSED';
-    throw error;
-  }
-
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  return quotes[randomIndex];
-}
 
 export async function GET() {
   try {
-    const randomQuote = getRandomQuote();
-    logger.info({ event: 'GET_RANDOM_QUOTE', quote: randomQuote }, 'Random quote fetched successfully');
-    return NextResponse.json(randomQuote);
+    const quotes = await getQuotes();
+    if (quotes.length === 0) {
+      logger.warn('No quotes available to select');
+      return NextResponse.json({ error: 'No quotes available.' }, { status: 404 });
+    }
+
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    logger.info({ event: 'GET_RANDOM_QUOTE', randomQuote }, 'Random quote selected');
+
+    const fullQuote = await getQuoteById(randomQuote.id!);
+    logger.info({ event: 'GET_QUOTE_BY_ID', fullQuote }, 'Full quote fetched successfully');
+    return NextResponse.json(fullQuote);
   } catch (error) {
     logger.error({ event: 'GET_RANDOM_QUOTE_ERROR', error }, 'Error fetching random quote');
     return NextResponse.json({ error: 'Failed to fetch random quote.' }, { status: 500 });
@@ -40,14 +31,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Quote text is required.' }, { status: 400 });
     }
 
-    const newQuote: Quote = {
-      id: uuidv4(),
-      text,
-      author: author || 'Unknown',
-    };
-
-    quotes.push(newQuote);
-
+    const newQuote = await createQuote({ text, author });
     logger.info({ event: 'ADD_QUOTE', quote: newQuote }, 'New quote added successfully');
     return NextResponse.json({ message: 'Quote added successfully!', quote: newQuote });
   } catch (error) {

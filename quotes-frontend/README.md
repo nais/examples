@@ -1,6 +1,6 @@
 # Quotes Frontend Application
 
-This is an example project used to showcase functionality in the [Nais platform](https://nais.io). The application demonstrates how to build and deploy a modern web application with features like structured logging, in-memory data storage, and UUID-based routing.
+This is an example project used to showcase functionality in the [Nais platform](https://nais.io). The application demonstrates how to build and deploy a modern web application with features like structured logging, in-memory data storage, and UUID-based routing. It interacts with the [quotes-backend](../quotes-backend/) service for persistent quote management.
 
 ## Features
 
@@ -8,7 +8,7 @@ This is an example project used to showcase functionality in the [Nais platform]
 - **Submit New Quotes**: Add new quotes via a user-friendly form.
 - **Shareable Links**: Each quote has a unique URL for sharing.
 - **Structured Logging**: Uses `pino` for structured logging in both development and production environments.
-- **In-Memory Data Storage**: Quotes are stored in a shared in-memory array.
+- **Backend Integration**: Fetches and submits quotes to the [quotes-backend](../quotes-backend/) API for persistence.
 
 ## Tech Stack
 
@@ -17,7 +17,52 @@ This is an example project used to showcase functionality in the [Nais platform]
 - **Styling**: Tailwind CSS for utility-first styling.
 - **Logging**: `pino` for structured and efficient logging.
 - **UUIDs**: `uuid` library for generating unique identifiers.
-- **API**: RESTful API routes built with Next.js.
+- **API**: RESTful API routes built with Next.js and integration with the quotes-backend service.
+## Backend API (quotes-backend)
+
+The frontend communicates with the [quotes-backend](../quotes-backend/) service for all quote data. Ensure the backend is running (see its README for setup instructions).
+
+### Main Endpoints
+
+- `GET /api/quotes`: Retrieve all quotes.
+- `POST /api/quotes`: Add a new quote. The backend generates the `id`.
+- `GET /api/quotes/{id}`: Retrieve a quote by its ID.
+
+#### Example: Add a Quote
+
+Request:
+
+```json
+{
+  "text": "Your quote here",
+  "author": "Author Name"
+}
+```
+
+Response (201 Created):
+
+```json
+{
+  "id": "6",
+  "text": "Your quote here",
+  "author": "Author Name"
+}
+```
+
+#### Error Handling
+
+If required fields are missing or the request body is invalid, the backend returns:
+
+```json
+{
+  "error": "BAD_REQUEST",
+  "message": "Failed to convert request body to class io.nais.quotesbackend.Quote"
+}
+```
+
+#### Health Check
+
+- `GET /internal/health`: Returns `200 OK` and `Application is healthy` if the backend is running.
 
 ## Getting Started
 
@@ -82,6 +127,8 @@ Create a `.env.local` file in the root directory to configure environment variab
 ```
 NODE_ENV=development
 PORT=3000
+# Optionally, set the backend API URL if not running on localhost:
+# QUOTES_BACKEND_URL=http://localhost:8080
 ```
 
 ## Logging

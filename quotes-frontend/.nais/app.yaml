@@ -53,15 +53,14 @@ spec:
     path: "/metrics"
   resources:
     limits:
-      cpu: "200m"
-      memory: "256Mi"
+      memory: "56Mi"
     requests:
-      cpu: "200m"
-      memory: "256Mi"
+      cpu: "10m"
+      memory: "56Mi"
   accessPolicy:
     outbound:
       rules:
-        - application: quotes-service
+        - application: quotes-backend
   filesFrom:
     - emptyDir:
         medium: Memory
