@@ -55,6 +55,10 @@ spec:
     outbound:
       rules:
         - application: sentiment-api
+  filesFrom:
+    - emptyDir:
+        medium: Memory
+      mountPath: /app/docs
   #gcp:
   #  sqlInstances:
   #    - name: quotes-backend

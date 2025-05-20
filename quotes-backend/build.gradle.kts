@@ -45,6 +45,7 @@ dependencies {
         exclude(group = "ch.qos.logback") // Exclude transitive Logback to use our defined version
     }
     implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryLogbackMdcVersion")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.16.0-alpha")
 
     // Testing
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
