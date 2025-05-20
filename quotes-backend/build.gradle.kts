@@ -1,46 +1,56 @@
 plugins {
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.serialization") version "1.9.20"
-    id("io.ktor.plugin") version "2.3.12" // Reverted Ktor plugin version
+    id("io.ktor.plugin") version "2.3.12"
     application
 }
 
-group = "com.example"
+group = "io.nais.quotesbackend"
 version = "1.0.0"
 
 application {
-    mainClass.set("com.example.ApplicationKt")
+    mainClass.set("io.nais.quotesbackend.ApplicationKt")
 }
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io") // Added JitPack repository for Ktor-OpenAPI-Generator
+    maven("https://jitpack.io") // For Ktor-OpenAPI-Generator
 }
 
+val ktorVersion = "2.3.12"
+val kotlinxSerializationVersion = "1.6.3"
+val logbackVersion = "1.5.6"
+val logstashLogbackEncoderVersion = "8.1"
+val opentelemetryLogbackMdcVersion = "2.16.0-alpha"
+val kotlinTestVersion = "1.9.20"
+
 dependencies {
-    implementation("io.ktor:ktor-server-netty:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-server-core:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-server-openapi:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-server-swagger:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-server-content-negotiation:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-server-status-pages:2.3.12") // Reverted Ktor version
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12") // Reverted Ktor version
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    // Ktor
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-openapi:$ktorVersion")
+    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
-    // Explicitly define Logback version to ensure consistency
-    implementation("ch.qos.logback:logback-classic:1.5.6")
-    implementation("ch.qos.logback:logback-core:1.5.6")
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinxSerializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
 
-    implementation("net.logstash.logback:logstash-logback-encoder:8.1") {
-        exclude(group = "ch.qos.logback") // Exclude all transitive Logback dependencies
+    // Logging
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("ch.qos.logback:logback-core:$logbackVersion")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion") {
+        exclude(group = "ch.qos.logback") // Exclude transitive Logback to use our defined version
     }
-    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:2.16.0-alpha") // OTel Logback MDC appender
+    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryLogbackMdcVersion")
 
-    testImplementation("io.ktor:ktor-server-tests:2.3.12") // Reverted Ktor version
-    testImplementation("io.ktor:ktor-client-content-negotiation:2.3.12") // Reverted Ktor version
-    testImplementation("io.ktor:ktor-client-mock:2.3.12") // Reverted Ktor version
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.20")
+    // Testing
+    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
 }
 
 tasks.withType<Test> {

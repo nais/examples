@@ -1,4 +1,4 @@
-package com.example
+package io.nais.quotesbackend
 
 import io.ktor.client.call.body // Added import for response.body<Type>()
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation // Alias for client plugin
