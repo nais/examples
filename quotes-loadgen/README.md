@@ -96,7 +96,7 @@ export LOADGEN_DURATION=15
 
 ## Deployment
 
-The application can be deployed to the NAIS platform using the provided `.nais/config.yaml` file. Ensure the Docker image is pushed to a container registry accessible by NAIS.
+The application can be deployed to the Nais platform using the provided `.nais/config.yaml` file. Ensure the Docker image is pushed to a container registry accessible by Nais.
 
 ## License
 

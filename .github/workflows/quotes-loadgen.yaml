@@ -36,13 +36,13 @@ jobs:
           dockerfile: ./quotes-loadgen/Dockerfile
           google_service_account: gh-examples
           push: ${{ github.actor != 'dependabot[bot]' }}
-          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+          workload_identity_provider: ${{ secrets.Nais_IO_WORKLOAD_IDENTITY_PROVIDER }}
     outputs:
       version: ${{ steps.image.outputs.version }}
   rollout:
     permissions:
       id-token: write
-    name: Deploy to NAIS
+    name: Deploy to Nais
     needs: ["build_push_sign"]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
