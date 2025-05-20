@@ -86,15 +86,15 @@ fun Application.module() {
                     "1",
                     Quote(
                             "1",
-                            "Deploy with confidence—let NAIS handle the platform, you focus on the code.",
-                            "NAIS Team"
+                            "Deploy with confidence—let Nais handle the platform, you focus on the code.",
+                            "Nais Team"
                     )
             )
             put(
                     "2",
                     Quote(
                             "2",
-                            "Kubernetes is complex, but NAIS makes it simple for developers.",
+                            "Kubernetes is complex, but Nais makes it simple for developers.",
                             "Platform Engineer"
                     )
             )
@@ -102,7 +102,7 @@ fun Application.module() {
                     "3",
                     Quote(
                             "3",
-                            "With NAIS, continuous delivery is not just a dream—it's the default.",
+                            "With Nais, continuous delivery is not just a dream—it's the default.",
                             "DevOps Enthusiast"
                     )
             )
@@ -110,7 +110,7 @@ fun Application.module() {
                     "4",
                     Quote(
                             "4",
-                            "Secure by default—NAIS integrates best practices into every deployment.",
+                            "Secure by default—Nais integrates best practices into every deployment.",
                             "Security Advocate"
                     )
             )
@@ -118,7 +118,7 @@ fun Application.module() {
                     "5",
                     Quote(
                             "5",
-                            "From Helm charts to GitHub Actions, NAIS brings it all together.",
+                            "From Helm charts to GitHub Actions, Nais brings it all together.",
                             "Cloud Native Developer"
                     )
             )
