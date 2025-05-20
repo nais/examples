@@ -1,7 +1,7 @@
 package loadgen
 
 import (
-	"fmt"
+	"context"
 	"net/http"
 	"os"
 	"strings"
@@ -10,13 +10,18 @@ import (
 
 	"log/slog"
 
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+
+	"github.com/nais/examples/quotes-loadgen/internal/metrics"
+	"github.com/nais/examples/quotes-loadgen/internal/otel"
+	t "go.opentelemetry.io/otel/trace"
 )
 
 var (
+	tracer            t.Tracer
 	urls              []string
 	duration          int
 	requestsPerSecond int
@@ -26,32 +31,19 @@ var (
 
 	metricsEnabled bool
 	metricsPort    int
-	requestsTotal  = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: "loadgen_requests_total",
-			Help: "Total number of requests made by the load generator",
-		},
-		[]string{"url", "status"},
-	)
-	requestDuration = prometheus.NewHistogramVec(
-		prometheus.HistogramOpts{
-			Name:    "loadgen_request_duration_seconds",
-			Help:    "Histogram of request durations",
-			Buckets: prometheus.DefBuckets,
-		},
-		[]string{"url"},
-	)
 )
 
 func init() {
+	// Initialize OpenTelemetry Tracing
+	ctx := context.Background()
+	tracer, _ = otel.InitTracer(ctx)
 	logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{}))
 
 	// Initialize viper with environment variable prefix
 	viper.SetEnvPrefix("LOADGEN")
 	viper.AutomaticEnv()
 
-	prometheus.MustRegister(requestsTotal)
-	prometheus.MustRegister(requestDuration)
+	metrics.Register()
 }
 
 func NewLoadCommand() *cobra.Command {
@@ -83,6 +75,9 @@ func NewLoadCommand() *cobra.Command {
 			stop := make(chan struct{})
 
 			// Start load generation
+			client := http.Client{
+				Transport: otelhttp.NewTransport(http.DefaultTransport),
+			}
 			for _, url := range urlList {
 				for i := 0; i < requestsPerSecond; i++ {
 					wg.Add(1)
@@ -96,27 +91,42 @@ func NewLoadCommand() *cobra.Command {
 								default:
 								}
 							}
+							// Parent span for the request
+							ctx, parentSpan := tracer.Start(context.Background(), "loadgen.request")
 							start := time.Now()
-							resp, err := http.Get(url)
+							// Child span for the HTTP GET
+							ctx, httpSpan := tracer.Start(ctx, "http.get")
+							req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+							if err != nil {
+								logger.Error("Error creating request", slog.String("url", url), slog.Any("error", err))
+								if metricsEnabled {
+									metrics.RequestsTotal.WithLabelValues(url, "error").Inc()
+								}
+								httpSpan.End()
+								parentSpan.End()
+								continue
+							}
+							resp, err := client.Do(req)
 							if err != nil {
 								logger.Error("Error loading URL", slog.String("url", url), slog.Any("error", err))
 								if metricsEnabled {
-									requestsTotal.WithLabelValues(url, "error").Inc()
+									metrics.RequestsTotal.WithLabelValues(url, "error").Inc()
 								}
 							} else {
 								logger.Info("Loaded URL", "url", url, "status", resp.StatusCode)
 								if metricsEnabled {
-									requestsTotal.WithLabelValues(url, http.StatusText(resp.StatusCode)).Inc()
-									requestDuration.WithLabelValues(url).Observe(time.Since(start).Seconds())
+									metrics.RequestsTotal.WithLabelValues(url, http.StatusText(resp.StatusCode)).Inc()
+									metrics.RequestDuration.WithLabelValues(url).Observe(time.Since(start).Seconds())
 								}
 								resp.Body.Close()
 							}
+							httpSpan.End()
+							parentSpan.End()
 							time.Sleep(time.Second / time.Duration(requestsPerSecond))
 						}
 					}(url)
 				}
 			}
-
 			// Stop load generation after the specified duration
 			if duration != 0 {
 				time.Sleep(time.Duration(duration) * time.Second)
@@ -177,14 +187,9 @@ func NewLoadCommand() *cobra.Command {
 
 		if metricsEnabled {
 			logger.Info("Starting Prometheus metrics server", slog.Int("port", metricsPort))
-			startMetricsServer()
+			metrics.StartMetricsServer(metricsPort)
 		}
 	}
 
 	return cmd
-}
-
-func startMetricsServer() {
-	http.Handle("/metrics", promhttp.Handler())
-	go http.ListenAndServe(fmt.Sprintf(":%d", metricsPort), nil)
 }
