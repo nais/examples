@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Quotes Frontend",
-  description: "An example project showcasing functionality in the NAIS platform.",
+  description: "An example project showcasing functionality in the Nais platform.",
 };
 
 const { publicRuntimeConfig } = getConfig();
