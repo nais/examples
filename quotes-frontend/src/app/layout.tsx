@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 
 const { publicRuntimeConfig } = getConfig();
 const grafanaLogsUrl = publicRuntimeConfig.grafanaLogsUrl;
+const grafanaDashboardUrl = publicRuntimeConfig.grafanaDashboardUrl;
 const githubUrl = publicRuntimeConfig.githubUrl;
 
 export default function RootLayout({
@@ -38,6 +39,9 @@ export default function RootLayout({
           <div className="container mx-auto flex flex-row justify-center items-center space-x-4">
             <a href={grafanaLogsUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
               <DocumentMagnifyingGlassIcon className="h-5 w-5 mr-1" /> View Logs
+            </a>
+            <a href={grafanaDashboardUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
+              <DocumentMagnifyingGlassIcon className="h-5 w-5 mr-1" /> Grafana Dashboard
             </a>
             <a href={githubUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
               <CodeBracketIcon className="h-5 w-5 mr-1" /> View Source
