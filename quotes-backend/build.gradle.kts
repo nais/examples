@@ -21,7 +21,7 @@ val ktorVersion = "2.3.12"
 val kotlinxSerializationVersion = "1.6.3"
 val logbackVersion = "1.5.6"
 val logstashLogbackEncoderVersion = "8.1"
-val opentelemetryLogbackMdcVersion = "2.16.0-alpha"
+val opentelemetryVersion = "2.16.0-alpha"
 val kotlinTestVersion = "1.9.20"
 
 dependencies {
@@ -44,8 +44,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion") {
         exclude(group = "ch.qos.logback") // Exclude transitive Logback to use our defined version
     }
-    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryLogbackMdcVersion")
-    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.16.0-alpha")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryVersion")
 
     // Testing
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
