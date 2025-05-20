@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Quotes API
+  version: 1.0.0
+  description: API for managing quotes
+paths:
+  /api/quotes:
+    get:
+      operationId: getAllQuotes
+      summary: Get all quotes
+      responses:
+        '200':
+          description: A list of quotes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quote'
+    post:
+      operationId: createQuote
+      summary: Add a new quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quote'
+      responses:
+        '201':
+          description: Quote created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+  /api/quotes/{id}:
+    get:
+      operationId: getQuoteById
+      summary: Get a specific quote
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '404':
+          description: Quote not found
+components:
+  schemas:
+    Quote:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        author:
+          type: string
