@@ -26,12 +26,14 @@ const QuoteDisplay: React.FC<QuoteDisplayProps> = ({
     });
   };
 
+  const isError = !quote.id;
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200 p-4">
+    <div className={`flex items-center justify-center min-h-screen p-4 ${isError ? 'bg-red-200' : 'bg-gray-200'}`}>
       <div className="bg-gray-50 shadow-lg rounded-lg p-8 max-w-2xl text-center">
         <h1 className="text-4xl font-bold mb-6 text-gray-800">Nais Quote</h1>
         <p className="text-2xl italic text-gray-600 mb-2">{quote.text}</p>
-        <p className="text-lg text-gray-500">- {quote.author}</p>
+        <p className="text-lg text-gray-500">- {quote.author || 'Unknown'}</p>
         <div className="flex justify-center gap-4 mt-6">
           <div className="inline-flex rounded-md shadow-sm" role="group">
             <button

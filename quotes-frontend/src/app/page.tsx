@@ -11,12 +11,13 @@ export default function Home() {
   const fetchQuote = async () => {
     try {
       const response = await fetch('/api/quotes');
+      if (!response.ok) throw new Error(`Error: ${response.statusText}`);
       const data: Quote = await response.json();
       logger.info({ event: 'FETCH_QUOTE', quote: data }, 'Quote fetched successfully');
-      setQuote({ id: data.id, text: data.text, author: data.author || "Unknown" });
+      setQuote({ id: data.id, text: data.text, author: data.author });
     } catch (error) {
       logger.error({ event: 'FETCH_QUOTE_ERROR', error }, 'Failed to fetch quote');
-      setQuote({ id: "", text: 'Failed to load quote. Please try again later.', author: "" });
+      setQuote({ id: "", text: 'Failed to fetch quote. Please try again later.', author: "" });
     }
   };
 
@@ -27,7 +28,7 @@ export default function Home() {
     if (quoteId && quoteId !== '') {
       fetch(`/api/quotes/${quoteId}`)
         .then((response) => response.json())
-        .then((data) => setQuote({ id: data.id, text: data.text, author: data.author || "Unknown" }))
+        .then((data) => setQuote({ id: data.id, text: data.text, author: data.author }))
         .catch((error) => {
           console.error('Failed to fetch quote by ID:', error);
           fetchQuote();
