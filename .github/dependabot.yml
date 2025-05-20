@@ -11,40 +11,37 @@ updates:
           - "*"
   # docker
   - package-ecosystem: "docker"
-    directory: "/shop-backend"
+    directory: "/quotes-backend"
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
-    directory: "/sentiment-api"
+    directory: "/quotes-frontend"
     schedule:
       interval: "monthly"
   - package-ecosystem: "docker"
-    directory: "/shop-frontend"
+    directory: "/quotes-loadgen"
     schedule:
       interval: "monthly"
   # gradle
   - package-ecosystem: "gradle"
-    directory: "/sentiment-api"
+    directory: "/quotes-backend"
     schedule:
       interval: "monthly"
     groups:
       sentiment-api-gradle:
         patterns:
           - "*"
-  - package-ecosystem: "gradle"
-    directory: "/shop-backend"
-    schedule:
-      interval: "monthly"
-    groups:
-      shop-backend-gradle:
-        patterns:
-          - "*"
   # npm
   - package-ecosystem: "npm"
-    directory: "/shop-frontend"
+    directory: "/quotes-frontend"
     schedule:
       interval: "monthly"
     groups:
-      shop-frontend-npm:
+      quotes-frontend-npm:
         patterns:
           - "*"
+  # gomod
+  - package-ecosystem: "gomod"
+    directory: "/quotes-loadgen"
+    schedule:
+      interval: "monthly"
