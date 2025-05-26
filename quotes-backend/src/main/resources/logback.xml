@@ -13,4 +13,6 @@
     <root level="INFO">
         <appender-ref ref="OTEL" />
     </root>
+
+    <logger name="io.netty" level="INFO"/>
 </configuration>

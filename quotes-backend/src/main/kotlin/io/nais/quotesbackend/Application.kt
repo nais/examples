@@ -6,6 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.statuspages.*
@@ -18,6 +19,7 @@ import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import org.slf4j.event.Level
 
 var globalErrorRate: Double = 0.1
 
@@ -30,9 +32,16 @@ fun main() {
 fun Application.module() {
   log.info("Using global error rate: $globalErrorRate")
 
+  install(CallLogging) {
+    level = Level.INFO
+    disableDefaultColors()
+  }
+
   install(StatusPages) {
     exception<BadRequestException> { call, cause ->
-      call.application.log.warn("Bad request for ${call.request.path()}: ${cause.message}")
+      call.application.environment.log.warn(
+              "Bad request for ${call.request.path()}: ${cause.message}"
+      )
       call.respond(
               HttpStatusCode.BadRequest,
               mapOf(
@@ -42,7 +51,7 @@ fun Application.module() {
       )
     }
     exception<SerializationException> { call, cause ->
-      call.application.log.warn(
+      call.application.environment.log.warn(
               "Request deserialization failed for ${call.request.path()}: ${cause.message}"
       )
       call.respond(
@@ -111,14 +120,18 @@ fun Application.module() {
   routing {
     route("/api/quotes") {
       get {
-        if (Random.nextDouble() < globalErrorRate) {
+        try {
+          if (Random.nextDouble() < globalErrorRate) {
+            throw IllegalStateException("Database connection failed")
+          }
+          call.respond(quotes.values)
+        } catch (e: IllegalStateException) {
+          call.application.environment.log.error("Database error: ${e.message}")
           call.respond(
                   HttpStatusCode.InternalServerError,
-                  "Simulated error for observability testing"
+                  mapOf("error" to "DATABASE_ERROR", "message" to e.message)
           )
-          return@get
         }
-        call.respond(quotes.values)
       }
 
       post {
@@ -130,42 +143,29 @@ fun Application.module() {
           return@post
         }
         val quoteRequest = call.receive<Quote>()
-        application.log.info("Received quote request (id should be null): $quoteRequest")
+        call.application.environment.log.debug("Received quote request: $quoteRequest")
 
-        val maxExistingId =
-                quotes.keys
-                        .mapNotNull { key ->
-                          try {
-                            key.toInt()
-                          } catch (e: NumberFormatException) {
-                            null
-                          }
-                        }
-                        .maxOrNull()
-                        ?: 0
-        application.log.info("Max existing ID determined: $maxExistingId")
-
+        val maxExistingId = quotes.keys.mapNotNull { it.toIntOrNull() }.maxOrNull() ?: 0
         val newId = (maxExistingId + 1).toString()
-        application.log.info("Generated new ID: $newId")
-
         val newQuote = quoteRequest.copy(id = newId)
-        application.log.info("Created newQuote object to be stored and responded: $newQuote")
 
-        if (quotes.containsKey(newId)) {
-          application.log.warn("Warning: Overwriting existing quote with ID $newId")
-        }
         quotes[newId] = newQuote
 
-        application.log.info("Responding with: $newQuote")
+        call.application.environment.log.info("New quote created with ID: $newId")
         call.respond(HttpStatusCode.Created, newQuote)
       }
     }
 
     get("/api/quotes/{id}") {
-      if (Random.nextDouble() < globalErrorRate) {
+      try {
+        if (Random.nextDouble() < globalErrorRate) {
+          throw IllegalStateException("Failed to retrieve quote due to database error")
+        }
+      } catch (e: IllegalStateException) {
+        call.application.environment.log.error("Error occurred while fetching quote: ${e.message}")
         call.respond(
                 HttpStatusCode.InternalServerError,
-                "Simulated error for observability testing"
+                mapOf("error" to "DATABASE_ERROR", "message" to e.message)
         )
         return@get
       }
