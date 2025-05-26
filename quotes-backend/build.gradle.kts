@@ -3,7 +3,10 @@ plugins {
     kotlin("plugin.serialization") version "1.9.20"
     id("io.ktor.plugin") version "2.3.12"
     application
+    id("com.github.ben-manes.versions") version "0.46.0"
 }
+
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 group = "io.nais.quotesbackend"
 version = "1.0.0"
@@ -40,9 +43,8 @@ dependencies {
 
     // Logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("ch.qos.logback:logback-core:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion") {
-        exclude(group = "ch.qos.logback") // Exclude transitive Logback to use our defined version
+        exclude(group = "ch.qos.logback") // Use defined Logback version
     }
     implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryVersion")
 
