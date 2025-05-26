@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.serialization") version "1.9.20"
-    id("io.ktor.plugin") version "2.3.12"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.21"
+    id("io.ktor.plugin") version "3.1.3"
     application
-    id("com.github.ben-manes.versions") version "0.46.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
@@ -20,12 +20,12 @@ repositories {
     maven("https://jitpack.io") // For Ktor-OpenAPI-Generator
 }
 
-val ktorVersion = "2.3.12"
-val kotlinxSerializationVersion = "1.6.3"
-val logbackVersion = "1.5.6"
+val ktorVersion = "2.3.13"
+val kotlinxSerializationVersion = "1.8.1"
+val logbackVersion = "1.5.18"
 val logstashLogbackEncoderVersion = "8.1"
 val opentelemetryVersion = "2.16.0-alpha"
-val kotlinTestVersion = "1.9.20"
+val kotlinTestVersion = "2.1.21"
 
 dependencies {
     // Ktor
