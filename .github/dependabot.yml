@@ -28,7 +28,7 @@ updates:
     schedule:
       interval: "monthly"
     groups:
-      sentiment-api-gradle:
+      quotes-backend-gradle:
         patterns:
           - "*"
   # npm
