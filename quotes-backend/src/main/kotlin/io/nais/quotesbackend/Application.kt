@@ -6,7 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.BadRequestException
-import io.ktor.server.plugins.callloging.CallLogging
+import io.ktor.server.plugins.calllogging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.statuspages.*
@@ -34,8 +34,16 @@ fun Application.module() {
 
   install(CallLogging) {
     level = Level.INFO
-    disableDefaultColors()
+    logger = this@module.log
+    format { call ->
+      val method = call.request.httpMethod.value
+      val path = call.request.uri
+      val status = call.response.status()?.value
+      "$method $path -> $status"
+    }
   }
+
+  log.info("Using global error rate: $globalErrorRate")
 
   install(StatusPages) {
     exception<BadRequestException> { call, cause ->
