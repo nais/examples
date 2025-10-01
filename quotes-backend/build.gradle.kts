@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
-    id("io.ktor.plugin") version "3.2.3"
+    kotlin("jvm") version "2.2.20"
+    kotlin("plugin.serialization") version "2.2.20"
+    id("io.ktor.plugin") version "3.3.0"
     application
-    id("com.github.ben-manes.versions") version "0.52.0"
+    id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
@@ -22,10 +22,10 @@ repositories {
 
 val ktorVersion = "2.3.13"
 val kotlinxSerializationVersion = "1.9.0"
-val logbackVersion = "1.5.18"
+val logbackVersion = "1.5.19"
 val logstashLogbackEncoderVersion = "8.1"
-val opentelemetryVersion = "2.18.1-alpha"
-val kotlinTestVersion = "2.2.0"
+val opentelemetryVersion = "2.20.1-alpha"
+val kotlinTestVersion = "2.2.20"
 
 dependencies {
     // Ktor
