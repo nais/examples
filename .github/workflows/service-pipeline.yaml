@@ -98,7 +98,7 @@ jobs:
     permissions:
       id-token: write
     name: Deploy ${{ inputs.service-name }} to Nais
-    needs: ["build_push_sign"]
+    needs: ["test", "build_push_sign"]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
