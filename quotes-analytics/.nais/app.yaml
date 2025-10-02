@@ -26,15 +26,13 @@ spec:
     - name: OTEL_METRICS_EXPORTER
       value: otlp
     - name: OTEL_LOGS_EXPORTER
-      value: none
+      value: otlp
     - name: OTEL_TRACES_EXPORTER
       value: otlp
     - name: OTEL_EXPORTER_METRICS_ENABLED
       value: "true"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
-    - name: Otel__Endpoint
-      value: "http://localhost:4317"
   liveness:
     path: "/internal/health"
     port: 8081
