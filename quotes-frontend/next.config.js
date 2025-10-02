@@ -2,10 +2,14 @@ module.exports = {
   output: 'standalone',
   reactStrictMode: true,
   serverExternalPackages: ['@navikt/next-logger', 'next-logger', 'pino', 'pino-roll'],
-  experimental: {
-    optimizePackageImports: ['@navikt/ds-react', '@navikt/aksel-icons'],
-    authInterrupts: true,
-  },
+  // Disable static optimization to prevent Html import errors
+  trailingSlash: false,
+  generateBuildId: () => 'build',
+  // Temporarily disable experimental features to fix Html import error
+  // experimental: {
+  //   optimizePackageImports: ['@navikt/ds-react', '@navikt/aksel-icons'],
+  //   authInterrupts: true,
+  // },
   images: {
     remotePatterns: [
       {
@@ -35,5 +39,6 @@ module.exports = {
   },
   env: {
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://quotes-backend',
+    ANALYTICS_SERVICE_URL: process.env.ANALYTICS_SERVICE_URL || 'http://quotes-analytics:8081',
   },
 };

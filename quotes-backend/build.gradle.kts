@@ -8,6 +8,15 @@ plugins {
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
 group = "io.nais.quotesbackend"
 version = "1.0.0"
 

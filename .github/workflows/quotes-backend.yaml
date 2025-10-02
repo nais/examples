@@ -5,11 +5,13 @@ on:
     branches: [ main ]
     paths:
       - .github/workflows/quotes-backend.yaml
+      - .github/workflows/service-pipeline.yaml
       - quotes-backend/**
   pull_request:
     branches: [ main ]
     paths:
       - .github/workflows/quotes-backend.yaml
+      - .github/workflows/service-pipeline.yaml
       - quotes-backend/**
   workflow_dispatch:
 
@@ -17,60 +19,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: ./quotes-backend
-
-env:
-  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
-
 jobs:
-  test:
-    name: Test Java application
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
-        with:
-          java-version: 17
-          distribution: 'temurin'
-          cache: 'gradle'
-          check-latest: true
-
-      - run: ./gradlew clean build --info -x test
-  build_push_sign:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v5
-      - uses: nais/platform-build-push-sign@main
-        id: image
-        with:
-          context: ./quotes-backend
-          name: quotes-backend
-          dockerfile: ./quotes-backend/Dockerfile
-          google_service_account: gh-examples
-          push: ${{ github.actor != 'dependabot[bot]' }}
-          workload_identity_provider: ${{ secrets.Nais_IO_WORKLOAD_IDENTITY_PROVIDER }}
-    outputs:
-      version: ${{ steps.image.outputs.version }}
-  rollout:
-    permissions:
-      id-token: write
-    name: Deploy to Nais
-    needs: ["test", "build_push_sign"]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-    - uses: actions/checkout@v5
-    - uses: nais/deploy/actions/deploy@v2
-      env:
-        CLUSTER: dev-gcp
-        TEAM: examples
-        PRINT_PAYLOAD: "true"
-        RESOURCE: "./quotes-backend/.nais/unleash.yaml,./quotes-backend/.nais/app.yaml"
-        VARS: quotes-backend/.nais/dev.yaml
-        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/quotes-backend:${{ needs.build_push_sign.outputs.version }},namespace=examples
+  pipeline:
+    uses: ./.github/workflows/service-pipeline.yaml
+    with:
+      service-name: quotes-backend
+      service-path: ./quotes-backend
+      enable-tests: true
+      enable-coverage: false
+    secrets:
+      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}

@@ -1,4 +1,4 @@
-FROM gradle:jdk17 AS build
+FROM gradle:jdk21 AS build
 WORKDIR /home/gradle/src
 
 # Download dependencies to cache them
@@ -17,7 +17,7 @@ ARG JAVA_OTEL_VERSION=v1.31.0
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$JAVA_OTEL_VERSION/opentelemetry-javaagent.jar /instrumentations/java/javaagent.jar
 
 # Final image
-FROM gcr.io/distroless/java17:nonroot
+FROM gcr.io/distroless/java21:nonroot
 # COPY --from=javaagent --chown=nonroot:nonroot /instrumentations/java/javaagent.jar /app/javaagent.jar
 COPY --from=build --chown=nonroot:nonroot /home/gradle/src/build/libs/quotes-backend-*.jar /app/quotes-backend.jar
 WORKDIR /app

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import getConfig from 'next/config';
-import { CodeBracketIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { CodeBracketIcon, DocumentMagnifyingGlassIcon, ChartBarIcon } from '@heroicons/react/24/solid';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +20,6 @@ export const metadata: Metadata = {
 };
 
 const { publicRuntimeConfig } = getConfig();
-const grafanaLogsUrl = publicRuntimeConfig.grafanaLogsUrl;
 const grafanaDashboardUrl = publicRuntimeConfig.grafanaDashboardUrl;
 const githubUrl = publicRuntimeConfig.githubUrl;
 
@@ -37,8 +36,10 @@ export default function RootLayout({
         <div className="flex-grow">{children}</div>
         <footer className="bg-gray-800 text-white py-4 text-center sticky bottom-0">
           <div className="container mx-auto flex flex-row justify-center items-center space-x-4">
-            <a href={grafanaLogsUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
-              <DocumentMagnifyingGlassIcon className="h-5 w-5 mr-1" /> View Logs
+            <a href="/analytics" className="text-gray-400 hover:text-white flex items-center">
+              <DocumentMagnifyingGlassIcon className="h-5 w-5 mr-1" />
+              <ChartBarIcon className="h-5 w-5 mr-1" />
+              Analytics
             </a>
             <a href={grafanaDashboardUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
               <DocumentMagnifyingGlassIcon className="h-5 w-5 mr-1" /> Grafana Dashboard

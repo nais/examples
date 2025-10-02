@@ -1,0 +1,113 @@
+name: Service Pipeline (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: 'Name of the service (e.g., quotes-backend, quotes-frontend)'
+        required: true
+        type: string
+      service-path:
+        description: 'Path to the service directory (e.g., ./quotes-backend)'
+        required: true
+        type: string
+      enable-tests:
+        description: 'Whether to run tests for this service'
+        required: false
+        type: boolean
+        default: true
+      enable-coverage:
+        description: 'Whether to collect test coverage'
+        required: false
+        type: boolean
+        default: false
+      coverage-flag:
+        description: 'Codecov flag for coverage reports'
+        required: false
+        type: string
+        default: ''
+    secrets:
+      CODECOV_TOKEN:
+        description: 'Codecov token for coverage uploads'
+        required: false
+      NAIS_WORKLOAD_IDENTITY_PROVIDER:
+        description: 'NAIS workload identity provider'
+        required: true
+
+env:
+  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
+
+jobs:
+  test:
+    name: Test ${{ inputs.service-name }}
+    runs-on: ubuntu-latest
+    if: ${{ inputs.enable-tests }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.service-path }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          version: 2024.12.18
+          experimental: true
+
+      - name: Install mise tools
+        run: mise install
+
+      - name: Run CI checks
+        run: mise run ci
+
+      - name: Run tests with coverage
+        if: ${{ inputs.enable-coverage }}
+        run: mise run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: ${{ inputs.enable-coverage && always() }}
+        with:
+          files: ${{ inputs.service-path }}/coverage/**/coverage.cobertura.xml
+          flags: ${{ inputs.coverage-flag || inputs.service-name }}
+          name: ${{ inputs.service-name }}-coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        continue-on-error: true
+
+  build_push_sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main
+        id: image
+        with:
+          context: ${{ inputs.service-path }}
+          name: ${{ inputs.service-name }}
+          dockerfile: ${{ inputs.service-path }}/Dockerfile
+          google_service_account: gh-examples
+          push: ${{ github.actor != 'dependabot[bot]' }}
+          workload_identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+    outputs:
+      version: ${{ steps.image.outputs.version }}
+
+  rollout:
+    permissions:
+      id-token: write
+    name: Deploy ${{ inputs.service-name }} to Nais
+    needs: ["build_push_sign"]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: nais/deploy/actions/deploy@v2
+      env:
+        CLUSTER: dev-gcp
+        TEAM: examples
+        PRINT_PAYLOAD: "true"
+        RESOURCE: "${{ inputs.service-path }}/.nais/unleash.yaml,${{ inputs.service-path }}/.nais/app.yaml"
+        VARS: ${{ inputs.service-path }}/.nais/dev.yaml
+        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/${{ inputs.service-name }}:${{ needs.build_push_sign.outputs.version }},namespace=examples

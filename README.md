@@ -22,12 +22,39 @@ The purpose of this repository is to help developers understand how to:
 
 This repository consists of the following services:
 
-| Service                              | Tech Stack                   | Purpose & Description                                                                |
-| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------ |
-| [quotes-frontend](quotes-frontend)   | Next.js, React, Tailwind CSS | The web frontend for the Quotes app, allowing users to view and submit quotes.       |
-| [quotes-backend](quotes-backend)     | Kotlin, Ktor, PostgreSQL     | The backend API for the Quotes app, handling quote storage and retrieval.            |
-| [quotes-analytics](quotes-analytics) | .NET 8, ASP.NET Core         | Analytics service with OpenTelemetry auto-instrumentation and custom traces/metrics. |
-| [quotes-loadgen](quotes-loadgen)     | Go (Golang)                  | A load generator for simulating traffic and testing the Quotes application.          |
+| Service                              | Tech Stack                   | Purpose & Description                                                                                              |
+| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [quotes-frontend](quotes-frontend)   | Next.js, React, Tailwind CSS | The web frontend for the Quotes app, allowing users to view and submit quotes. Includes analytics dashboard.       |
+| [quotes-backend](quotes-backend)     | Kotlin, Ktor, PostgreSQL     | The backend API for the Quotes app, handling quote storage and retrieval.                                          |
+| [quotes-analytics](quotes-analytics) | .NET 8, ASP.NET Core         | Analytics service that processes quote data from the backend, providing insights and custom OpenTelemetry metrics. |
+| [quotes-loadgen](quotes-loadgen)     | Go (Golang)                  | A load generator for simulating traffic and testing the Quotes application.                                        |
+
+## Integration Flow
+
+1. **Users** interact with the **quotes-frontend** (Next.js) to view and submit quotes
+2. **Frontend** communicates with **quotes-backend** (Kotlin/Ktor) for quote storage/retrieval
+3. **Analytics service** (.NET) processes quotes from the backend to provide:
+   - Word count analysis
+   - Sentiment scoring
+   - Quote categorization
+   - Custom OpenTelemetry metrics
+4. **Frontend** displays analytics via a dedicated `/analytics` page
+5. **Load generator** (Go) simulates traffic to test the entire system
+6. All services send **observability data** (traces, metrics, logs) to the OTEL stack
+
+## Quick Start
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Access the application
+open http://localhost:3000          # Frontend (quotes + analytics)
+open http://localhost:8080          # Backend API
+open http://localhost:8081          # Analytics API
+open http://localhost:3000/analytics # Analytics Dashboard
+open http://localhost:3000          # Grafana (logs, metrics, traces)
+```
 
 For more details on each service, see the README in the respective subdirectory:
 
@@ -49,16 +76,16 @@ config:
 graph LR
 
   subgraph Browser
-  A(React.js)
+  A(User)
   end
 
   subgraph Frontend
-  B(Next.js + Tailwind CSS)
+  B(Next.js)
   end
 
   subgraph Backend
-  C(Ktor)
-  D(PostgreSQL)
+  C(Ktor API)
+  D[(PostgreSQL)]
   end
 
   subgraph Analytics
@@ -69,12 +96,22 @@ graph LR
   E(Go)
   end
 
+  subgraph Observability
+  G[Grafana/OTEL]
+  end
+
   A --> B
   B --> C
+  B --> F
   C --> D
   F --> C
   E --> B
   E --> F
+
+  B -.-> G
+  C -.-> G
+  F -.-> G
+  E -.-> G
 
 ```
 

@@ -27,6 +27,10 @@ public class QuotesAnalyticsService
         _httpClient = httpClient;
         _logger = logger;
 
+        // Debug HttpClient configuration
+        _logger.LogInformation("QuotesAnalyticsService initialized with HttpClient BaseAddress: {BaseAddress}",
+            _httpClient.BaseAddress?.ToString() ?? "NULL");
+
         _quotesAnalyzedCounter = Meter.CreateCounter<long>(
             "quotes.analyzed.total",
             description: "Total number of quotes analyzed");

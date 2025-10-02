@@ -1,0 +1,383 @@
+[tools]
+# Root tools for the entire project (kept minimal, each service manages its own)
+watchexec = "2.3.2"
+
+[env]
+# Global environment variables for development
+COMPOSE_PROJECT_NAME = "nais-quotes"
+OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317"
+# Development service URLs
+NEXT_PUBLIC_BACKEND_URL = "http://localhost:8080"
+ANALYTICS_SERVICE_URL = "http://localhost:8081"
+
+# =============================================================================
+# MAIN DEVELOPMENT TASKS
+# =============================================================================
+
+[tasks.dev]
+description = "Start all services in development mode"
+run = [
+  "echo '🚀 Starting development environment...'",
+  "mise run infra:up",
+  "mkdir -p logs",
+  "echo 'Starting services...'",
+  # Start services using their own mise tasks in background
+  "(cd quotes-backend && mise run dev > ../logs/backend.log 2>&1) &",
+  "(cd quotes-analytics && mise run dev > ../logs/analytics.log 2>&1) &",
+  "(cd quotes-frontend && NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL ANALYTICS_SERVICE_URL=$ANALYTICS_SERVICE_URL mise run dev > ../logs/frontend.log 2>&1) &",
+  "mise run dev:wait-for-services",
+  "echo '✅ Services ready - streaming logs (Ctrl+C to stop)...'",
+  "tail -f logs/*.log",
+]
+
+[tasks."dev:manual"]
+description = "Start infrastructure only - start services manually"
+run = [
+  "mise run infra:up",
+  "mise run dev:wait-for-infra",
+  "echo ''",
+  "echo '🚀 Start services manually in separate terminals:'",
+  "echo '  mise run backend:dev      # Backend (Kotlin/Ktor)'",
+  "echo '  mise run frontend:dev     # Frontend (Next.js)'",
+  "echo '  mise run analytics:dev    # Analytics (.NET)'",
+  "echo '  mise run loadgen:dev      # Load Generator (Go)'",
+  "echo ''",
+]
+
+[tasks."dev:wait-for-services"]
+description = "Wait for all services to be ready"
+run = [
+  "echo 'Waiting for services to start...'",
+  "sleep 5",
+  "for i in {1..30}; do curl -s http://localhost:8080/internal/health >/dev/null && echo 'Backend ready' && break || sleep 1; done",
+  "for i in {1..30}; do curl -s http://localhost:8081/internal/health >/dev/null && echo 'Analytics ready' && break || sleep 1; done",
+  "for i in {1..30}; do curl -s http://localhost:3000 >/dev/null && echo 'Frontend ready' && break || sleep 1; done",
+  "echo '✅ All services are ready:'",
+  "echo '   📱 Frontend: http://localhost:3000'",
+  "echo '   ⚡ Backend: http://localhost:8080'",
+  "echo '   📊 Analytics: http://localhost:8081'",
+  "echo '   📈 Grafana: http://localhost:4300'",
+]
+
+[tasks."dev:wait-for-infra"]
+description = "Wait for infrastructure services to be ready"
+run = [
+  "echo 'Waiting for infrastructure...'",
+  "for i in {1..30}; do nc -z localhost 5432 2>/dev/null && echo 'PostgreSQL ready' && break || sleep 1; done",
+  "for i in {1..30}; do curl -s http://localhost:4242/health >/dev/null && echo 'Unleash ready' && break || sleep 1; done",
+  "echo '✅ Infrastructure ready'",
+]
+
+[tasks.stop]
+description = "Stop all development services"
+run = [
+  "echo '🛑 Stopping all services...'",
+  "pkill -f 'dotnet.*quotes-analytics' || true",
+  "pkill -f 'next.*dev' || true",
+  "pkill -f 'gradlew.*run' || true",
+  "docker-compose down",
+  "echo '✅ All services stopped'",
+]
+
+[tasks.logs]
+description = "Show logs from all development services"
+run = [
+  "echo '📋 Application service logs:'",
+  "echo ''",
+  "mkdir -p logs",
+  "tail -f logs/*.log 2>/dev/null || echo 'No log files found. Run mise run dev first.'",
+]
+
+[tasks.status]
+description = "Show status of all services"
+run = [
+  "echo '📊 Service Status:'",
+  "echo ''",
+  "curl -s http://localhost:8080/internal/health | jq . 2>/dev/null && echo '✅ Backend (8080): Running' || echo '❌ Backend (8080): Not responding'",
+  "curl -s http://localhost:8081/internal/health | jq . 2>/dev/null && echo '✅ Analytics (8081): Running' || echo '❌ Analytics (8081): Not responding'",
+  "curl -s http://localhost:3000 >/dev/null 2>&1 && echo '✅ Frontend (3000): Running' || echo '❌ Frontend (3000): Not responding'",
+  "curl -s http://localhost:4300 >/dev/null 2>&1 && echo '✅ Grafana (4300): Running' || echo '❌ Grafana (4300): Not responding'",
+  "curl -s http://localhost:4242/health >/dev/null 2>&1 && echo '✅ Unleash (4242): Running' || echo '❌ Unleash (4242): Not responding'",
+]
+
+# =============================================================================
+# INFRASTRUCTURE TASKS
+# =============================================================================
+
+[tasks."infra:up"]
+description = "Start infrastructure services (PostgreSQL, OTEL, Unleash)"
+run = [
+  "echo '🏗️ Starting infrastructure services...'",
+  "docker-compose up -d postgres otel unleash",
+  "echo '✅ Infrastructure ready:'",
+  "echo '   📊 Grafana: http://localhost:4300'",
+  "echo '   🎯 Unleash: http://localhost:4242'",
+  "echo '   🗄️ PostgreSQL: localhost:5432'",
+]
+
+[tasks."infra:down"]
+description = "Stop infrastructure services"
+run = [
+  "echo '🛑 Stopping infrastructure...'",
+  "docker-compose down",
+  "echo '✅ Infrastructure stopped'",
+]
+
+[tasks."infra:logs"]
+description = "Show infrastructure logs"
+run = "docker-compose logs -f postgres otel unleash"
+
+# =============================================================================
+# SERVICE DELEGATION TASKS
+# =============================================================================
+
+# Backend (Kotlin/Ktor)
+[tasks."backend:dev"]
+description = "Start backend in development mode"
+run = "cd quotes-backend && mise run dev"
+
+[tasks."backend:build"]
+description = "Build backend service"
+run = "cd quotes-backend && mise run build"
+
+[tasks."backend:test"]
+description = "Test backend service"
+run = "cd quotes-backend && mise run test"
+
+[tasks."backend:lint"]
+description = "Lint backend service"
+run = "cd quotes-backend && mise run lint"
+
+[tasks."backend:clean"]
+description = "Clean backend service"
+run = "cd quotes-backend && mise run clean"
+
+# Frontend (Next.js)
+[tasks."frontend:dev"]
+description = "Start frontend in development mode"
+env = { NEXT_PUBLIC_BACKEND_URL = "http://localhost:8080", ANALYTICS_SERVICE_URL = "http://localhost:8081" }
+run = "cd quotes-frontend && mise run dev"
+
+[tasks."frontend:build"]
+description = "Build frontend service"
+run = "cd quotes-frontend && mise run build"
+
+[tasks."frontend:test"]
+description = "Test frontend service (type check)"
+run = "cd quotes-frontend && mise run type-check"
+
+[tasks."frontend:lint"]
+description = "Lint frontend service"
+run = "cd quotes-frontend && mise run lint"
+
+[tasks."frontend:clean"]
+description = "Clean frontend service"
+run = "cd quotes-frontend && mise run clean"
+
+# Analytics (.NET)
+[tasks."analytics:dev"]
+description = "Start analytics in development mode"
+run = "cd quotes-analytics && mise run dev"
+
+[tasks."analytics:build"]
+description = "Build analytics service"
+run = "cd quotes-analytics && mise run build"
+
+[tasks."analytics:test"]
+description = "Test analytics service"
+run = "cd quotes-analytics && mise run test"
+
+[tasks."analytics:lint"]
+description = "Lint analytics service"
+run = "cd quotes-analytics && mise run lint"
+
+[tasks."analytics:clean"]
+description = "Clean analytics service"
+run = "cd quotes-analytics && mise run clean"
+
+# Load Generator (Go)
+[tasks."loadgen:dev"]
+description = "Start load generator"
+run = "cd quotes-loadgen && mise run dev"
+
+[tasks."loadgen:build"]
+description = "Build load generator"
+run = "cd quotes-loadgen && mise run build"
+
+[tasks."loadgen:test"]
+description = "Test load generator"
+run = "cd quotes-loadgen && mise run test"
+
+[tasks."loadgen:analytics"]
+description = "Generate load for analytics endpoints"
+run = "cd quotes-loadgen && mise run load:analytics"
+
+[tasks."loadgen:full"]
+description = "Generate load for all endpoints"
+run = "cd quotes-loadgen && mise run load:full"
+
+[tasks."loadgen:lint"]
+description = "Lint load generator"
+run = "cd quotes-loadgen && mise run lint"
+
+[tasks."loadgen:clean"]
+description = "Clean load generator"
+run = "cd quotes-loadgen && mise run clean"
+
+# =============================================================================
+# ORCHESTRATION TASKS
+# =============================================================================
+
+[tasks.build]
+description = "Build all services"
+run = [
+  "echo '🔨 Building all services...'",
+  "mise run backend:build",
+  "mise run frontend:build",
+  "mise run analytics:build",
+  "mise run loadgen:build",
+  "echo '✅ All services built successfully'",
+]
+
+[tasks.test]
+description = "Run tests for all services"
+run = [
+  "echo '🧪 Running tests for all services...'",
+  "mise run backend:test",
+  "mise run frontend:test",
+  "mise run analytics:test",
+  "mise run loadgen:test",
+  "echo '✅ All tests completed'",
+]
+
+[tasks.lint]
+description = "Run linting for all services"
+run = [
+  "echo '🔍 Running linting for all services...'",
+  "mise run backend:lint",
+  "mise run frontend:lint",
+  "mise run analytics:lint",
+  "mise run loadgen:lint",
+  "echo '✅ All linting completed'",
+]
+
+[tasks.clean]
+description = "Clean all services"
+run = [
+  "echo '🧹 Cleaning all services...'",
+  "mise run backend:clean",
+  "mise run frontend:clean",
+  "mise run analytics:clean",
+  "mise run loadgen:clean",
+  "echo '✅ All services cleaned'",
+]
+
+[tasks.ci]
+description = "Run full CI pipeline"
+run = [
+  "echo '🏗️ Running full CI pipeline...'",
+  "mise run lint",
+  "mise run test",
+  "mise run build",
+  "echo '✅ CI pipeline completed successfully'",
+]
+
+# =============================================================================
+# DOCKER TASKS
+# =============================================================================
+
+[tasks."docker:build"]
+description = "Build all Docker images"
+run = [
+  "echo '🐳 Building all Docker images...'",
+  "docker-compose build",
+  "echo '✅ All Docker images built'",
+]
+
+[tasks."docker:up"]
+description = "Start all services with Docker Compose"
+run = [
+  "echo '🚀 Starting all services with Docker Compose...'",
+  "docker-compose up -d --build",
+  "echo '✅ All services started'",
+  "echo '🌐 Frontend: http://localhost:3000'",
+  "echo '⚡ Backend: http://localhost:8080'",
+  "echo '📊 Analytics: http://localhost:8081'",
+  "echo '📈 Grafana: http://localhost:4300'",
+  "echo '🎯 Unleash: http://localhost:4242'",
+]
+
+[tasks."docker:down"]
+description = "Stop all Docker services"
+run = [
+  "echo '🛑 Stopping all Docker services...'",
+  "docker-compose down",
+  "echo '✅ All Docker services stopped'",
+]
+
+[tasks."docker:logs"]
+description = "Show logs from all Docker services"
+run = "docker-compose logs -f"
+
+# =============================================================================
+# SETUP AND HELP
+# =============================================================================
+
+[tasks.setup]
+description = "Set up the development environment"
+run = [
+  "echo '⚙️ Setting up development environment...'",
+  "mkdir -p logs",
+  "mise install",
+  "echo 'Installing dependencies for each service...'",
+  "cd quotes-frontend && mise run install",
+  "cd quotes-backend && mise run build --no-daemon",
+  "cd quotes-analytics && mise run restore",
+  "cd quotes-loadgen && mise run mod-download",
+  "echo '✅ Development environment set up successfully'",
+  "echo ''",
+  "echo '🚀 Quick start:'",
+  "echo '  mise run dev              # Start all services with logs'",
+  "echo '  mise run dev:manual       # Manual terminal approach'",
+  "echo '  mise run docker:up        # Full Docker Compose stack'",
+]
+
+[tasks.help]
+description = "Show available tasks and usage"
+run = [
+  "echo '🚀 Nais Quotes Application - Available Commands:'",
+  "echo ''",
+  "echo '📦 Setup:'",
+  "echo '  mise run setup            # Set up development environment'",
+  "echo ''",
+  "echo '🚀 Development:'",
+  "echo '  mise run dev              # Start everything (recommended)'",
+  "echo '  mise run dev:manual       # Start infrastructure only'",
+  "echo '  mise run stop             # Stop all services'",
+  "echo '  mise run logs             # Show application logs'",
+  "echo '  mise run status           # Check service status'",
+  "echo ''",
+  "echo '🔨 Individual Services:'",
+  "echo '  mise run backend:dev      # Start backend in dev mode'",
+  "echo '  mise run frontend:dev     # Start frontend in dev mode'",
+  "echo '  mise run analytics:dev    # Start analytics in dev mode'",
+  "echo '  mise run loadgen:dev      # Start load generator'",
+  "echo '  mise run loadgen:analytics # Load test analytics endpoints'",
+  "echo '  mise run loadgen:full     # Load test all endpoints'",
+  "echo ''",
+  "echo '🐳 Docker:'",
+  "echo '  mise run docker:up        # Start all services with Docker'",
+  "echo '  mise run docker:down      # Stop all Docker services'",
+  "echo '  mise run docker:logs      # Show Docker logs'",
+  "echo ''",
+  "echo '🧪 Testing & Quality:'",
+  "echo '  mise run test             # Run tests for all services'",
+  "echo '  mise run lint             # Run linting for all services'",
+  "echo '  mise run build            # Build all services'",
+  "echo '  mise run ci               # Run full CI pipeline'",
+  "echo ''",
+  "echo '🏗️ Infrastructure:'",
+  "echo '  mise run infra:up         # Start infrastructure only'",
+  "echo '  mise run infra:down       # Stop infrastructure'",
+  "echo '  mise run infra:logs       # Show infrastructure logs'",
+]

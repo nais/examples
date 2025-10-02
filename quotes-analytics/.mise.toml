@@ -33,8 +33,12 @@ run = "dotnet watch test"
 description = "Run tests with code coverage"
 run = "dotnet test quotes-analytics.sln --collect:'XPlat Code Coverage' --results-directory ./coverage"
 
+[tasks.dev]
+description = "Run the application with hot reload (development)"
+run = "dotnet watch run"
+
 [tasks.run]
-description = "Run the application locally"
+description = "Run the application locally (no hot reload)"
 run = "dotnet run"
 
 [tasks.watch]

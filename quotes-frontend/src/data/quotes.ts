@@ -4,7 +4,6 @@ import { Quote } from '@/types/quote';
  * Extend the globalThis object to include a shared quotes array.
  */
 declare global {
-  // eslint-disable-next-line no-var
   var quotes: Quote[] | undefined;
 }
 

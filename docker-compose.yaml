@@ -5,7 +5,7 @@ services:
     ports:
       - "4317:4317" # OTLP over gRPC
       - "4318:4318" # OTLP over HTTP
-      - "3000:3000" # Grafana
+      - "4300:3000" # Grafana
 
   postgres:
     image: postgres:16
@@ -60,6 +60,22 @@ services:
       QuotesBackend__Url: http://quotes-backend:8080
     ports:
       - "8081:8081"
+
+  quotes-frontend:
+    build:
+      context: ./quotes-frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - otel
+      - quotes-backend
+      - quotes-analytics
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel:4318
+      OTEL_SERVICE_NAME: quotes-frontend
+      NEXT_PUBLIC_BACKEND_URL: http://quotes-backend:8080
+      ANALYTICS_SERVICE_URL: http://quotes-analytics:8081
+    ports:
+      - "3000:3000"
 
 volumes:
   db-data:

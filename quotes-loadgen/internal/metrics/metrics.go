@@ -33,5 +33,10 @@ func Register() {
 
 func StartMetricsServer(port int) {
 	http.Handle("/metrics", promhttp.Handler())
-	go http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	go func() {
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
+			// Server stopped, this is expected when shutting down
+			fmt.Printf("Metrics server stopped: %v\n", err)
+		}
+	}()
 }

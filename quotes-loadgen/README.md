@@ -49,10 +49,10 @@ The Quotes Load Generator is a simple Go-based tool designed to generate load on
 3. Run the load generator:
 
    ```bash
-   ./quotes-loadgen load --url /api/quotes --url /api/healthz --hostname "localhost:3000" --protocol "http" --rps 20 --duration 15
+   ./quotes-loadgen load --url / --url /quotes --url /analytics --url /api/quotes --url /api/analytics --url /api/analytics/summary --hostname "localhost:3000" --protocol "http" --rps 8 --duration 30
    ```
 
-   - This example generates 20 requests per second for 15 seconds on the URLs `/api/quotes` and `/api/healthz` with the hostname `localhost:3000` and the `http` protocol.
+   - This example generates 8 requests per second for 30 seconds on frontend pages and API endpoints including quotes and analytics.
 
 ### Running with Docker
 
@@ -65,7 +65,7 @@ The Quotes Load Generator is a simple Go-based tool designed to generate load on
 2. Run the container:
 
    ```bash
-   docker run --rm quotes-loadgen load --url /api/quotes --url /api/healthz --hostname "localhost:3000" --protocol "http" --rps 20 --duration 15
+   docker run --rm quotes-loadgen load --url / --url /quotes --url /analytics --url /api/quotes --url /api/analytics --url /api/analytics/summary --hostname "localhost:3000" --protocol "http" --rps 8 --duration 30
    ```
 
 ## Environment Variables
@@ -85,18 +85,18 @@ The Quotes Load Generator supports the following environment variables for confi
 You can configure the load generator using environment variables instead of command-line flags:
 
 ```bash
-export LOADGEN_URLS="/api/quotes,/api/healthz"
+export LOADGEN_URLS="/,/quotes,/analytics,/api/quotes,/api/analytics,/api/analytics/summary"
 export LOADGEN_HOSTNAME="localhost:3000"
 export LOADGEN_PROTOCOL="http"
-export LOADGEN_RPS=20
-export LOADGEN_DURATION=15
+export LOADGEN_RPS=8
+export LOADGEN_DURATION=30
 
 ./quotes-loadgen load
 ```
 
 ## Deployment
 
-The application can be deployed to the Nais platform using the provided `.nais/config.yaml` file. Ensure the Docker image is pushed to a container registry accessible by Nais.
+The application can be deployed to the Nais platform using the provided `.nais/app.yaml` file. Ensure the Docker image is pushed to a container registry accessible by Nais.
 
 ## License
 

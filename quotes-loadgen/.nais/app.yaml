@@ -22,14 +22,15 @@ spec:
       destinations:
         - id: loki
   env:
+    # Load test frontend endpoints: quotes page, analytics page, and frontend API routes
     - name: "LOADGEN_URLS"
-      value: "/api/quotes"
+      value: "/,/quotes,/analytics,/api/quotes,/api/analytics,/api/analytics/summary"
     - name: "LOADGEN_HOSTNAME"
       value: "example-quotes-frontend.intern.dev.nav.no"
     - name: "LOADGEN_PROTOCOL"
       value: "https"
     - name: "LOADGEN_RPS"
-      value: "1"
+      value: "2"
     - name: "LOADGEN_DURATION"
       value: "0" # 0 means infinite
     - name: "LOADGEN_METRICS"

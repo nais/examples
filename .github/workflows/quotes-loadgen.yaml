@@ -5,11 +5,13 @@ on:
     branches: [ main ]
     paths:
       - .github/workflows/quotes-loadgen.yaml
+      - .github/workflows/service-pipeline.yaml
       - quotes-loadgen/**
   pull_request:
     branches: [ main ]
     paths:
       - .github/workflows/quotes-loadgen.yaml
+      - .github/workflows/service-pipeline.yaml
       - quotes-loadgen/**
   workflow_dispatch:
 
@@ -17,42 +19,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
-
 jobs:
-  build_push_sign:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v5
-      - uses: nais/platform-build-push-sign@main
-        id: image
-        with:
-          context: ./quotes-loadgen
-          name: quotes-loadgen
-          dockerfile: ./quotes-loadgen/Dockerfile
-          google_service_account: gh-examples
-          push: ${{ github.actor != 'dependabot[bot]' }}
-          workload_identity_provider: ${{ secrets.Nais_IO_WORKLOAD_IDENTITY_PROVIDER }}
-    outputs:
-      version: ${{ steps.image.outputs.version }}
-  rollout:
-    permissions:
-      id-token: write
-    name: Deploy to Nais
-    needs: ["build_push_sign"]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-    - uses: actions/checkout@v5
-    - uses: nais/deploy/actions/deploy@v2
-      env:
-        CLUSTER: dev-gcp
-        TEAM: examples
-        PRINT_PAYLOAD: "true"
-        RESOURCE: "./quotes-loadgen/.nais/unleash.yaml,./quotes-loadgen/.nais/app.yaml"
-        VARS: quotes-loadgen/.nais/dev.yaml
-        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/quotes-loadgen:${{ needs.build_push_sign.outputs.version }},namespace=examples
+  pipeline:
+    uses: ./.github/workflows/service-pipeline.yaml
+    with:
+      service-name: quotes-loadgen
+      service-path: ./quotes-loadgen
+      enable-tests: true
+      enable-coverage: false
+    secrets:
+      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}

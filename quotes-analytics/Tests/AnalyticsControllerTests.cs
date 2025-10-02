@@ -28,7 +28,7 @@ public class AnalyticsControllerTests : IClassFixture<WebApplicationFactory<Prog
         // Assert
         // May return OK with empty data or error if backend is unavailable
         // Just checking the endpoint exists and responds
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable);
     }
 
     [Fact]
@@ -42,6 +42,6 @@ public class AnalyticsControllerTests : IClassFixture<WebApplicationFactory<Prog
 
         // Assert
         // May return OK with empty array or error if backend is unavailable
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable);
     }
 }

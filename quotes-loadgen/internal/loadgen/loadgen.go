@@ -2,6 +2,7 @@ package loadgen
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -142,25 +143,39 @@ func NewLoadCommand() *cobra.Command {
 
 	// Bind flags to viper keys
 	cmd.Flags().StringSliceVar(&urls, "url", nil, "List of URLs to load (can be specified multiple times or set via URLS environment variable)")
-	viper.BindPFlag("URLS", cmd.Flags().Lookup("url"))
+	if err := viper.BindPFlag("URLS", cmd.Flags().Lookup("url")); err != nil {
+		panic(fmt.Sprintf("Failed to bind URLS flag: %v", err))
+	}
 
 	cmd.Flags().StringVar(&hostname, "hostname", "localhost:3000", "Hostname to prefix to all URLs (can be set via HOSTNAME environment variable)")
-	viper.BindPFlag("HOSTNAME", cmd.Flags().Lookup("hostname"))
+	if err := viper.BindPFlag("HOSTNAME", cmd.Flags().Lookup("hostname")); err != nil {
+		panic(fmt.Sprintf("Failed to bind HOSTNAME flag: %v", err))
+	}
 
 	cmd.Flags().StringVar(&protocol, "protocol", "http", "Protocol to use for URLs (http or https, can be set via PROTOCOL environment variable)")
-	viper.BindPFlag("PROTOCOL", cmd.Flags().Lookup("protocol"))
+	if err := viper.BindPFlag("PROTOCOL", cmd.Flags().Lookup("protocol")); err != nil {
+		panic(fmt.Sprintf("Failed to bind PROTOCOL flag: %v", err))
+	}
 
 	cmd.Flags().IntVar(&requestsPerSecond, "rps", 10, "Number of requests per second (can be set via RPS environment variable)")
-	viper.BindPFlag("RPS", cmd.Flags().Lookup("rps"))
+	if err := viper.BindPFlag("RPS", cmd.Flags().Lookup("rps")); err != nil {
+		panic(fmt.Sprintf("Failed to bind RPS flag: %v", err))
+	}
 
 	cmd.Flags().IntVar(&duration, "duration", 10, "Duration of the load test in seconds (can be set via DURATION environment variable)")
-	viper.BindPFlag("DURATION", cmd.Flags().Lookup("duration"))
+	if err := viper.BindPFlag("DURATION", cmd.Flags().Lookup("duration")); err != nil {
+		panic(fmt.Sprintf("Failed to bind DURATION flag: %v", err))
+	}
 
 	cmd.Flags().BoolVar(&metricsEnabled, "metrics", false, "Enable Prometheus metrics endpoint")
 	cmd.Flags().IntVar(&metricsPort, "metrics-port", 8080, "Port for the Prometheus metrics endpoint")
 
-	viper.BindPFlag("METRICS", cmd.Flags().Lookup("metrics"))
-	viper.BindPFlag("METRICS_PORT", cmd.Flags().Lookup("metrics-port"))
+	if err := viper.BindPFlag("METRICS", cmd.Flags().Lookup("metrics")); err != nil {
+		panic(fmt.Sprintf("Failed to bind METRICS flag: %v", err))
+	}
+	if err := viper.BindPFlag("METRICS_PORT", cmd.Flags().Lookup("metrics-port")); err != nil {
+		panic(fmt.Sprintf("Failed to bind METRICS_PORT flag: %v", err))
+	}
 
 	cmd.PreRun = func(cmd *cobra.Command, args []string) {
 		// Load values from viper

@@ -23,8 +23,10 @@ spec:
       value: "production"
     - name: "NEXT_TELEMETRY_DISABLED"
       value: "1"
-    - name: "quotes_SERVICE_URL"
-      value: "http://quotes-service"
+    - name: "NEXT_PUBLIC_BACKEND_URL"
+      value: "http://quotes-backend"
+    - name: "ANALYTICS_SERVICE_URL"
+      value: "http://quotes-analytics:8081"
     - name: OTEL_METRICS_EXPORTER
       value: otlp
     - name: OTEL_LOGS_EXPORTER
@@ -61,6 +63,7 @@ spec:
     outbound:
       rules:
         - application: quotes-backend
+        - application: quotes-analytics
   filesFrom:
     - emptyDir:
         medium: Memory

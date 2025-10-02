@@ -1,0 +1,85 @@
+[tools]
+go = "1.24.3"
+watchexec = "2.3.2"
+
+[env]
+GO111MODULE = "on"
+CGO_ENABLED = "0"
+
+[tasks.dev]
+description = "Run load generator with hot reload (development)"
+run = "watchexec -r -e go -- go run ./cmd/main.go load --url / --url /quotes --url /analytics --url /api/quotes --url /api/analytics --url /api/analytics/summary --hostname localhost:3000 --protocol http --rps 3 --duration 0"
+
+[tasks.build]
+description = "Build the Go application"
+run = "go build -o bin/quotes-loadgen ./cmd/main.go"
+
+[tasks.watch]
+description = "Run load generator with hot reload (alias for dev)"
+run = "watchexec -r -e go -- go run ./cmd/main.go load --url / --url /quotes --url /analytics --url /api/quotes --url /api/analytics --url /api/analytics/summary --hostname localhost:3000 --protocol http --rps 3 --duration 0"
+
+[tasks."load:analytics"]
+description = "Generate load specifically for analytics endpoints"
+run = "go run ./cmd/main.go load --url /analytics --url /api/analytics --url /api/analytics/summary --hostname localhost:3000 --protocol http --rps 3 --duration 30"
+
+[tasks."load:full"]
+description = "Generate load for all frontend endpoints including analytics"
+run = "go run ./cmd/main.go load --url / --url /quotes --url /analytics --url /submit-quote --url /api/quotes --url /api/analytics --url /api/analytics/summary --hostname localhost:3000 --protocol http --rps 8 --duration 60"
+
+[tasks.test]
+description = "Run all tests"
+run = "go test ./..."
+
+[tasks.test-verbose]
+description = "Run tests with verbose output"
+run = "go test -v ./..."
+
+[tasks.test-coverage]
+description = "Run tests with coverage"
+run = "go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out"
+
+[tasks.run]
+description = "Run the built binary"
+run = "./bin/quotes-loadgen"
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = "rm -rf bin/ coverage.out"
+
+[tasks.mod-tidy]
+description = "Tidy Go modules"
+run = "go mod tidy"
+
+[tasks.mod-download]
+description = "Download Go modules"
+run = "go mod download"
+
+[tasks.lint]
+description = "Run Go linting"
+run = "go run github.com/golangci/golangci-lint/cmd/golangci-lint run"
+
+[tasks.format]
+description = "Format Go code"
+run = "go fmt ./..."
+
+[tasks.vet]
+description = "Run Go vet"
+run = "go vet ./..."
+
+[tasks.docker-build]
+description = "Build Docker image"
+run = "docker build -t quotes-loadgen:local ."
+
+[tasks.docker-run]
+description = "Run Docker container locally"
+run = "docker run quotes-loadgen:local"
+
+[tasks.ci]
+description = "Run all CI checks"
+run = [
+  "go mod tidy",
+  "go fmt ./...",
+  "go vet ./...",
+  "go test ./...",
+  "go build -o bin/quotes-loadgen ./cmd/main.go",
+]
