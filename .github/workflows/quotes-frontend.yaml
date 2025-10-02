@@ -27,7 +27,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: nais/platform-build-push-sign@main
         id: image
         with:
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: dev-gcp
