@@ -1,0 +1,108 @@
+name: quotes-analytics
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/workflows/quotes-analytics.yaml
+      - quotes-analytics/**
+  pull_request:
+    branches: [ main ]
+    paths:
+      - .github/workflows/quotes-analytics.yaml
+      - quotes-analytics/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: ./quotes-analytics
+
+env:
+  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
+jobs:
+  test:
+    name: Test .NET application
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          version: 2024.12.18
+          experimental: true
+
+      - name: Install mise tools
+        run: mise install
+        working-directory: ./quotes-analytics
+
+      - name: Restore dependencies
+        run: mise run restore
+        working-directory: ./quotes-analytics
+
+      - name: Check code formatting
+        run: mise run format-check
+        working-directory: ./quotes-analytics
+
+      - name: Build with linting
+        run: mise run lint
+        working-directory: ./quotes-analytics
+
+      - name: Run tests with coverage
+        run: mise run test:coverage
+        working-directory: ./quotes-analytics
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./quotes-analytics/coverage/**/coverage.cobertura.xml
+          flags: quotes-analytics
+          name: quotes-analytics-coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        continue-on-error: true
+
+  build_push_sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main
+        id: image
+        with:
+          context: ./quotes-analytics
+          name: quotes-analytics
+          dockerfile: ./quotes-analytics/Dockerfile
+          google_service_account: gh-examples
+          push: ${{ github.actor != 'dependabot[bot]' }}
+          workload_identity_provider: ${{ secrets.Nais_IO_WORKLOAD_IDENTITY_PROVIDER }}
+    outputs:
+      version: ${{ steps.image.outputs.version }}
+
+  rollout:
+    permissions:
+      id-token: write
+    name: Deploy to Nais
+    needs: ["test", "build_push_sign"]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: nais/deploy/actions/deploy@v2
+      env:
+        CLUSTER: dev-gcp
+        TEAM: examples
+        PRINT_PAYLOAD: "true"
+        RESOURCE: "./quotes-analytics/.nais/unleash.yaml,./quotes-analytics/.nais/app.yaml"
+        VARS: quotes-analytics/.nais/dev.yaml
+        VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/quotes-analytics:${{ needs.build_push_sign.outputs.version }},namespace=examples

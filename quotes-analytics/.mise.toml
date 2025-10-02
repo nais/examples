@@ -1,0 +1,86 @@
+[tools]
+dotnet = "8.0.404"
+
+[env]
+DOTNET_CLI_TELEMETRY_OPTOUT = "1"
+ASPNETCORE_ENVIRONMENT = "Development"
+
+[tasks.build]
+description = "Build the .NET application"
+run = "dotnet build quotes-analytics.sln"
+
+[tasks.test]
+description = "Run all tests"
+run = "dotnet test quotes-analytics.sln --logger 'console;verbosity=normal'"
+
+[tasks."test:unit"]
+description = "Run unit tests only"
+run = "dotnet test quotes-analytics.sln --filter 'Category!=Integration' --logger 'console;verbosity=normal'"
+
+[tasks."test:integration"]
+description = "Run integration tests only"
+run = "dotnet test quotes-analytics.sln --filter 'Category=Integration' --logger 'console;verbosity=normal'"
+
+[tasks."test:verbose"]
+description = "Run all tests with detailed output"
+run = "dotnet test quotes-analytics.sln --logger 'console;verbosity=detailed'"
+
+[tasks."test:watch"]
+description = "Run tests in watch mode"
+run = "dotnet watch test"
+
+[tasks."test:coverage"]
+description = "Run tests with code coverage"
+run = "dotnet test quotes-analytics.sln --collect:'XPlat Code Coverage' --results-directory ./coverage"
+
+[tasks.run]
+description = "Run the application locally"
+run = "dotnet run"
+
+[tasks.watch]
+description = "Run the application with hot reload"
+run = "dotnet watch run"
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = "dotnet clean quotes-analytics.sln"
+
+[tasks.restore]
+description = "Restore NuGet packages"
+run = "dotnet restore quotes-analytics.sln"
+
+[tasks.format]
+description = "Format code"
+run = "dotnet format quotes-analytics.sln"
+
+[tasks.format-check]
+description = "Check code formatting"
+run = "dotnet format quotes-analytics.sln --verify-no-changes"
+
+[tasks.lint]
+description = "Run linting (format check + build)"
+run = [
+  "dotnet format quotes-analytics.sln --verify-no-changes",
+  "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
+]
+
+[tasks.publish]
+description = "Publish the application for production"
+run = "dotnet publish -c Release -o out"
+
+[tasks.docker-build]
+description = "Build Docker image"
+run = "docker build -t quotes-analytics:local ."
+
+[tasks.docker-run]
+description = "Run Docker container locally"
+run = "docker run -p 8081:8081 --env-file .env.local quotes-analytics:local"
+
+[tasks.ci]
+description = "Run all CI checks"
+run = [
+  "dotnet restore quotes-analytics.sln",
+  "dotnet format quotes-analytics.sln --verify-no-changes",
+  "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
+  "dotnet test quotes-analytics.sln --no-build --logger 'console;verbosity=normal'",
+]

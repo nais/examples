@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: unleash-bootstrap-quotes-analytics
+  namespace: examples
+  labels:
+    app: quotes-analytics
+    team: examples
+data:
+  # No feature flags for analytics service yet
+  # Add toggles here when needed

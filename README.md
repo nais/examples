@@ -22,16 +22,18 @@ The purpose of this repository is to help developers understand how to:
 
 This repository consists of the following services:
 
-| Service                            | Tech Stack                   | Purpose & Description                                                          |
-| ---------------------------------- | ---------------------------- | ------------------------------------------------------------------------------ |
-| [quotes-frontend](quotes-frontend) | Next.js, React, Tailwind CSS | The web frontend for the Quotes app, allowing users to view and submit quotes. |
-| [quotes-backend](quotes-backend)   | Kotlin, Ktor, PostgreSQL     | The backend API for the Quotes app, handling quote storage and retrieval.      |
-| [quotes-loadgen](quotes-loadgen)   | Go (Golang)                  | A load generator for simulating traffic and testing the Quotes application.    |
+| Service                              | Tech Stack                   | Purpose & Description                                                                |
+| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------ |
+| [quotes-frontend](quotes-frontend)   | Next.js, React, Tailwind CSS | The web frontend for the Quotes app, allowing users to view and submit quotes.       |
+| [quotes-backend](quotes-backend)     | Kotlin, Ktor, PostgreSQL     | The backend API for the Quotes app, handling quote storage and retrieval.            |
+| [quotes-analytics](quotes-analytics) | .NET 8, ASP.NET Core         | Analytics service with OpenTelemetry auto-instrumentation and custom traces/metrics. |
+| [quotes-loadgen](quotes-loadgen)     | Go (Golang)                  | A load generator for simulating traffic and testing the Quotes application.          |
 
 For more details on each service, see the README in the respective subdirectory:
 
 - [quotes-frontend/README.md](quotes-frontend/README.md)
 - [quotes-backend/README.md](quotes-backend/README.md)
+- [quotes-analytics/README.md](quotes-analytics/README.md)
 - [quotes-loadgen/README.md](quotes-loadgen/README.md)
 
 ## Architecture
@@ -59,6 +61,10 @@ graph LR
   D(PostgreSQL)
   end
 
+  subgraph Analytics
+  F(.NET 8)
+  end
+
   subgraph Loadgen
   E(Go)
   end
@@ -66,7 +72,9 @@ graph LR
   A --> B
   B --> C
   C --> D
+  F --> C
   E --> B
+  E --> F
 
 ```
 

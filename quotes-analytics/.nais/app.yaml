@@ -1,0 +1,70 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: "quotes-analytics"
+  namespace: "examples"
+  labels:
+    "team": "examples"
+  annotations:
+    "nais.io/run-as-group": "65532"
+    "nais.io/run-as-user": "65532"
+spec:
+  image: {{image}}
+  port: 8081
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: "dotnet"
+    logging:
+      destinations:
+        - id: loki
+  env:
+    - name: "ASPNETCORE_ENVIRONMENT"
+      value: "Production"
+    - name: "QuotesBackend__Url"
+      value: "http://quotes-backend"
+    - name: OTEL_METRICS_EXPORTER
+      value: otlp
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_EXPORTER_METRICS_ENABLED
+      value: "true"
+    - name: OTEL_METRICS_EXEMPLAR_FILTER
+      value: ALWAYS_ON
+    - name: Otel__Endpoint
+      value: "http://localhost:4317"
+  liveness:
+    path: "/internal/health"
+    port: 8081
+    initialDelay: 20
+    timeout: 60
+  readiness:
+    path: "/internal/ready"
+    port: 8081
+    initialDelay: 20
+    timeout: 60
+  replicas:
+    min: 1
+    max: 2
+  prometheus:
+    enabled: false
+    path: "/metrics"
+  resources:
+    limits:
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: quotes-frontend
+    outbound:
+      rules:
+        - application: quotes-backend
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}

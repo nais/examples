@@ -36,5 +36,30 @@ services:
     ports:
       - "4242:4242"
 
+  quotes-backend:
+    build:
+      context: ./quotes-backend
+      dockerfile: Dockerfile
+    depends_on:
+      - otel
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel:4317
+      OTEL_SERVICE_NAME: quotes-backend
+    ports:
+      - "8080:8080"
+
+  quotes-analytics:
+    build:
+      context: ./quotes-analytics
+      dockerfile: Dockerfile
+    depends_on:
+      - otel
+      - quotes-backend
+    environment:
+      Otel__Endpoint: http://otel:4317
+      QuotesBackend__Url: http://quotes-backend:8080
+    ports:
+      - "8081:8081"
+
 volumes:
   db-data:
