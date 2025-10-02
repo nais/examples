@@ -22,6 +22,10 @@ updates:
     directory: "/quotes-loadgen"
     schedule:
       interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/quotes-analytics"
+    schedule:
+      interval: "monthly"
   # gradle
   - package-ecosystem: "gradle"
     directory: "/quotes-backend"
@@ -45,3 +49,12 @@ updates:
     directory: "/quotes-loadgen"
     schedule:
       interval: "monthly"
+  # nuget
+  - package-ecosystem: "nuget"
+    directory: "/quotes-analytics"
+    schedule:
+      interval: "monthly"
+    groups:
+      quotes-analytics-nuget:
+        patterns:
+          - "*"
