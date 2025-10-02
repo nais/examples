@@ -47,9 +47,9 @@ jobs:
         working-directory: ${{ inputs.service-path }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
         with:
           version: 2024.12.18
           experimental: true
@@ -65,7 +65,7 @@ jobs:
         run: mise run test:coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: ${{ inputs.enable-coverage && always() }}
         with:
           files: ${{ inputs.service-path }}/coverage/**/coverage.cobertura.xml
@@ -81,7 +81,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: nais/platform-build-push-sign@main
         id: image
         with:
@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: nais/deploy/actions/deploy@v2
       env:
         CLUSTER: dev-gcp
