@@ -24,11 +24,16 @@ var (
 		},
 		[]string{"url"},
 	)
+	registered = false
 )
 
 func Register() {
+	if registered {
+		return
+	}
 	prometheus.MustRegister(RequestsTotal)
 	prometheus.MustRegister(RequestDuration)
+	registered = true
 }
 
 func StartMetricsServer(port int) {

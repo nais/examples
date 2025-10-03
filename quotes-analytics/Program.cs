@@ -26,13 +26,8 @@ if (builder.Environment.IsDevelopment())
 
     builder.Logging.AddOpenTelemetry(logging => logging.AddOtlpExporter());
 }
-else
-{
-    // In production (NAIS), just register our custom sources for auto-instrumentation
-    builder.Services.AddOpenTelemetry()
-        .WithTracing(tracing => tracing.AddSource(QuotesAnalyticsService.ActivitySourceName))
-        .WithMetrics(metrics => metrics.AddMeter(QuotesAnalyticsService.MeterName));
-}
+// In production (NAIS), auto-instrumentation handles everything automatically
+// No manual OpenTelemetry configuration needed - just ensure ActivitySource and Meter are available
 
 // Configuration
 var backendUrl = builder.Configuration["QuotesBackend:Url"] ?? "http://localhost:8080";
