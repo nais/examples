@@ -55,6 +55,7 @@ spec:
     inbound:
       rules:
         - application: quotes-frontend
+        - application: quotes-analytics
     outbound:
       rules:
         - application: sentiment-api
