@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"net/url"
 	"os"
 
 	"go.opentelemetry.io/otel"
@@ -24,6 +25,12 @@ func InitTracer(ctx context.Context) (oteltrace.Tracer, func()) {
 	serviceName := os.Getenv("OTEL_SERVICE_NAME")
 	if serviceName == "" {
 		serviceName = "quotes-loadgen"
+	}
+
+	if endpoint != "" {
+		if u, err := url.Parse(endpoint); err == nil && u.Host != "" {
+			endpoint = u.Host
+		}
 	}
 
 	res, err := resource.New(ctx,
