@@ -3,10 +3,12 @@ package loadgen
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"time"
 
 	"log/slog"
 
+	"github.com/nais/examples/quotes-loadgen/internal/metrics"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -130,15 +132,22 @@ func (lg *LoadGenerator) makeRequest(ctx context.Context, url string) {
 	}
 
 	resp, err := lg.client.Do(req)
+	duration := time.Since(start)
+
 	if err != nil {
+		metrics.RequestsTotal.WithLabelValues(url, "error").Inc()
 		lg.logger.Error("Error loading URL", slog.String("url", url), slog.Any("error", err))
 		return
 	}
 	defer resp.Body.Close()
 
-	duration := time.Since(start)
+	statusCode := strconv.Itoa(resp.StatusCode)
+	metrics.RequestsTotal.WithLabelValues(url, statusCode).Inc()
+	metrics.RequestDuration.WithLabelValues(url).Observe(duration.Seconds())
+
 	lg.logger.Info("Loaded URL",
 		slog.String("url", url),
 		slog.Int("status", resp.StatusCode),
-		slog.Duration("duration", duration))
+		slog.Duration("duration", duration),
+		slog.String("trace_id", trace.SpanFromContext(httpCtx).SpanContext().TraceID().String()))
 }
