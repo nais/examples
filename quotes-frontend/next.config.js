@@ -39,6 +39,6 @@ module.exports = {
   },
   env: {
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://quotes-backend',
-    ANALYTICS_SERVICE_URL: process.env.ANALYTICS_SERVICE_URL || 'http://quotes-analytics:8081',
+    ANALYTICS_SERVICE_URL: process.env.ANALYTICS_SERVICE_URL || 'http://quotes-analytics',
   },
 };
