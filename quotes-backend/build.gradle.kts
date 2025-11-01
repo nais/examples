@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
-    kotlin("plugin.serialization") version "2.2.20"
-    id("io.ktor.plugin") version "3.3.0"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
+    id("io.ktor.plugin") version "3.3.1"
     application
     id("com.github.ben-manes.versions") version "0.53.0"
 }
@@ -31,10 +31,10 @@ repositories {
 
 val ktorVersion = "2.3.13"
 val kotlinxSerializationVersion = "1.9.0"
-val logbackVersion = "1.5.19"
-val logstashLogbackEncoderVersion = "8.1"
-val opentelemetryVersion = "2.20.1-alpha"
-val kotlinTestVersion = "2.2.20"
+val logbackVersion = "1.5.20"
+val logstashLogbackEncoderVersion = "9.0"
+val opentelemetryVersion = "2.21.0-alpha"
+val kotlinTestVersion = "2.2.21"
 
 dependencies {
     // Ktor
