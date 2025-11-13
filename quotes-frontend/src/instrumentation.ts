@@ -5,6 +5,7 @@ import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
+import logger from '@/utils/logger';
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -36,8 +37,8 @@ export async function register() {
 
     process.on('SIGTERM', () => {
       sdk.shutdown()
-        .then(() => console.log('OpenTelemetry SDK shut down successfully'))
-        .catch((error) => console.error('Error shutting down OpenTelemetry SDK', error));
+        .then(() => logger.info('OpenTelemetry SDK shut down successfully'))
+        .catch((error) => logger.error({ error }, 'Error shutting down OpenTelemetry SDK'));
     });
   }
 }

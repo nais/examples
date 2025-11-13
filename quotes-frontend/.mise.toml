@@ -12,7 +12,7 @@ run = "yarn dev"
 
 [tasks.build]
 description = "Build the Next.js application"
-env = { NODE_ENV = "production" }
+env = { NODE_ENV = "production", OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317" }
 run = "yarn build"
 
 [tasks.start]
@@ -53,6 +53,7 @@ run = "docker run -p 3000:3000 quotes-frontend:local"
 
 [tasks.ci]
 description = "Run all CI checks"
+env = { OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317" }
 run = [
   "mise run install",
   "mise run lint",
