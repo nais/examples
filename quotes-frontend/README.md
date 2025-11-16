@@ -7,7 +7,8 @@ This is an example project used to showcase functionality in the [Nais platform]
 - **Random Quote Display**: View a random quote on the homepage.
 - **Submit New Quotes**: Add new quotes via a user-friendly form.
 - **Shareable Links**: Each quote has a unique URL for sharing.
-- **Structured Logging**: Uses `pino` for structured logging in both development and production environments.
+- **Structured Logging**: Uses `pino` for structured JSON logging with full OpenTelemetry integration for trace context propagation.
+- **Observability**: Auto-instrumented with OpenTelemetry for distributed tracing and metrics.
 - **Backend Integration**: Fetches and submits quotes to the [quotes-backend](../quotes-backend/) API for persistence.
 
 ## Tech Stack
@@ -15,7 +16,8 @@ This is an example project used to showcase functionality in the [Nais platform]
 - **Framework**: [Next.js](https://nextjs.org) for server-side rendering and routing.
 - **Language**: TypeScript for type safety and modern JavaScript features.
 - **Styling**: Tailwind CSS for utility-first styling.
-- **Logging**: `pino` for structured and efficient logging.
+- **Logging**: `pino` for structured and efficient logging with OpenTelemetry trace context.
+- **Observability**: OpenTelemetry for automatic instrumentation, tracing, and metrics.
 - **UUIDs**: `uuid` library for generating unique identifiers.
 - **API**: RESTful API routes built with Next.js and integration with the quotes-backend service.
 ## Backend API (quotes-backend)
@@ -133,10 +135,12 @@ PORT=3000
 
 ## Logging
 
-The application uses `pino` for structured logging. Logs are formatted differently for development and production environments:
+The application uses `pino` for structured logging with full OpenTelemetry integration. Logs are formatted differently for development and production environments:
 
-- **Development**: Pretty-printed logs with `pino-pretty`.
-- **Production**: JSON-formatted logs.
+- **Development**: Pretty-printed logs with `pino-pretty` for easier debugging.
+- **Production**: JSON-formatted logs with trace context (trace_id, span_id, trace_flags) for correlation with distributed traces.
+
+All logs automatically include OpenTelemetry trace context when available, enabling correlation across services and systems. See [LOGGING.md](./LOGGING.md) for detailed documentation.
 
 ## Learn More
 

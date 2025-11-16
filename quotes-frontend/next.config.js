@@ -2,14 +2,8 @@ module.exports = {
   output: 'standalone',
   reactStrictMode: true,
   serverExternalPackages: ['@navikt/next-logger', 'next-logger', 'pino', 'pino-roll'],
-  // Disable static optimization to prevent Html import errors
   trailingSlash: false,
   generateBuildId: () => 'build',
-  // Temporarily disable experimental features to fix Html import error
-  // experimental: {
-  //   optimizePackageImports: ['@navikt/ds-react', '@navikt/aksel-icons'],
-  //   authInterrupts: true,
-  // },
   images: {
     remotePatterns: [
       {
