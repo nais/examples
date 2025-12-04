@@ -48,6 +48,7 @@ jobs:
     env:
       # Disable GPG verification for Node.js as GitHub Actions runners may not have the required public keys
       MISE_NODE_VERIFY: false
+      MISE_VERBOSE: 1
 
     steps:
       - uses: actions/checkout@v5
@@ -56,6 +57,7 @@ jobs:
         with:
           version: 2024.12.18
           experimental: true
+          log_level: debug
 
       - name: Install mise tools
         run: mise install
