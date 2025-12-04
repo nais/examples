@@ -19,7 +19,7 @@ spec:
       destinations:
         - id: loki
   env:
-    - name: OTEL_JAVAAGENT_LOGGING:
+    - name: OTEL_JAVAAGENT_LOGGING
       value: "INFO"
     - name: OTEL_METRICS_EXPORTER
       value: otlp
