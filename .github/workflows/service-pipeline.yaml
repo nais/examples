@@ -56,6 +56,9 @@ jobs:
 
       - name: Install mise tools
         run: mise install
+        env:
+          # Disable GPG verification for Node.js as GitHub Actions runners may not have the required public keys
+          MISE_NODE_VERIFY: false
 
       - name: Run CI checks
         run: mise run ci
