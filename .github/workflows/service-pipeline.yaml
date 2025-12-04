@@ -48,7 +48,6 @@ jobs:
     env:
       # Disable GPG verification for Node.js as GitHub Actions runners may not have the required public keys
       MISE_NODE_VERIFY: false
-      MISE_VERBOSE: 1
 
     steps:
       - uses: actions/checkout@v5
