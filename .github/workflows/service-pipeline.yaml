@@ -57,10 +57,10 @@ jobs:
         with:
           version: 2024.12.18
           install: true
-          cache: false
+          experimental: false
+          cache: true
           cache_save: true
           cache_key_prefix: mise-v1
-          experimental: false
           log_level: debug
 
       - name: Install mise tools
