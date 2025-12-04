@@ -25,6 +25,10 @@ spec:
       value: "1"
     - name: "NEXT_PUBLIC_BACKEND_URL"
       value: "http://quotes-backend"
+    - name: "NEXT_PUBLIC_GITHUB_URL"
+      value: "https://github.com/nais/examples/tree/main/quotes-frontend"
+    - name: "NEXT_PUBLIC_GRAFANA_DASHBOARD_URL"
+      value: "https://grafana.nav.cloud.nais.io/d/eemcfslr8f94wb/nais-quotes?orgId=1&from=now-3h&to=now&timezone=browser&var-Filters="
     - name: "ANALYTICS_SERVICE_URL"
       value: "http://quotes-analytics"
     - name: OTEL_METRICS_EXPORTER

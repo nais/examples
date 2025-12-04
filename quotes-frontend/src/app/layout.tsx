@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import getConfig from 'next/config';
 import { CodeBracketIcon, DocumentMagnifyingGlassIcon, ChartBarIcon } from '@heroicons/react/24/solid';
 
 const geistSans = Geist({
@@ -19,9 +18,8 @@ export const metadata: Metadata = {
   description: "An example project showcasing functionality in the Nais platform.",
 };
 
-const { publicRuntimeConfig } = getConfig();
-const grafanaDashboardUrl = publicRuntimeConfig.grafanaDashboardUrl;
-const githubUrl = publicRuntimeConfig.githubUrl;
+const grafanaDashboardUrl = process.env.NEXT_PUBLIC_GRAFANA_DASHBOARD_URL;
+const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL;
 
 export default function RootLayout({
   children,
