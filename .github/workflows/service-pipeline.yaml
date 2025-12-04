@@ -56,7 +56,11 @@ jobs:
       - uses: jdx/mise-action@v3
         with:
           version: 2024.12.18
-          experimental: true
+          install: true
+          cache: true
+          cache_save: true
+          cache_key_prefix: mise-v0
+          experimental: false
           log_level: debug
 
       - name: Install mise tools
