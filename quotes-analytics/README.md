@@ -1,6 +1,6 @@
 # Quotes Analytics Service (.NET)
 
-.NET 8 service providing quote analytics with OpenTelemetry auto-instrumentation and custom telemetry.
+.NET 10 service providing quote analytics with OpenTelemetry auto-instrumentation and custom telemetry.
 
 ## Features
 
@@ -13,11 +13,11 @@ See [INSTRUMENTATION.md](INSTRUMENTATION.md) for telemetry details
 
 ## Quick Start
 
-**Prerequisites:** [mise](https://mise.jdx.dev/) or .NET 8 SDK, Docker
+**Prerequisites:** [mise](https://mise.jdx.dev/) or .NET 10 SDK, Docker
 
 ```bash
 # Using mise (recommended)
-mise install                    # Install .NET 8
+mise install                    # Install .NET 10
 mise run build                  # Build
 mise run test                   # Run tests
 mise run run                    # Start service

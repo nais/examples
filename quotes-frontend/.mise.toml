@@ -1,5 +1,5 @@
 [tools]
-nodejs = "24"
+node = "25.2.1"
 yarn = "1.22.22"
 
 [env]
@@ -59,3 +59,11 @@ run = [
   "mise run type-check",
   "mise run build",
 ]
+
+[tasks."dependencies:check"]
+description = "Check for outdated npm packages"
+run = "yarn outdated"
+
+[tasks."dependencies:update"]
+description = "Update all dependencies to latest versions"
+run = ["yarn upgrade --latest", "yarn install"]

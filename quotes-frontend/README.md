@@ -70,7 +70,7 @@ If required fields are missing or the request body is invalid, the backend retur
 
 Ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v22 or later)
+- [Node.js](https://nodejs.org/) (v25 or later)
 - [yarn](https://yarnpkg.com/)
 
 ### Installation

@@ -1,5 +1,5 @@
 [tools]
-go = "1.24.3"
+go = "latest"
 watchexec = "2.3.2"
 
 [env]
@@ -83,3 +83,11 @@ run = [
   "go test ./...",
   "go build -o bin/quotes-loadgen ./cmd/main.go",
 ]
+
+[tasks."dependencies:check"]
+description = "Check for outdated Go modules"
+run = "go list -u -m all"
+
+[tasks."dependencies:update"]
+description = "Update all Go module dependencies"
+run = ["go get -u ./...", "go mod tidy"]

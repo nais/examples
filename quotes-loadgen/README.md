@@ -10,7 +10,7 @@ The Quotes Load Generator is a simple Go-based tool designed to generate load on
 
 ## Prerequisites
 
-- [Go](https://golang.org/) 1.20 or later
+- [Go](https://golang.org/) 1.25 or later
 - Docker (optional, for containerized usage)
 
 ## Usage

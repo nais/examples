@@ -1,5 +1,5 @@
 [tools]
-dotnet = "8.0.404"
+dotnet = "latest"
 
 [env]
 DOTNET_CLI_TELEMETRY_OPTOUT = "1"
@@ -88,3 +88,11 @@ run = [
   "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
   "dotnet test quotes-analytics.sln --no-build --logger 'console;verbosity=normal'",
 ]
+
+[tasks."dependencies:check"]
+description = "Check for outdated NuGet packages"
+run = "dotnet list package --outdated"
+
+[tasks."dependencies:update"]
+description = "Check for outdated NuGet packages (.NET requires manual updates)"
+run = "dotnet list package --outdated"

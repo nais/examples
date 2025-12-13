@@ -282,6 +282,37 @@ run = [
   "echo '✅ CI pipeline completed successfully'",
 ]
 
+[tasks."dependencies:update"]
+description = "Update dependencies for all services"
+run = [
+  "echo '📦 Updating dependencies for all services...'",
+  "mise run backend:dependencies:update",
+  "mise run frontend:dependencies:update",
+  "mise run analytics:dependencies:update",
+  "mise run loadgen:dependencies:update",
+  "echo '✅ All dependencies updated'",
+]
+
+# =============================================================================
+# INDIVIDUAL SERVICE DEPENDENCY UPDATE TASKS
+# =============================================================================
+
+[tasks."backend:dependencies:update"]
+description = "Update backend dependencies"
+run = "cd quotes-backend && mise run dependencies:update"
+
+[tasks."frontend:dependencies:update"]
+description = "Update frontend dependencies"
+run = "cd quotes-frontend && mise run dependencies:update"
+
+[tasks."analytics:dependencies:update"]
+description = "Update analytics dependencies"
+run = "cd quotes-analytics && mise run dependencies:update"
+
+[tasks."loadgen:dependencies:update"]
+description = "Update load generator dependencies"
+run = "cd quotes-loadgen && mise run dependencies:update"
+
 # =============================================================================
 # DOCKER TASKS
 # =============================================================================

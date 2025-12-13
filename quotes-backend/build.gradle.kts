@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "2.2.20"
     kotlin("plugin.serialization") version "2.2.20"
-    id("io.ktor.plugin") version "3.3.0"
+    id("io.ktor.plugin") version "3.3.3"
     application
     id("com.github.ben-manes.versions") version "0.53.0"
 }
@@ -29,11 +29,11 @@ repositories {
     maven("https://jitpack.io") // For Ktor-OpenAPI-Generator
 }
 
-val ktorVersion = "2.3.13"
+val ktorVersion = "3.3.3"
 val kotlinxSerializationVersion = "1.9.0"
-val logbackVersion = "1.5.19"
-val logstashLogbackEncoderVersion = "8.1"
-val opentelemetryVersion = "2.20.1-alpha"
+val logbackVersion = "1.5.22"
+val logstashLogbackEncoderVersion = "9.0"
+val opentelemetryVersion = "2.23.0-alpha"
 val kotlinTestVersion = "2.2.20"
 
 dependencies {
@@ -60,7 +60,7 @@ dependencies {
     implementation("io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:$opentelemetryVersion")
 
     // Testing
-    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")

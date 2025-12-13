@@ -17,8 +17,9 @@ The Quotes Backend is a Kotlin-based service built with Ktor. It provides a simp
 
 ## Prerequisites
 
-- [Kotlin](https://kotlinlang.org/) 1.8 or later
-- [Gradle](https://gradle.org/) 8.0 or later
+- [Kotlin](https://kotlinlang.org/) 2.2 or later
+- [Gradle](https://gradle.org/) 8.12 or later
+- [Java](https://www.java.com/) 21 or later
 
 ## Running the Service
 

@@ -1288,10 +1288,10 @@ except ApiException as e:
     "application/json" : {
       "schema" : {
         "type" : "array",
-        "x-content-type" : "application/json",
         "items" : {
           "$ref" : "#/components/schemas/Quote"
-        }
+        },
+        "x-content-type" : "application/json"
       }
     }
   }

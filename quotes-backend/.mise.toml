@@ -1,6 +1,6 @@
 [tools]
 java = "21"
-gradle = "8.12"
+gradle = "latest"
 
 [env]
 GRADLE_OPTS = "-Dorg.gradle.daemon=true -Dorg.gradle.parallel=true"
@@ -61,3 +61,11 @@ run = "docker run -p 8080:8080 quotes-backend:local"
 [tasks.ci]
 description = "Run all CI checks"
 run = ["./gradlew clean", "./gradlew check", "./gradlew build"]
+
+[tasks."dependencies:check"]
+description = "Check for outdated dependencies"
+run = "./gradlew dependencyUpdates"
+
+[tasks."dependencies:update"]
+description = "Check for outdated dependencies (Gradle requires manual updates)"
+run = "./gradlew dependencyUpdates"
