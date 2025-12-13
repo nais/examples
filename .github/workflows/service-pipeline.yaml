@@ -59,7 +59,7 @@ jobs:
           experimental: false
           cache: true
           cache_save: true
-          cache_key_prefix: mise-v1
+          cache_key_prefix: mise-v2
           log_level: debug
 
       - name: Install mise tools
