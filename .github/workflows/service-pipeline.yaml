@@ -56,7 +56,7 @@ jobs:
         with:
           version: 2024.12.18
           install: true
-          experimental: false
+          experimental: true
           cache: true
           cache_save: true
           cache_key_prefix: mise-v1
