@@ -424,6 +424,9 @@ gradle-app.setting
 # Exclude Gradle build scans directory
 .gradle-scans/
 
+# Generated API documentation
+**/docs/index.html
+
 ### Ktor ###
 # Specific to Ktor, if you use embeddedServer output
 # These might be too broad if you have other important jars/zips/tars

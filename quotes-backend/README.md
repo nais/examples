@@ -89,8 +89,12 @@ Retrieves a quote by its ID.
 
 ## OpenAPI and Swagger
 
+The API documentation is **generated dynamically at runtime** by Ktor's OpenAPI and Swagger plugins:
+
 - OpenAPI specification: [http://localhost:8080/openapi](http://localhost:8080/openapi)
 - Swagger UI: [http://localhost:8080/swagger](http://localhost:8080/swagger)
+
+**Note**: No static HTML documentation files are committed to the repository. The Swagger UI is served directly by the application when it's running.
 
 ## Health Endpoint
 
