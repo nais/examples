@@ -1,8 +1,7 @@
 [tools]
 # Root tools for the entire project (kept minimal, each service manages its own)
-go = "1.25"
 watchexec = "2.3.2"
-"go:github.com/sethvargo/ratchet" = "latest"
+# Note: ratchet can be installed separately with: go install github.com/sethvargo/ratchet@latest
 
 [env]
 # Global environment variables for development
