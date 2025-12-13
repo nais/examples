@@ -2,13 +2,13 @@ name: quotes-analytics
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-analytics.yaml
       - .github/workflows/service-pipeline.yaml
       - quotes-analytics/**
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-analytics.yaml
       - .github/workflows/service-pipeline.yaml

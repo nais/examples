@@ -2,13 +2,13 @@ name: quotes-loadgen
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-loadgen.yaml
       - .github/workflows/service-pipeline.yaml
       - quotes-loadgen/**
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-loadgen.yaml
       - .github/workflows/service-pipeline.yaml

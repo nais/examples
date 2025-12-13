@@ -2,13 +2,13 @@ name: quotes-frontend
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-frontend.yaml
       - .github/workflows/service-pipeline.yaml
       - quotes-frontend/**
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
       - .github/workflows/quotes-frontend.yaml
       - .github/workflows/service-pipeline.yaml

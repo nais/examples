@@ -1,6 +1,8 @@
 [tools]
 # Root tools for the entire project (kept minimal, each service manages its own)
+go = "1.25"
 watchexec = "2.3.2"
+"go:github.com/sethvargo/ratchet" = "latest"
 
 [env]
 # Global environment variables for development
@@ -312,6 +314,41 @@ run = "cd quotes-analytics && mise run dependencies:update"
 [tasks."loadgen:dependencies:update"]
 description = "Update load generator dependencies"
 run = "cd quotes-loadgen && mise run dependencies:update"
+
+# =============================================================================
+# GITHUB ACTIONS SECURITY TASKS (Ratchet)
+# =============================================================================
+
+[tasks."ratchet:pin"]
+description = "Pin GitHub Actions to specific commit SHAs"
+run = [
+  "echo '📌 Pinning GitHub Actions to commit SHAs...'",
+  "ratchet pin .github/workflows/*.yml .github/workflows/*.yaml",
+  "echo '✅ All actions pinned'",
+]
+
+[tasks."ratchet:update"]
+description = "Update pinned GitHub Actions to latest versions"
+run = [
+  "echo '🔄 Updating pinned GitHub Actions...'",
+  "ratchet update .github/workflows/*.yml .github/workflows/*.yaml",
+  "echo '✅ All actions updated'",
+]
+
+[tasks."ratchet:lint"]
+description = "Check if GitHub Actions are properly pinned"
+run = [
+  "echo '🔍 Checking GitHub Actions pinning...'",
+  "ratchet lint .github/workflows/*.yml .github/workflows/*.yaml",
+]
+
+[tasks."ratchet:unpin"]
+description = "Unpin GitHub Actions (restore to tags)"
+run = [
+  "echo '🔓 Unpinning GitHub Actions...'",
+  "ratchet unpin .github/workflows/*.yml .github/workflows/*.yaml",
+  "echo '✅ All actions unpinned'",
+]
 
 # =============================================================================
 # DOCKER TASKS
