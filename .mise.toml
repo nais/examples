@@ -64,7 +64,8 @@ run = [
 description = "Wait for infrastructure services to be ready"
 run = [
   "echo 'Waiting for infrastructure...'",
-  "for i in {1..30}; do nc -z localhost 5432 2>/dev/null && echo 'PostgreSQL ready' && break || sleep 1; done",
+  "for i in {1..30}; do nc -z localhost 5432 2>/dev/null && echo 'PostgreSQL (Unleash) ready' && break || sleep 1; done",
+  "for i in {1..30}; do nc -z localhost 5433 2>/dev/null && echo 'PostgreSQL (Quotes) ready' && break || sleep 1; done",
   "for i in {1..30}; do curl -s http://localhost:4242/health >/dev/null && echo 'Unleash ready' && break || sleep 1; done",
   "echo '✅ Infrastructure ready'",
 ]
@@ -109,11 +110,12 @@ run = [
 description = "Start infrastructure services (PostgreSQL, OTEL, Unleash)"
 run = [
   "echo '🏗️ Starting infrastructure services...'",
-  "docker-compose up -d postgres otel unleash",
+  "docker-compose up -d postgres quotes-db otel unleash",
   "echo '✅ Infrastructure ready:'",
   "echo '   📊 Grafana: http://localhost:4300'",
   "echo '   🎯 Unleash: http://localhost:4242'",
-  "echo '   🗄️ PostgreSQL: localhost:5432'",
+  "echo '   🗄️ PostgreSQL (Unleash): localhost:5432'",
+  "echo '   🗄️ PostgreSQL (Quotes): localhost:5433'",
 ]
 
 [tasks."infra:down"]

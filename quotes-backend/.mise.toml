@@ -5,6 +5,9 @@ gradle = "latest"
 [env]
 GRADLE_OPTS = "-Dorg.gradle.daemon=true -Dorg.gradle.parallel=true"
 JAVA_TOOL_OPTIONS = "-XX:+UseG1GC"
+DB_URL = "jdbc:postgresql://localhost:5433/quotes"
+DB_USERNAME = "quotes"
+DB_PASSWORD = "quotes"
 
 [tasks.dev]
 description = "Start development server with auto-reload"
@@ -69,3 +72,48 @@ run = "./gradlew dependencyUpdates"
 [tasks."dependencies:update"]
 description = "Check for outdated dependencies (Gradle requires manual updates)"
 run = "./gradlew dependencyUpdates"
+[tasks."db:start"]
+description = "Start local PostgreSQL database"
+run = [
+  "echo '🗄️ Starting quotes database...'",
+  "docker-compose -f ../docker-compose.yaml up -d quotes-db",
+  "echo 'Waiting for database to be ready...'",
+  "for i in {1..30}; do nc -z localhost 5433 2>/dev/null && echo '✅ Database ready on localhost:5433' && break || sleep 1; done",
+]
+
+[tasks."db:stop"]
+description = "Stop local PostgreSQL database"
+run = [
+  "echo '🛑 Stopping quotes database...'",
+  "docker-compose -f ../docker-compose.yaml stop quotes-db",
+]
+
+[tasks."db:logs"]
+description = "Show database logs"
+run = "docker-compose -f ../docker-compose.yaml logs -f quotes-db"
+
+[tasks."db:psql"]
+description = "Connect to database with psql"
+run = "docker exec -it nais-quotes-quotes-db-1 psql -U quotes -d quotes"
+
+[tasks."db:reset"]
+description = "Reset database (WARNING: destroys all data)"
+run = [
+  "echo '⚠️ This will destroy all database data!'",
+  "read -p 'Are you sure? (yes/no): ' confirm",
+  "if [ \"$confirm\" = \"yes\" ]; then",
+  "  docker-compose -f ../docker-compose.yaml down -v quotes-db",
+  "  docker-compose -f ../docker-compose.yaml up -d quotes-db",
+  "  echo '✅ Database reset complete'",
+  "else",
+  "  echo '❌ Reset cancelled'",
+  "fi",
+]
+
+[tasks."dev:with-db"]
+description = "Start database and development server"
+run = [
+  "mise run db:start",
+  "echo '🚀 Starting development server...'",
+  "./gradlew run --continuous",
+]

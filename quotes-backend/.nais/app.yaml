@@ -65,14 +65,19 @@ spec:
     - emptyDir:
         medium: Memory
       mountPath: /app/docs
-  #gcp:
-  #  sqlInstances:
-  #    - name: quotes-backend
-  #      type: POSTGRES_14
-  #      databases:
-  #        - name: quotes-backend
-  #          envVarPrefix: DB
-  #      tier: db-f1-micro
+  gcp:
+    sqlInstances:
+      - name: quotes-backend
+        type: POSTGRES_16
+        databases:
+          - name: quotes
+            envVarPrefix: DB
+        tier: db-f1-micro
+        flags:
+          - name: cloudsql.enable_pgaudit
+            value: "on"
+          - name: pgaudit.log
+            value: "all"
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}

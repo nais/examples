@@ -35,6 +35,9 @@ val logbackVersion = "1.5.22"
 val logstashLogbackEncoderVersion = "9.0"
 val opentelemetryVersion = "2.23.0-alpha"
 val kotlinTestVersion = "2.2.21"
+val exposedVersion = "0.57.0"
+val postgresqlVersion = "42.7.5"
+val hikariVersion = "6.2.1"
 
 dependencies {
     // Ktor
@@ -59,11 +62,19 @@ dependencies {
     implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:$opentelemetryVersion")
     implementation("io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:$opentelemetryVersion")
 
+    // Database
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
+
     // Testing
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
+    testImplementation("com.h2database:h2:2.3.232")
 }
 
 tasks.withType<Test> {
