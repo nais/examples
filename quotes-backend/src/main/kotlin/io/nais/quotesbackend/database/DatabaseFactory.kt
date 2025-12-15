@@ -15,20 +15,25 @@ object DatabaseFactory {
   private fun hikari(): HikariDataSource {
     val config =
             HikariConfig().apply {
-              // Support both environment variables and system properties (for testing)
-              val dbUrl = System.getProperty("DB_URL") ?: System.getenv("DB_URL")
-              val dbUser = System.getProperty("DB_USERNAME") ?: System.getenv("DB_USERNAME")
+              // NAIS provides DB_JDBC_URL which is ready for JDBC (jdbc:postgresql://...)
+              // For local dev, fall back to DB_URL or default to H2
+              val jdbcUrl =
+                      System.getProperty("DB_JDBC_URL")
+                              ?: System.getenv("DB_JDBC_URL") ?: System.getProperty("DB_URL")
+                                      ?: System.getenv("DB_URL")
+                                      ?: "jdbc:h2:mem:quotes;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
+              val dbUser = System.getProperty("DB_USERNAME") ?: System.getenv("DB_USERNAME") ?: "sa"
               val dbPassword =
                       System.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: ""
 
               // Auto-detect driver based on URL
               driverClassName =
                       when {
-                        dbUrl.contains("h2") -> "org.h2.Driver"
+                        jdbcUrl.contains("h2") -> "org.h2.Driver"
                         else -> "org.postgresql.Driver"
                       }
 
-              jdbcUrl = dbUrl
+              this.jdbcUrl = jdbcUrl
               username = dbUser
               password = dbPassword
               maximumPoolSize = 3
