@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "axios": "^1.12.2",
-    "next": "16.0.10",
-    "pino": "^10.1.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "axios": "^1.13.4",
+    "next": "16.1.6",
+    "pino": "^10.3.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -24,7 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9.39.2",
-    "eslint-config-next": "16.0.10",
+    "eslint-config-next": "16.1.6",
     "pino-pretty": "^13.1.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5"
