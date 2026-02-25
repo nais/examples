@@ -51,12 +51,17 @@ run = "docker build -t quotes-frontend:local ."
 description = "Run Docker container locally"
 run = "docker run -p 3000:3000 quotes-frontend:local"
 
+[tasks.test]
+description = "Run tests"
+run = "npx vitest run"
+
 [tasks.ci]
 description = "Run all CI checks"
 run = [
   "mise run install",
   "mise run lint",
   "mise run type-check",
+  "mise run test",
   "mise run build",
 ]
 

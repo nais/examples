@@ -71,8 +71,9 @@ class QuoteService {
   }
 
   suspend fun searchQuotes(query: String): List<Quote> = dbQuery {
+    val escaped = query.replace("%", "\\%").replace("_", "\\_")
     QuotesTable.selectAll()
-            .where { (QuotesTable.text like "%$query%") or (QuotesTable.author like "%$query%") }
+            .where { (QuotesTable.text like "%$escaped%") or (QuotesTable.author like "%$escaped%") }
             .map {
               Quote(
                       id = it[QuotesTable.id].toString(),

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
@@ -20,7 +21,7 @@ public class QuotesAnalyticsService
     private readonly Histogram<double> _sentimentScoreHistogram;
     private readonly Counter<long> _categoryCounter;
     private readonly Histogram<long> _analysisTimeHistogram;
-    private readonly Dictionary<string, QuoteAnalytics> _analyticsCache = new();
+    private readonly ConcurrentDictionary<string, QuoteAnalytics> _analyticsCache = new();
 
     public QuotesAnalyticsService(HttpClient httpClient, ILogger<QuotesAnalyticsService> logger)
     {

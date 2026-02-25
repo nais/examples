@@ -13,7 +13,7 @@ RUN ./gradlew --no-daemon assemble
 # Download opentelemetry-javaagent
 # https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/
 FROM scratch AS javaagent
-ARG JAVA_OTEL_VERSION=v2.0.0
+ARG JAVA_OTEL_VERSION=v2.12.0
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/$JAVA_OTEL_VERSION/opentelemetry-javaagent.jar /instrumentations/java/javaagent.jar
 
 # Final image
