@@ -7,56 +7,38 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.testApplication
+import io.nais.quotesbackend.database.DatabaseFactory
 import io.nais.quotesbackend.database.QuotesTable
 import kotlin.test.*
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ApplicationIntegrationTest {
 
-  private lateinit var database: Database
-
   @BeforeTest
   fun setupDatabase() {
-    // Set environment variables for test database connection
     System.setProperty(
             "DB_URL",
-            "jdbc:h2:mem:test_${System.currentTimeMillis()};DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
+            "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
     )
     System.setProperty("DB_USERNAME", "sa")
     System.setProperty("DB_PASSWORD", "")
-
-    // Use H2 in-memory database for integration tests
-    database =
-            Database.connect(
-                    url = System.getProperty("DB_URL"),
-                    driver = "org.h2.Driver",
-                    user = System.getProperty("DB_USERNAME"),
-                    password = System.getProperty("DB_PASSWORD")
-            )
-
-    transaction(database) { SchemaUtils.create(QuotesTable) }
   }
 
   @AfterTest
   fun tearDownDatabase() {
-    transaction(database) {
-      QuotesTable.deleteAll()
-      SchemaUtils.drop(QuotesTable)
-    }
+    DatabaseFactory.close()
   }
 
   @Test
   fun testGetQuotesWithDatabase() = testApplication {
     globalErrorRate = 0.0
 
-    // Clear database before test
-    transaction(database) { QuotesTable.deleteAll() }
-
-    application { module() }
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
 
     val client = createClient {
       install(ClientContentNegotiation) {
@@ -86,9 +68,10 @@ class ApplicationIntegrationTest {
   fun testCreateAndRetrieveQuote() = testApplication {
     globalErrorRate = 0.0
 
-    transaction(database) { QuotesTable.deleteAll() }
-
-    application { module() }
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
 
     val client = createClient {
       install(ClientContentNegotiation) {
@@ -130,9 +113,10 @@ class ApplicationIntegrationTest {
   fun testGetAllQuotesIncludesNewlyCreated() = testApplication {
     globalErrorRate = 0.0
 
-    transaction(database) { QuotesTable.deleteAll() }
-
-    application { module() }
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
 
     val client = createClient {
       install(ClientContentNegotiation) {
@@ -170,9 +154,10 @@ class ApplicationIntegrationTest {
   fun testGetQuoteNotFoundReturns404() = testApplication {
     globalErrorRate = 0.0
 
-    transaction(database) { QuotesTable.deleteAll() }
-
-    application { module() }
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
 
     val client = createClient {}
 
@@ -249,9 +234,10 @@ class ApplicationIntegrationTest {
   fun testCreateMultipleQuotesSequentially() = testApplication {
     globalErrorRate = 0.0
 
-    transaction(database) { QuotesTable.deleteAll() }
-
-    application { module() }
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
 
     val client = createClient {
       install(ClientContentNegotiation) {
@@ -294,5 +280,223 @@ class ApplicationIntegrationTest {
     for (id in createdIds) {
       assertTrue(allQuotes.any { it.id == id })
     }
+  }
+
+  @Test
+  fun testUpdateQuote() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {
+      install(ClientContentNegotiation) {
+        json(
+                Json {
+                  prettyPrint = true
+                  isLenient = true
+                  ignoreUnknownKeys = true
+                }
+        )
+      }
+    }
+
+    val created: Quote =
+            client
+                    .post("/api/quotes") {
+                      contentType(ContentType.Application.Json)
+                      setBody(QuoteInput(text = "Original", author = "Author"))
+                    }
+                    .body()
+
+    val updateResponse =
+            client.put("/api/quotes/${created.id}") {
+              contentType(ContentType.Application.Json)
+              setBody(QuoteInput(text = "Updated", author = "New Author"))
+            }
+
+    assertEquals(HttpStatusCode.OK, updateResponse.status)
+    val updated: Quote = updateResponse.body()
+    assertEquals("Updated", updated.text)
+    assertEquals("New Author", updated.author)
+  }
+
+  @Test
+  fun testUpdateQuoteNotFound() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {
+      install(ClientContentNegotiation) {
+        json(
+                Json {
+                  prettyPrint = true
+                  isLenient = true
+                  ignoreUnknownKeys = true
+                }
+        )
+      }
+    }
+
+    val response =
+            client.put("/api/quotes/99999") {
+              contentType(ContentType.Application.Json)
+              setBody(QuoteInput(text = "Text", author = "Author"))
+            }
+
+    assertEquals(HttpStatusCode.NotFound, response.status)
+  }
+
+  @Test
+  fun testDeleteQuote() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {
+      install(ClientContentNegotiation) {
+        json(
+                Json {
+                  prettyPrint = true
+                  isLenient = true
+                  ignoreUnknownKeys = true
+                }
+        )
+      }
+    }
+
+    val created: Quote =
+            client
+                    .post("/api/quotes") {
+                      contentType(ContentType.Application.Json)
+                      setBody(QuoteInput(text = "To delete", author = "Author"))
+                    }
+                    .body()
+
+    val deleteResponse = client.delete("/api/quotes/${created.id}")
+    assertEquals(HttpStatusCode.NoContent, deleteResponse.status)
+
+    val getResponse = client.get("/api/quotes/${created.id}")
+    assertEquals(HttpStatusCode.NotFound, getResponse.status)
+  }
+
+  @Test
+  fun testDeleteQuoteNotFound() = testApplication {
+    globalErrorRate = 0.0
+
+    application { module() }
+
+    val client = createClient {}
+
+    val response = client.delete("/api/quotes/99999")
+    assertEquals(HttpStatusCode.NotFound, response.status)
+  }
+
+  @Test
+  fun testSearchQuotes() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {
+      install(ClientContentNegotiation) {
+        json(
+                Json {
+                  prettyPrint = true
+                  isLenient = true
+                  ignoreUnknownKeys = true
+                }
+        )
+      }
+    }
+
+    client.post("/api/quotes") {
+      contentType(ContentType.Application.Json)
+      setBody(QuoteInput(text = "Unique searchable text", author = "Search Author"))
+    }
+
+    val response = client.get("/api/quotes/search?q=searchable")
+    assertEquals(HttpStatusCode.OK, response.status)
+
+    val results: List<Quote> = response.body()
+    assertTrue(results.isNotEmpty())
+    assertTrue(results.any { it.text.contains("searchable") })
+  }
+
+  @Test
+  fun testSearchQuotesMissingQuery() = testApplication {
+    globalErrorRate = 0.0
+
+    application { module() }
+
+    val client = createClient {}
+
+    val response = client.get("/api/quotes/search")
+    assertEquals(HttpStatusCode.BadRequest, response.status)
+  }
+
+  @Test
+  fun testSearchQuotesWithWildcardCharacters() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {
+      install(ClientContentNegotiation) {
+        json(
+                Json {
+                  prettyPrint = true
+                  isLenient = true
+                  ignoreUnknownKeys = true
+                }
+        )
+      }
+    }
+
+    client.post("/api/quotes") {
+      contentType(ContentType.Application.Json)
+      setBody(QuoteInput(text = "Normal quote", author = "Author"))
+    }
+
+    val response = client.get("/api/quotes/search?q=%25")
+    assertEquals(HttpStatusCode.OK, response.status)
+
+    val results: List<Quote> = response.body()
+    assertTrue(results.isEmpty(), "Searching for literal % should not match all quotes")
+  }
+
+  @Test
+  fun testStatsEndpoint() = testApplication {
+    globalErrorRate = 0.0
+
+    application {
+      module()
+      transaction(DatabaseFactory.database!!) { QuotesTable.deleteAll() }
+    }
+
+    val client = createClient {}
+
+    client.get("/internal/ready")
+
+    val response = client.get("/internal/stats")
+    assertEquals(HttpStatusCode.OK, response.status)
+
+    val body = response.bodyAsText()
+    assertTrue(body.contains("total_quotes"))
   }
 }

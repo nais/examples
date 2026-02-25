@@ -43,6 +43,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - language: csharp
+            build-mode: autobuild
           - language: go
             build-mode: autobuild
           - language: java-kotlin
@@ -84,7 +86,7 @@ jobs:
 
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # ratchet:actions/setup-java@v5
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'temurin'
           cache: 'gradle'
 

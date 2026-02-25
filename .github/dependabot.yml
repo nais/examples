@@ -35,13 +35,13 @@ updates:
       quotes-backend-gradle:
         patterns:
           - "*"
-  # npm
+  # pnpm
   - package-ecosystem: "npm"
     directory: "/quotes-frontend"
     schedule:
       interval: "monthly"
     groups:
-      quotes-frontend-npm:
+      quotes-frontend-pnpm:
         patterns:
           - "*"
   # gomod
