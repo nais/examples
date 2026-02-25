@@ -45,7 +45,7 @@ mise run dev:manual
 
 | Service          | Language                   | Build                    | Test             | Lint                                |
 | ---------------- | -------------------------- | ------------------------ | ---------------- | ----------------------------------- |
-| quotes-frontend  | TypeScript (Next.js 16)    | `yarn build`             | `vitest run`     | `eslint .`                          |
+| quotes-frontend  | TypeScript (Next.js 16)    | `pnpm build`             | `vitest run`     | `eslint .`                          |
 | quotes-backend   | Kotlin 2 (Ktor 3, Exposed) | `./gradlew build`        | `./gradlew test` | `./gradlew ktlintCheck`             |
 | quotes-analytics | C# (.NET 10)               | `dotnet build`           | `dotnet test`    | `dotnet format --verify-no-changes` |
 | quotes-loadgen   | Go 1.24                    | `go build ./cmd/main.go` | `go test ./...`  | `golangci-lint run`                 |

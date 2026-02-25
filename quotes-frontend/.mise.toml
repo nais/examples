@@ -1,6 +1,5 @@
 [tools]
 node = "25.2.1"
-yarn = "1.22.22"
 
 [env]
 NODE_ENV = "development"
@@ -8,36 +7,36 @@ NEXT_TELEMETRY_DISABLED = "1"
 
 [tasks.dev]
 description = "Start development server with Turbopack"
-run = "yarn dev"
+run = "pnpm dev"
 
 [tasks.build]
 description = "Build the Next.js application"
 env = { NODE_ENV = "production" }
-run = "yarn build"
+run = "pnpm build"
 
 [tasks.start]
 description = "Start production server"
-run = "yarn start"
+run = "pnpm start"
 
 [tasks.watch]
 description = "Run development server with hot reload (alias for dev)"
-run = "yarn dev"
+run = "pnpm dev"
 
 [tasks.lint]
 description = "Run ESLint"
-run = "yarn lint"
+run = "pnpm lint"
 
 [tasks.lint-fix]
 description = "Run ESLint with auto-fix"
-run = "yarn lint --fix"
+run = "pnpm lint --fix"
 
 [tasks.type-check]
 description = "Run TypeScript type checking"
-run = "npx tsc --noEmit"
+run = "pnpm tsc --noEmit"
 
 [tasks.install]
 description = "Install dependencies"
-run = "yarn install"
+run = "pnpm install"
 
 [tasks.clean]
 description = "Clean build artifacts and node_modules"
@@ -53,7 +52,7 @@ run = "docker run -p 3000:3000 quotes-frontend:local"
 
 [tasks.test]
 description = "Run tests"
-run = "npx vitest run"
+run = "pnpm vitest run"
 
 [tasks.ci]
 description = "Run all CI checks"
@@ -66,9 +65,9 @@ run = [
 ]
 
 [tasks."dependencies:check"]
-description = "Check for outdated npm packages"
-run = "yarn outdated"
+description = "Check for outdated packages"
+run = "pnpm outdated"
 
 [tasks."dependencies:update"]
 description = "Update all dependencies to latest versions"
-run = ["yarn upgrade --latest", "yarn install"]
+run = "pnpm update --latest"

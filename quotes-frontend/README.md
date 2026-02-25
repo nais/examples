@@ -71,7 +71,7 @@ If required fields are missing or the request body is invalid, the backend retur
 Ensure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (v25 or later)
-- [yarn](https://yarnpkg.com/)
+- [pnpm](https://pnpm.io/)
 
 ### Installation
 
@@ -85,7 +85,7 @@ Ensure you have the following installed:
 2. Install dependencies:
 
    ```bash
-   yarn install
+   pnpm install
    ```
 
 ### Running the Development Server
@@ -93,7 +93,7 @@ Ensure you have the following installed:
 Start the development server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
@@ -103,13 +103,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 Build the application for production:
 
 ```bash
-yarn build
+pnpm build
 ```
 
 Start the production server:
 
 ```bash
-yarn start
+pnpm start
 ```
 
 ### Testing
@@ -117,7 +117,7 @@ yarn start
 Run tests:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 ## Environment Variables
