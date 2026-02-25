@@ -8,9 +8,13 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.* // For client-side JSON serialization
 import io.ktor.server.application.* // Import Application from Ktor
 import io.ktor.server.testing.testApplication
+import io.nais.quotesbackend.database.DatabaseFactory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull // Added for assertNotNull
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
+import kotlin.test.assertTrue
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -18,6 +22,21 @@ import kotlinx.serialization.json.jsonPrimitive
 // usage
 
 class ApplicationTest {
+
+        @BeforeTest
+        fun setupDatabase() {
+                System.setProperty(
+                        "DB_URL",
+                        "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
+                )
+                System.setProperty("DB_USERNAME", "sa")
+                System.setProperty("DB_PASSWORD", "")
+        }
+
+        @AfterTest
+        fun tearDownDatabase() {
+                DatabaseFactory.close()
+        }
 
         @Test
         fun testGetQuotes() = testApplication {
@@ -49,45 +68,40 @@ class ApplicationTest {
 
         @Test
         fun testGetSpecificQuote() = testApplication {
-                globalErrorRate = 0.0 // Set error rate to 0 for this test
+                globalErrorRate = 0.0
                 application {
-                        module() // Call module within application block
+                        module()
                 }
                 val client = createClient {}
 
-                // Assuming a quote with ID 1 exists in the database
-                val response = client.get("/api/quotes/1")
+                // Initialize default quotes via readiness endpoint
+                client.get("/internal/ready")
+
+                // Get all quotes to find a valid ID
+                val allResponse = client.get("/api/quotes")
+                assertEquals(HttpStatusCode.OK, allResponse.status)
+                val allBody = allResponse.bodyAsText()
+                val json = kotlinx.serialization.json.Json
+                val allQuotes = json.parseToJsonElement(allBody) as kotlinx.serialization.json.JsonArray
+                assertTrue(allQuotes.size > 0, "Expected at least one quote")
+
+                val firstQuote = allQuotes[0] as kotlinx.serialization.json.JsonObject
+                val quoteId = firstQuote["id"]?.jsonPrimitive?.content?.toInt()
+                        ?: error("Missing 'id' field")
+
+                // Fetch the specific quote by its actual ID
+                val response = client.get("/api/quotes/$quoteId")
                 assertEquals(HttpStatusCode.OK, response.status)
 
-                val responseBodyString = response.bodyAsText()
+                val actualJsonElement = json.parseToJsonElement(response.bodyAsText())
+                val actualJsonObject = actualJsonElement as? kotlinx.serialization.json.JsonObject
+                        ?: error("Expected JsonObject, but got: ${actualJsonElement::class.simpleName}")
 
-                val json = kotlinx.serialization.json.Json
-                val actualJsonElement = json.parseToJsonElement(responseBodyString)
-
-                val actualJsonObject =
-                        actualJsonElement as? kotlinx.serialization.json.JsonObject
-                                ?: error(
-                                        "Expected JsonElement to be a JsonObject, but it was: ${actualJsonElement::class.simpleName}"
-                                )
-
-                kotlin.test.assertTrue(
-                        actualJsonObject.containsKey("id"),
-                        "Response JSON should contain an 'id' field"
-                )
-                kotlin.test.assertEquals(
-                        1,
-                        actualJsonObject["id"]?.jsonPrimitive?.content?.toInt()
-                                ?: error("Missing 'id' field"),
-                        "ID does not match"
-                )
-                kotlin.test.assertTrue(
-                        actualJsonObject.containsKey("text"),
-                        "Response JSON should contain a 'text' field"
-                )
-                kotlin.test.assertTrue(
-                        actualJsonObject.containsKey("author"),
-                        "Response JSON should contain an 'author' field"
-                )
+                assertTrue(actualJsonObject.containsKey("id"))
+                assertEquals(quoteId, actualJsonObject["id"]?.jsonPrimitive?.content?.toInt()
+                        ?: error("Missing 'id' field"), "ID does not match")
+                assertTrue(actualJsonObject.containsKey("text"))
+                assertTrue(actualJsonObject.containsKey("author"))
         }
 
         @Test

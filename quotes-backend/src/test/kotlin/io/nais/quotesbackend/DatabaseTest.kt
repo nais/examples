@@ -25,7 +25,7 @@ class DatabaseTest {
 
     transaction(database) { SchemaUtils.create(QuotesTable) }
 
-    quoteService = QuoteService()
+    quoteService = QuoteService(database)
   }
 
   @AfterTest

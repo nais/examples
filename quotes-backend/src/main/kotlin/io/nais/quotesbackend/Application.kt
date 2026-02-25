@@ -35,8 +35,8 @@ fun main() {
 fun Application.module() {
         log.info("Using global error rate: $globalErrorRate")
 
-        DatabaseFactory.init()
-        val quoteService = QuoteService()
+        val database = DatabaseFactory.init()
+        val quoteService = QuoteService(database)
 
         install(CallLogging) {
                 level = Level.INFO

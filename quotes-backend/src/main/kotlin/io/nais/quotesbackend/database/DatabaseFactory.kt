@@ -7,9 +7,24 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
-  fun init() {
-    val database = Database.connect(hikari())
-    transaction(database) { SchemaUtils.create(QuotesTable) }
+  private var dataSource: HikariDataSource? = null
+  var database: Database? = null
+    private set
+
+  fun init(): Database {
+    dataSource?.close()
+    val ds = hikari()
+    dataSource = ds
+    val db = Database.connect(ds)
+    database = db
+    transaction(db) { SchemaUtils.create(QuotesTable) }
+    return db
+  }
+
+  fun close() {
+    dataSource?.close()
+    dataSource = null
+    database = null
   }
 
   private fun hikari(): HikariDataSource {

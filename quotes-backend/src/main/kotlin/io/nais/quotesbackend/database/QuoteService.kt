@@ -5,10 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-
-class QuoteService {
+class QuoteService(private val database: Database) {
   private suspend fun <T> dbQuery(block: suspend () -> T): T =
-          newSuspendedTransaction(Dispatchers.IO) { block() }
+          newSuspendedTransaction(Dispatchers.IO, database) { block() }
 
   suspend fun getAllQuotes(): List<Quote> = dbQuery {
     QuotesTable.selectAll().map {
