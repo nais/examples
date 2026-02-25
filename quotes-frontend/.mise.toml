@@ -1,5 +1,6 @@
 [tools]
 node = "25.2.1"
+"npm:pnpm" = "10"
 
 [env]
 NODE_ENV = "development"
