@@ -76,7 +76,7 @@ run = [
   "echo '🛑 Stopping all services...'",
   "pkill -f 'dotnet.*quotes-analytics' || true",
   "pkill -f 'next.*dev' || true",
-  "pkill -f 'gradlew.*run' || true",
+  "pkill -f 'gradle.*run' || true",
   "docker-compose down",
   "echo '✅ All services stopped'",
 ]

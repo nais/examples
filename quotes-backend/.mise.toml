@@ -11,47 +11,47 @@ DB_PASSWORD = "quotes"
 
 [tasks.dev]
 description = "Start development server with auto-reload"
-run = "./gradlew run --continuous"
+run = "gradle run --continuous"
 
 [tasks.build]
 description = "Build the Kotlin application"
-run = "./gradlew build"
+run = "gradle build"
 
 [tasks.test]
 description = "Run all tests"
-run = "./gradlew test"
+run = "gradle test"
 
 [tasks.run]
 description = "Run the application"
-run = "./gradlew run"
+run = "gradle run"
 
 [tasks.watch]
 description = "Run the application with hot reload (alias for dev)"
-run = "./gradlew run --continuous"
+run = "gradle run --continuous"
 
 [tasks.clean]
 description = "Clean build artifacts"
-run = "./gradlew clean"
+run = "gradle clean"
 
 [tasks.check]
 description = "Run all checks (tests, linting, etc.)"
-run = "./gradlew check"
+run = "gradle check"
 
 [tasks.dependencies]
 description = "Show dependency updates"
-run = "./gradlew dependencyUpdates"
+run = "gradle dependencyUpdates"
 
 [tasks.lint]
 description = "Run Kotlin linting (using check task)"
-run = "./gradlew check"
+run = "gradle check"
 
 [tasks.format]
 description = "Format Kotlin code"
-run = "./gradlew ktlintFormat"
+run = "gradle ktlintFormat"
 
 [tasks.format-check]
 description = "Check Kotlin code formatting"
-run = "./gradlew ktlintCheck"
+run = "gradle ktlintCheck"
 
 [tasks.docker-build]
 description = "Build Docker image"
@@ -63,15 +63,15 @@ run = "docker run -p 8080:8080 quotes-backend:local"
 
 [tasks.ci]
 description = "Run all CI checks"
-run = ["./gradlew clean", "./gradlew check", "./gradlew build"]
+run = ["gradle clean", "gradle check", "gradle build"]
 
 [tasks."dependencies:check"]
 description = "Check for outdated dependencies"
-run = "./gradlew dependencyUpdates"
+run = "gradle dependencyUpdates"
 
 [tasks."dependencies:update"]
 description = "Check for outdated dependencies (Gradle requires manual updates)"
-run = "./gradlew dependencyUpdates"
+run = "gradle dependencyUpdates"
 [tasks."db:start"]
 description = "Start local PostgreSQL database"
 run = [
@@ -115,5 +115,5 @@ description = "Start database and development server"
 run = [
   "mise run db:start",
   "echo '🚀 Starting development server...'",
-  "./gradlew run --continuous",
+  "gradle run --continuous",
 ]
