@@ -83,6 +83,14 @@ describe("QuoteDisplay", () => {
     expect(submitLink).toHaveAttribute("href", "/submit-quote");
   });
 
+  it("disables submit link when disableNewQuote is true", () => {
+    render(<QuoteDisplay {...defaultProps()} disableNewQuote={true} />);
+
+    const submitLink = screen.getByText("Submit a New Quote");
+    expect(submitLink.className).toContain("pointer-events-none");
+    expect(submitLink.className).toContain("bg-gray-400");
+  });
+
   it("applies error background when quote has no id", () => {
     const { container } = render(
       <QuoteDisplay

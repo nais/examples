@@ -1,11 +1,14 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: unleash.nais.io/v1
+kind: ApiToken
 metadata:
-  name: unleash-bootstrap-quotes-analytics
-  namespace: examples
+  name: quotes-analytics
+  namespace: { { namespace } }
   labels:
-    app: quotes-analytics
-    team: examples
-data:
-  # No feature flags for analytics service yet
-  # Add toggles here when needed
+    team: { { namespace } }
+spec:
+  unleashInstance:
+    apiVersion: unleash.nais.io/v1
+    kind: RemoteUnleash
+    name: examples
+  secretName: quotes-analytics-unleash-api-token
+  environment: development

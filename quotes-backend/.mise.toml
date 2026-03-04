@@ -8,6 +8,9 @@ JAVA_TOOL_OPTIONS = "-XX:+UseG1GC"
 DB_URL = "jdbc:postgresql://localhost:5433/quotes"
 DB_USERNAME = "quotes"
 DB_PASSWORD = "quotes"
+UNLEASH_SERVER_API_URL = "http://localhost:4242/api"
+UNLEASH_SERVER_API_TOKEN = "default:development.client-token"
+UNLEASH_SERVER_API_ENVIRONMENT = "development"
 
 [tasks.dev]
 description = "Start development server with auto-reload"

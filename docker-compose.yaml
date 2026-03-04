@@ -48,6 +48,8 @@ services:
       DATABASE_SSL: false
       CHECK_VERSION: false
       SEND_TELEMETRY: false
+      UNLEASH_DEFAULT_ADMIN_USERNAME: admin
+      UNLEASH_DEFAULT_ADMIN_PASSWORD: unleash
       INIT_ADMIN_API_TOKENS: "*:*.admin-token"
       INIT_CLIENT_API_TOKENS: "default:development.client-token"
     ports:
@@ -68,6 +70,9 @@ services:
       DB_URL: jdbc:postgresql://quotes-db:5432/quotes
       DB_USERNAME: quotes
       DB_PASSWORD: quotes
+      UNLEASH_SERVER_API_URL: http://unleash:4242/api
+      UNLEASH_SERVER_API_TOKEN: "default:development.client-token"
+      UNLEASH_SERVER_API_ENVIRONMENT: development
     ports:
       - "8080:8080"
 
@@ -97,6 +102,9 @@ services:
       OTEL_SERVICE_NAME: quotes-frontend
       NEXT_PUBLIC_BACKEND_URL: http://quotes-backend:8080
       ANALYTICS_SERVICE_URL: http://quotes-analytics:8081
+      UNLEASH_SERVER_API_URL: http://unleash:4242/api
+      UNLEASH_SERVER_API_TOKEN: "default:development.client-token"
+      UNLEASH_SERVER_API_ENVIRONMENT: development
     ports:
       - "3000:3000"
 

@@ -115,6 +115,71 @@ graph LR
 
 ```
 
+## Feature Flags with Unleash
+
+This project demonstrates [Unleash](https://docs.nais.io/services/feature-flagging/) feature flagging on the NAIS platform. Unleash lets you toggle features on and off without redeploying.
+
+### How it works
+
+Each service has an [Unleash API token](https://docs.nais.io/services/feature-flagging/#step-2-define-an-apitoken-for-your-application) defined in `.nais/unleash.yaml`. When deployed, the NAIS Unleash operator provisions a client token and stores it as a Kubernetes secret. The app reads the secret via `envFrom` in `.nais/app.yaml`:
+
+```yaml
+# .nais/app.yaml
+envFrom:
+  - secret: quotes-backend-unleash-api-token
+```
+
+This provides the environment variables `UNLEASH_SERVER_API_URL`, `UNLEASH_SERVER_API_TOKEN`, and `UNLEASH_SERVER_API_ENVIRONMENT` to the application at runtime.
+
+### Feature flags in use
+
+| Flag            | Service                         | Effect                                                                                                                                                        |
+| --------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `quotes.submit` | quotes-backend, quotes-frontend | Controls whether users can submit new quotes. When disabled, the backend returns 403 and the frontend hides/disables the submit button.                       |
+| `quotes.errors` | quotes-backend                  | Enables simulated error injection (10% error rate on GET/POST endpoints). Default: **disabled**. Turn on to generate errors visible in dashboards and alerts. |
+
+### Adding a new feature flag
+
+1. **Create the toggle** in the [Unleash UI](http://localhost:4242) (or on NAIS at your team's Unleash instance)
+2. **Check the flag in code:**
+
+   **Kotlin (backend):**
+
+   ```kotlin
+   if (FeatureFlags.isEnabled("my.new.flag")) {
+       // feature code
+   }
+   ```
+
+   **TypeScript (frontend, server-side):**
+
+   ```typescript
+   import { isEnabled } from '@/utils/unleash';
+   const enabled = isEnabled('my.new.flag');
+   ```
+
+3. **Register the flag name** in `FeatureFlags.kt` (backend) or `unleash.ts` (frontend) so it appears in the `/api/features` endpoint
+
+### Local development
+
+Unleash runs locally via docker-compose on port 4242. The admin UI is at <http://localhost:4242> (no login required with the dev setup).
+
+To create the `quotes.submit` toggle locally:
+
+1. Start infrastructure: `mise run infra:up`
+2. Open <http://localhost:4242>
+3. Create feature flags named `quotes.submit` and `quotes.errors` in the `development` environment
+4. Enable or disable them to see the effect in the running application
+
+The local client token `default:development.client-token` is pre-configured in both `.mise.toml` (for `mise run dev`) and `docker-compose.yaml`.
+
+### Graceful degradation
+
+When Unleash is unavailable (no env vars set, or server unreachable), all feature flags default to **enabled**. This means:
+
+- Tests run without Unleash — all features work normally
+- A misconfigured Unleash connection won't break the application
+
 ## License
 
 The code in this repository is licensed under the MIT license. See [LICENSE](LICENSE) for more information.

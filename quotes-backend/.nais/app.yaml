@@ -31,6 +31,8 @@ spec:
       value: "true"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
+  envFrom:
+    - secret: quotes-backend-unleash-api-token
   liveness:
     path: "/internal/health"
     port: 8080

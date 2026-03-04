@@ -5,6 +5,9 @@ node = "25.2.1"
 [env]
 NODE_ENV = "development"
 NEXT_TELEMETRY_DISABLED = "1"
+UNLEASH_SERVER_API_URL = "http://localhost:4242/api"
+UNLEASH_SERVER_API_TOKEN = "default:development.client-token"
+UNLEASH_SERVER_API_ENVIRONMENT = "development"
 
 [tasks.dev]
 description = "Start development server with Turbopack"

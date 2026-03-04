@@ -22,7 +22,17 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
-var globalErrorRate: Double = 0.1
+var globalErrorRate: Double = 0.0
+
+fun shouldInjectError(): Boolean {
+    val rate = if (FeatureFlags.isEnabled(FeatureFlags.QUOTES_ERRORS, default = false)) {
+        if (globalErrorRate > 0.0) globalErrorRate else 0.1
+    } else {
+        globalErrorRate
+    }
+    if (rate <= 0.0) return false
+    return Random.nextDouble() < rate
+}
 
 @Serializable data class Quote(val id: String, val text: String, val author: String)
 
@@ -34,6 +44,9 @@ fun main() {
 
 fun Application.module() {
         log.info("Using global error rate: $globalErrorRate")
+
+        FeatureFlags.init()
+        log.info("Feature flags initialized: ${FeatureFlags.allFlags()}")
 
         val database = DatabaseFactory.init()
         val quoteService = QuoteService(database)
@@ -95,7 +108,7 @@ fun Application.module() {
                 route("/api/quotes") {
                         get {
                                 try {
-                                        if (Random.nextDouble() < globalErrorRate) {
+                                        if (shouldInjectError()) {
                                                 throw IllegalStateException(
                                                         "Database connection failed"
                                                 )
@@ -129,7 +142,17 @@ fun Application.module() {
                         }
 
                         post {
-                                if (Random.nextDouble() < globalErrorRate) {
+                                if (!FeatureFlags.isEnabled(FeatureFlags.QUOTES_SUBMIT)) {
+                                        call.respond(
+                                                HttpStatusCode.Forbidden,
+                                                mapOf(
+                                                        "error" to "FEATURE_DISABLED",
+                                                        "message" to "Submitting quotes is currently disabled"
+                                                )
+                                        )
+                                        return@post
+                                }
+                                if (shouldInjectError()) {
                                         call.respond(
                                                 HttpStatusCode.InternalServerError,
                                                 "Simulated error for observability testing"
@@ -285,7 +308,7 @@ fun Application.module() {
 
                 get("/api/quotes/{id}") {
                         try {
-                                if (Random.nextDouble() < globalErrorRate) {
+                                if (shouldInjectError()) {
                                         throw IllegalStateException(
                                                 "Failed to retrieve quote due to database error"
                                         )
@@ -368,6 +391,10 @@ fun Application.module() {
 
                 openAPI(path = "openapi")
                 swaggerUI(path = "swagger")
+
+                get("/api/features") {
+                        call.respond(FeatureFlags.allFlags())
+                }
 
                 route("/internal") {
                         get("/stats") {

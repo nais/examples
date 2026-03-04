@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import logger from "@/utils/logger";
 
@@ -8,6 +8,18 @@ export default function SubmitQuote() {
   const [text, setText] = useState("");
   const [author, setAuthor] = useState("");
   const [message, setMessage] = useState("");
+  const [submitEnabled, setSubmitEnabled] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/features')
+      .then((res) => res.json())
+      .then((features) => {
+        const enabled = features['quotes.submit'] ?? true;
+        setSubmitEnabled(enabled);
+        if (!enabled) setMessage("Submitting new quotes is currently disabled.");
+      })
+      .catch(() => setSubmitEnabled(true));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +116,8 @@ export default function SubmitQuote() {
               </Link>
               <button
                 type="submit"
-                className="rounded-md bg-gray-800 px-6 py-3 text-lg font-semibold text-white shadow-md hover:bg-gray-900 focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+                disabled={!submitEnabled}
+                className={`rounded-md px-6 py-3 text-lg font-semibold text-white shadow-md focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 ${submitEnabled ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-400 cursor-not-allowed'}`}
               >
                 Submit Quote
               </button>
