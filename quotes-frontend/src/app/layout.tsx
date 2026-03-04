@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CodeBracketIcon, DocumentMagnifyingGlassIcon, ChartBarIcon } from '@heroicons/react/24/solid';
+import { CodeBracketIcon, DocumentMagnifyingGlassIcon, ChartBarIcon, FlagIcon } from '@heroicons/react/24/solid';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +44,9 @@ export default function RootLayout({
             </a>
             <a href={githubUrl} className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
               <CodeBracketIcon className="h-5 w-5 mr-1" /> View Source
+            </a>
+            <a href="https://examples-unleash-web.nav.cloud.nais.io" className="text-gray-400 hover:text-white flex items-center" target="_blank" rel="noopener noreferrer">
+              <FlagIcon className="h-5 w-5 mr-1" /> Unleash
             </a>
           </div>
         </footer>
