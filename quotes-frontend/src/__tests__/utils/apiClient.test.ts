@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import axios from "axios";
 import { getQuotes, getQuoteById, createQuote, apiClient } from "@/utils/apiClient";
 
 vi.mock("axios", () => {

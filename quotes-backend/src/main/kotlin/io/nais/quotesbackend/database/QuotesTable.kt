@@ -1,6 +1,6 @@
 package io.nais.quotesbackend.database
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.v1.core.Table
 
 object QuotesTable : Table("quotes") {
   val id = integer("id").autoIncrement()
