@@ -80,6 +80,10 @@ run = "docker build -t quotes-analytics:local ."
 description = "Run Docker container locally"
 run = "docker run -p 8081:8081 --env-file .env.local quotes-analytics:local"
 
+[tasks."security-scan"]
+description = "Run security scanning"
+run = "semgrep scan --config p/csharp --config p/owasp-top-ten --error ."
+
 [tasks.ci]
 description = "Run all CI checks"
 run = [
@@ -87,6 +91,7 @@ run = [
   "dotnet format quotes-analytics.sln --verify-no-changes",
   "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
   "dotnet test quotes-analytics.sln --no-build --logger 'console;verbosity=normal'",
+  "mise run security-scan",
 ]
 
 [tasks."dependencies:check"]

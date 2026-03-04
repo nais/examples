@@ -58,6 +58,10 @@ run = "docker run -p 3000:3000 quotes-frontend:local"
 description = "Run tests"
 run = "pnpm vitest run"
 
+[tasks."security-scan"]
+description = "Run security scanning"
+run = "semgrep scan --config p/typescript --config p/owasp-top-ten --error ."
+
 [tasks.ci]
 description = "Run all CI checks"
 run = [
@@ -66,6 +70,7 @@ run = [
   "mise run type-check",
   "mise run test",
   "mise run build",
+  "mise run security-scan",
 ]
 
 [tasks."dependencies:check"]

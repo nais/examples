@@ -64,9 +64,13 @@ run = "docker build -t quotes-backend:local ."
 description = "Run Docker container locally"
 run = "docker run -p 8080:8080 quotes-backend:local"
 
+[tasks."security-scan"]
+description = "Run security scanning"
+run = "semgrep scan --config p/kotlin --config p/owasp-top-ten --error ."
+
 [tasks.ci]
 description = "Run all CI checks"
-run = ["gradle clean", "gradle check", "gradle build"]
+run = ["gradle clean", "gradle check", "gradle build", "mise run security-scan"]
 
 [tasks."dependencies:check"]
 description = "Check for outdated dependencies"

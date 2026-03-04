@@ -21,5 +21,5 @@ FROM gcr.io/distroless/java21-debian12:nonroot
 # COPY --from=javaagent --chown=nonroot:nonroot /instrumentations/java/javaagent.jar /app/javaagent.jar
 COPY --from=build --chown=nonroot:nonroot /home/gradle/src/build/libs/quotes-backend-*.jar /app/quotes-backend.jar
 WORKDIR /app
-# TLS Config works around an issue in OpenJDK... See: https://github.com/kubernetes-client/java/issues/854
+USER nonroot
 ENTRYPOINT [ "java", "-Djdk.tls.client.protocols=TLSv1.2", "-Dlogback.statusListenerClass=ch.qos.logback.core.status.NopStatusListener", "-jar", "/app/quotes-backend.jar" ]

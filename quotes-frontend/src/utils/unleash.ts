@@ -19,13 +19,23 @@ export function getUnleash(): Unleash | null {
   return unleash;
 }
 
-export function isEnabled(flag: string, defaultValue = true): boolean {
-  const client = getUnleash();
-  if (!client) return defaultValue;
-  return client.isEnabled(flag, undefined, defaultValue);
-}
-
 export const FEATURE_FLAGS = {
   QUOTES_SUBMIT: 'quotes.submit',
   QUOTES_ERRORS: 'quotes.errors',
 } as const;
+
+export type FeatureFlag = (typeof FEATURE_FLAGS)[keyof typeof FEATURE_FLAGS];
+
+const FEATURE_FLAG_DEFAULTS: Record<FeatureFlag, boolean> = {
+  [FEATURE_FLAGS.QUOTES_SUBMIT]: true,
+  [FEATURE_FLAGS.QUOTES_ERRORS]: false,
+};
+
+export function isEnabled(flag: FeatureFlag, defaultValue?: boolean): boolean {
+  const effectiveDefault =
+    defaultValue !== undefined ? defaultValue : FEATURE_FLAG_DEFAULTS[flag] ?? true;
+
+  const client = getUnleash();
+  if (!client) return effectiveDefault;
+  return client.isEnabled(flag, undefined, effectiveDefault);
+}

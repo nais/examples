@@ -162,7 +162,7 @@ This provides the environment variables `UNLEASH_SERVER_API_URL`, `UNLEASH_SERVE
 
 ### Local development
 
-Unleash runs locally via docker-compose on port 4242. The admin UI is at <http://localhost:4242> (no login required with the dev setup).
+Unleash runs locally via docker-compose on port 4242. The admin UI is at <http://localhost:4242>. Log in with the default credentials configured in `docker-compose.yaml` (username `admin`, password `unleash`).
 
 To create the `quotes.submit` toggle locally:
 
@@ -175,10 +175,10 @@ The local client token `default:development.client-token` is pre-configured in b
 
 ### Graceful degradation
 
-When Unleash is unavailable (no env vars set, or server unreachable), all feature flags default to **enabled**. This means:
+When Unleash is unavailable (no env vars set, or server unreachable), feature flags fall back to their configured default values. These defaults are defined per flag in the backend/frontend and may be either enabled or disabled. This means:
 
-- Tests run without Unleash — all features work normally
-- A misconfigured Unleash connection won't break the application
+- Tests can run without Unleash, using the configured default values for each flag
+- A misconfigured Unleash connection won't break the application; features will follow their safe defaults
 
 ## License
 

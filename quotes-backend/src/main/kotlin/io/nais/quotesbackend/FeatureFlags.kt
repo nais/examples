@@ -29,7 +29,7 @@ object FeatureFlags {
             unleash = DefaultUnleash(config)
             log.info("Unleash initialized for environment: $environment")
         } catch (e: Exception) {
-            log.warn("Failed to initialize Unleash, feature flags will default to enabled: ${e.message}")
+            log.warn("Failed to initialize Unleash, feature flags will fall back to default values: ${e.message}")
         }
     }
 
