@@ -105,20 +105,21 @@ public class QuotesAnalyticsService
     public async Task<QuoteAnalytics> GetAnalyticsForQuoteAsync(string quoteId)
     {
         using var activity = ActivitySource.StartActivity("GetAnalyticsForQuote", ActivityKind.Internal);
-        activity?.SetTag("quote.id", quoteId);
+        var safeQuoteId = SanitizeForLog(quoteId);
+        activity?.SetTag("quote.id", safeQuoteId);
 
         try
         {
             // Check cache first
             if (_analyticsCache.TryGetValue(quoteId, out var cachedAnalytics))
             {
-                _logger.LogInformation("Returning cached analytics for quote {QuoteId}", quoteId);
+                _logger.LogInformation("Returning cached analytics for quote {QuoteId}", safeQuoteId);
                 activity?.SetTag("cache.hit", true);
                 return cachedAnalytics;
             }
 
             activity?.SetTag("cache.hit", false);
-            _logger.LogInformation("Fetching quote {QuoteId} from backend", quoteId);
+            _logger.LogInformation("Fetching quote {QuoteId} from backend", safeQuoteId);
 
             var response = await _httpClient.GetAsync($"/api/quotes/{quoteId}");
             response.EnsureSuccessStatusCode();
@@ -134,7 +135,7 @@ public class QuotesAnalyticsService
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Failed to fetch quote {QuoteId} from backend", quoteId);
+            _logger.LogError(ex, "Failed to fetch quote {QuoteId} from backend", safeQuoteId);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             activity?.AddEvent(new ActivityEvent("exception",
                 tags: new ActivityTagsCollection
@@ -352,4 +353,7 @@ public class QuotesAnalyticsService
 
         return "General";
     }
+
+    private static string SanitizeForLog(string input) =>
+        string.Concat(input.Where(c => !char.IsControl(c)));
 }
