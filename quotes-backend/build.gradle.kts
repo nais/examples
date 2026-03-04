@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
     id("io.ktor.plugin") version "3.4.1"
     application
     id("com.github.ben-manes.versions") version "0.53.0"
@@ -34,9 +34,9 @@ val kotlinxSerializationVersion = "1.10.0"
 val logbackVersion = "1.5.32"
 val logstashLogbackEncoderVersion = "9.0"
 val opentelemetryVersion = "2.25.0-alpha"
-val kotlinTestVersion = "2.2.21"
+val kotlinTestVersion = "2.3.10"
 val exposedVersion = "1.1.1"
-val postgresqlVersion = "42.7.5"
+val postgresqlVersion = "42.7.10"
 val hikariVersion = "7.0.2"
 val unleashVersion = "12.2.0"
 
