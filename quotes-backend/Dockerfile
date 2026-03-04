@@ -1,4 +1,4 @@
-FROM gradle:8-jdk21-jammy AS build
+FROM gradle:9-jdk21-jammy AS build
 WORKDIR /home/gradle/src
 
 # Download dependencies to cache them
