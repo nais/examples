@@ -49,6 +49,10 @@ updates:
     directory: "/quotes-loadgen"
     schedule:
       interval: "monthly"
+    groups:
+      quotes-loadgen-gomod:
+        patterns:
+          - "*"
   # nuget
   - package-ecosystem: "nuget"
     directory: "/quotes-analytics"
