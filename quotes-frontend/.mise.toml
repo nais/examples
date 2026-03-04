@@ -5,6 +5,9 @@ node = "25.2.1"
 [env]
 NODE_ENV = "development"
 NEXT_TELEMETRY_DISABLED = "1"
+UNLEASH_SERVER_API_URL = "http://localhost:4242/api"
+UNLEASH_SERVER_API_TOKEN = "default:development.client-token"
+UNLEASH_SERVER_API_ENVIRONMENT = "development"
 
 [tasks.dev]
 description = "Start development server with Turbopack"
@@ -55,6 +58,10 @@ run = "docker run -p 3000:3000 quotes-frontend:local"
 description = "Run tests"
 run = "pnpm vitest run"
 
+[tasks."security-scan"]
+description = "Run security scanning"
+run = "semgrep scan --config p/typescript --config p/owasp-top-ten --error ."
+
 [tasks.ci]
 description = "Run all CI checks"
 run = [
@@ -63,6 +70,7 @@ run = [
   "mise run type-check",
   "mise run test",
   "mise run build",
+  "mise run security-scan",
 ]
 
 [tasks."dependencies:check"]

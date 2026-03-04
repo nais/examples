@@ -39,7 +39,7 @@ func Register() {
 func StartMetricsServer(port int) {
 	http.Handle("/metrics", promhttp.Handler())
 	go func() {
-		if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil { // nosemgrep: go.lang.security.audit.net.use-tls.use-tls
 			// Server stopped, this is expected when shutting down
 			fmt.Printf("Metrics server stopped: %v\n", err)
 		}

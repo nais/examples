@@ -102,15 +102,16 @@ public class QuotesAnalyticsService
         }
     }
 
-    public async Task<QuoteAnalytics> GetAnalyticsForQuoteAsync(string quoteId)
+    public async Task<QuoteAnalytics> GetAnalyticsForQuoteAsync(int quoteId)
     {
         using var activity = ActivitySource.StartActivity("GetAnalyticsForQuote", ActivityKind.Internal);
         activity?.SetTag("quote.id", quoteId);
+        var quoteIdStr = quoteId.ToString();
 
         try
         {
             // Check cache first
-            if (_analyticsCache.TryGetValue(quoteId, out var cachedAnalytics))
+            if (_analyticsCache.TryGetValue(quoteIdStr, out var cachedAnalytics))
             {
                 _logger.LogInformation("Returning cached analytics for quote {QuoteId}", quoteId);
                 activity?.SetTag("cache.hit", true);
@@ -120,14 +121,14 @@ public class QuotesAnalyticsService
             activity?.SetTag("cache.hit", false);
             _logger.LogInformation("Fetching quote {QuoteId} from backend", quoteId);
 
-            var response = await _httpClient.GetAsync($"/api/quotes/{quoteId}");
+            var response = await _httpClient.GetAsync($"/api/quotes/{quoteIdStr}");
             response.EnsureSuccessStatusCode();
 
             var quote = await response.Content.ReadFromJsonAsync<Quote>();
 
             if (quote == null)
             {
-                throw new InvalidOperationException($"Quote {quoteId} not found");
+                throw new InvalidOperationException($"Quote {quoteIdStr} not found");
             }
 
             return await AnalyzeQuoteAsync(quote);
@@ -352,4 +353,5 @@ public class QuotesAnalyticsService
 
         return "General";
     }
+
 }

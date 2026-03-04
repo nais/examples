@@ -52,7 +52,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "42", Text = "Deploy with confidence", Author = "Nais Team" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("42");
+        var result = await service.GetAnalyticsForQuoteAsync(42);
 
         result.QuoteId.Should().Be("42");
         result.Text.Should().Be("Deploy with confidence");
@@ -67,8 +67,8 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "Test quote", Author = "Author" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var first = await service.GetAnalyticsForQuoteAsync("1");
-        var second = await service.GetAnalyticsForQuoteAsync("1");
+        var first = await service.GetAnalyticsForQuoteAsync(1);
+        var second = await service.GetAnalyticsForQuoteAsync(1);
 
         second.QuoteId.Should().Be(first.QuoteId);
         second.Text.Should().Be(first.Text);
@@ -80,7 +80,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "one two three four five", Author = "A" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.WordCount.Should().Be(5);
     }
@@ -92,7 +92,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = text, Author = "A" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.CharacterCount.Should().Be(text.Length);
     }
@@ -103,7 +103,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "This is a great and amazing quote", Author = "A" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.SentimentScore.Should().BeInRange(-1.0, 1.0);
     }
@@ -114,7 +114,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "Deploy your app to production", Author = "A" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.Category.Should().Be("Platform");
     }
@@ -125,7 +125,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "Secure by default is the way", Author = "A" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.Category.Should().Be("Security");
     }
@@ -136,7 +136,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "Continuous delivery is the goal", Author = "DevOps" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.Category.Should().Be("DevOps");
     }
@@ -147,7 +147,7 @@ public class QuotesAnalyticsServiceTests
         var quote = new { Id = "1", Text = "Just a regular quote", Author = "Regular Person" };
         var service = CreateService(JsonSerializer.Serialize(quote));
 
-        var result = await service.GetAnalyticsForQuoteAsync("1");
+        var result = await service.GetAnalyticsForQuoteAsync(1);
 
         result.Category.Should().Be("General");
     }

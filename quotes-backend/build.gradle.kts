@@ -38,6 +38,7 @@ val kotlinTestVersion = "2.2.21"
 val exposedVersion = "0.57.0"
 val postgresqlVersion = "42.7.5"
 val hikariVersion = "6.2.1"
+val unleashVersion = "10.1.1"
 
 dependencies {
     // Ktor
@@ -69,6 +70,9 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
 
+    // Feature Flags
+    implementation("io.getunleash:unleash-client-java:$unleashVersion")
+
     // Testing
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
@@ -81,4 +85,6 @@ tasks.withType<Test> {
     testLogging {
         showStandardStreams = true
     }
+    environment("UNLEASH_SERVER_API_URL", "")
+    environment("UNLEASH_SERVER_API_TOKEN", "")
 }

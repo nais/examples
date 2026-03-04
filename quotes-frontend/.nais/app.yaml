@@ -41,6 +41,8 @@ spec:
       value: "true"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
+  envFrom:
+    - secret: quotes-frontend-unleash-api-token
   liveness:
     path: "/"
     port: 3000

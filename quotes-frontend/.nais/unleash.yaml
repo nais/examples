@@ -6,9 +6,9 @@ metadata:
   labels:
     team: {{ namespace }}
 spec:
-    unleashInstance:
-      apiVersion: unleash.nais.io/v1
-      kind: RemoteUnleash
-      name: nais-demo
-    secretName: quotes-frontend-unleash-api-token
-    environment: development
+  unleashInstance:
+    apiVersion: unleash.nais.io/v1
+    kind: RemoteUnleash
+    name: examples
+  secretName: quotes-frontend-unleash-api-token
+  environment: development

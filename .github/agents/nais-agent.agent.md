@@ -33,7 +33,7 @@ metadata:
   labels:
     team: team-namespace
 spec:
-  image: { { image } } # Replaced by CI/CD
+  image: {{ image }} # Replaced by CI/CD
   port: 8080
 
   # Observability (required)

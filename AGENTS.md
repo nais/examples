@@ -146,3 +146,42 @@ quotes-<service>/
 - Each service is self-contained with its own `.mise.toml`, `Dockerfile`, and `.nais/app.yaml`
 - Root `.mise.toml` orchestrates cross-service tasks (`mise run dev`, `mise run ci`)
 - `docker-compose.yaml` provides local infrastructure (PostgreSQL, Unleash, Grafana/OTEL)
+
+## Feature Flags (Unleash)
+
+Feature flags use [Unleash](https://docs.nais.io/services/feature-flagging/) via the NAIS platform.
+
+**Architecture:**
+
+- Each service has `.nais/unleash.yaml` that provisions an API token as a Kubernetes secret
+- `envFrom` in `.nais/app.yaml` injects `UNLEASH_SERVER_API_URL`, `UNLEASH_SERVER_API_TOKEN`, `UNLEASH_SERVER_API_ENVIRONMENT`
+- Backend uses `io.getunleash:unleash-client-java`, frontend uses `unleash-client` (Node.js)
+- When Unleash is unavailable, flags fall back to their configured default values (graceful degradation)
+
+**Current flags:**
+
+- `quotes.submit` — gates the "Submit a New Quote" feature (backend + frontend)
+- `quotes.errors` — enables simulated error injection in the backend (default: **disabled**)
+
+**Patterns:**
+
+```kotlin
+// Kotlin: check flag, default true when Unleash is unavailable
+FeatureFlags.isEnabled(FeatureFlags.QUOTES_SUBMIT)
+
+// Kotlin: error injection flag, default false (opt-in)
+FeatureFlags.isEnabled(FeatureFlags.QUOTES_ERRORS, default = false)
+```
+
+```typescript
+// TypeScript (server-side API routes): check flag
+import { isEnabled, FEATURE_FLAGS } from '@/utils/unleash';
+isEnabled(FEATURE_FLAGS.QUOTES_SUBMIT);
+```
+
+**Rules:**
+
+- Register flag names as constants in `FeatureFlags.kt` / `unleash.ts`
+- Define per-flag defaults (e.g., `quotes.submit` defaults `true`, `quotes.errors` defaults `false`)
+- Use `GET /api/features` (backend or frontend) to inspect flag states
+- Local Unleash admin UI: `http://localhost:4242` (started via `mise run infra:up`)

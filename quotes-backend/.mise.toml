@@ -8,6 +8,9 @@ JAVA_TOOL_OPTIONS = "-XX:+UseG1GC"
 DB_URL = "jdbc:postgresql://localhost:5433/quotes"
 DB_USERNAME = "quotes"
 DB_PASSWORD = "quotes"
+UNLEASH_SERVER_API_URL = "http://localhost:4242/api"
+UNLEASH_SERVER_API_TOKEN = "default:development.client-token"
+UNLEASH_SERVER_API_ENVIRONMENT = "development"
 
 [tasks.dev]
 description = "Start development server with auto-reload"
@@ -61,9 +64,13 @@ run = "docker build -t quotes-backend:local ."
 description = "Run Docker container locally"
 run = "docker run -p 8080:8080 quotes-backend:local"
 
+[tasks."security-scan"]
+description = "Run security scanning"
+run = "semgrep scan --config p/kotlin --config p/owasp-top-ten --error ."
+
 [tasks.ci]
 description = "Run all CI checks"
-run = ["gradle clean", "gradle check", "gradle build"]
+run = ["gradle clean", "gradle check", "gradle build", "mise run security-scan"]
 
 [tasks."dependencies:check"]
 description = "Check for outdated dependencies"

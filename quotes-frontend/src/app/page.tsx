@@ -7,6 +7,7 @@ import logger from '@/utils/logger';
 
 export default function Home() {
   const [quote, setQuote] = useState<Quote>({ id: "", text: "Loading...", author: "" });
+  const [submitEnabled, setSubmitEnabled] = useState(true);
 
   const fetchQuote = async () => {
     try {
@@ -22,6 +23,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetch('/api/features')
+      .then((res) => res.json())
+      .then((features) => {
+        setSubmitEnabled(features['quotes.submit'] ?? true);
+      })
+      .catch(() => setSubmitEnabled(true));
+
     const pathSegments = window.location.pathname.split('/');
     const quoteId = pathSegments[pathSegments.length - 1];
 
@@ -53,7 +61,7 @@ export default function Home() {
       handleThumbsDown={handleThumbsDown}
       fetchQuote={fetchQuote}
       disableRandomQuote={false}
-      disableNewQuote={false}
+      disableNewQuote={!submitEnabled}
     />
   );
 }

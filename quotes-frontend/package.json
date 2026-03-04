@@ -15,7 +15,8 @@
     "next": "16.0.10",
     "pino": "^10.1.0",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "unleash-client": "^6.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,6 +1,7 @@
 [tools]
 # Root tools for the entire project (kept minimal, each service manages its own)
 watchexec = "2.3.2"
+"pipx:semgrep" = "latest"
 # Note: ratchet can be installed separately with: go install github.com/sethvargo/ratchet@latest
 
 [env]
@@ -155,6 +156,10 @@ run = "cd quotes-backend && mise run lint"
 description = "Clean backend service"
 run = "cd quotes-backend && mise run clean"
 
+[tasks."backend:security-scan"]
+description = "Security scan backend service"
+run = "cd quotes-backend && mise run security-scan"
+
 # Frontend (Next.js)
 [tasks."frontend:dev"]
 description = "Start frontend in development mode"
@@ -177,6 +182,10 @@ run = "cd quotes-frontend && mise run lint"
 description = "Clean frontend service"
 run = "cd quotes-frontend && mise run clean"
 
+[tasks."frontend:security-scan"]
+description = "Security scan frontend service"
+run = "cd quotes-frontend && mise run security-scan"
+
 # Analytics (.NET)
 [tasks."analytics:dev"]
 description = "Start analytics in development mode"
@@ -197,6 +206,10 @@ run = "cd quotes-analytics && mise run lint"
 [tasks."analytics:clean"]
 description = "Clean analytics service"
 run = "cd quotes-analytics && mise run clean"
+
+[tasks."analytics:security-scan"]
+description = "Security scan analytics service"
+run = "cd quotes-analytics && mise run security-scan"
 
 # Load Generator (Go)
 [tasks."loadgen:dev"]
@@ -226,6 +239,10 @@ run = "cd quotes-loadgen && mise run lint"
 [tasks."loadgen:clean"]
 description = "Clean load generator"
 run = "cd quotes-loadgen && mise run clean"
+
+[tasks."loadgen:security-scan"]
+description = "Security scan load generator"
+run = "cd quotes-loadgen && mise run security-scan"
 
 # =============================================================================
 # ORCHESTRATION TASKS
@@ -275,6 +292,17 @@ run = [
   "echo '✅ All services cleaned'",
 ]
 
+[tasks."security-scan"]
+description = "Run security scanning for all services"
+run = [
+  "echo '🔒 Running security scans for all services...'",
+  "mise run backend:security-scan",
+  "mise run frontend:security-scan",
+  "mise run analytics:security-scan",
+  "mise run loadgen:security-scan",
+  "echo '✅ All security scans completed'",
+]
+
 [tasks.ci]
 description = "Run full CI pipeline"
 run = [
@@ -282,6 +310,7 @@ run = [
   "mise run lint",
   "mise run test",
   "mise run build",
+  "mise run security-scan",
   "echo '✅ CI pipeline completed successfully'",
 ]
 
