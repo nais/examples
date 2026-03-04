@@ -70,6 +70,8 @@ spec:
       rules:
         - application: quotes-backend
         - application: quotes-analytics
+      external:
+        - host: examples-unleash-api.nav.cloud.nais.io
   filesFrom:
     - emptyDir:
         medium: Memory

@@ -63,6 +63,8 @@ spec:
     outbound:
       rules:
         - application: sentiment-api
+      external:
+        - host: examples-unleash-api.nav.cloud.nais.io
   filesFrom:
     - emptyDir:
         medium: Memory
