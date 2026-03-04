@@ -53,37 +53,35 @@ public class AnalyticsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<QuoteAnalytics>> GetAnalyticsForQuote(string id)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (!int.TryParse(id, out var quoteId))
         {
-            return BadRequest(new { error = "Invalid quote ID", message = "Quote ID cannot be empty" });
+            return BadRequest(new { error = "Invalid quote ID", message = "Quote ID must be a number" });
         }
-
-        var safeId = SanitizeForLog(id);
 
         try
         {
-            var analytics = await _analyticsService.GetAnalyticsForQuoteAsync(id);
-            _logger.LogInformation("Retrieved analytics for quote {QuoteId}", safeId);
+            var analytics = await _analyticsService.GetAnalyticsForQuoteAsync(quoteId);
+            _logger.LogInformation("Retrieved analytics for quote {QuoteId}", quoteId);
             return Ok(analytics);
         }
         catch (InvalidOperationException ex) when (ex.Message.Contains("request URI"))
         {
-            _logger.LogError(ex, "HttpClient configuration error for quote {QuoteId}", safeId);
+            _logger.LogError(ex, "HttpClient configuration error for quote {QuoteId}", quoteId);
             return StatusCode(503, new { error = "Backend service unavailable", message = "Service configuration error" });
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Quote {QuoteId} not found", safeId);
-            return NotFound(new { error = "Quote not found", message = ex.Message, quoteId = id });
+            _logger.LogWarning(ex, "Quote {QuoteId} not found", quoteId);
+            return NotFound(new { error = "Quote not found", quoteId });
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Failed to connect to quotes backend service for quote {QuoteId}", safeId);
+            _logger.LogError(ex, "Failed to connect to quotes backend service for quote {QuoteId}", quoteId);
             return StatusCode(503, new { error = "Backend service unavailable", message = "Unable to connect to quotes service" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get analytics for quote {QuoteId}", safeId);
+            _logger.LogError(ex, "Failed to get analytics for quote {QuoteId}", quoteId);
             return StatusCode(500, new { error = "Failed to fetch analytics", message = ex.Message });
         }
     }
@@ -116,6 +114,4 @@ public class AnalyticsController : ControllerBase
         }
     }
 
-    private static string SanitizeForLog(string input) =>
-        string.Concat(input.Where(c => !char.IsControl(c)));
 }

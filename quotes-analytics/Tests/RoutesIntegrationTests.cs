@@ -68,22 +68,11 @@ public class RoutesIntegrationTests : IClassFixture<WebApplicationFactory<Progra
     [Fact]
     public async Task AnalyticsRoutes_ExistInRouting()
     {
-        // Test that routes are properly registered (should not return 404)
-        // This tests routing configuration independent of backend availability
-        var routes = new[]
-        {
-            "/api/analytics/test-quote-id"
-        };
+        var response = await _client.GetAsync("/api/analytics/1");
 
-        foreach (var route in routes)
-        {
-            var response = await _client.GetAsync(route);
-
-            // Route should exist (not 404), but may return error due to backend unavailability
-            // 404 means the route isn't configured, other errors mean the route exists but fails
-            response.StatusCode.Should().NotBe(HttpStatusCode.NotFound,
-                $"Route {route} should be configured in the controller");
-        }
+        // Route should exist (not 404), but may return error due to backend unavailability
+        response.StatusCode.Should().NotBe(HttpStatusCode.NotFound,
+            "Route /api/analytics/{id} should be configured in the controller");
     }
 
     [Fact]

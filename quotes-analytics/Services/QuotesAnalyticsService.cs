@@ -102,40 +102,40 @@ public class QuotesAnalyticsService
         }
     }
 
-    public async Task<QuoteAnalytics> GetAnalyticsForQuoteAsync(string quoteId)
+    public async Task<QuoteAnalytics> GetAnalyticsForQuoteAsync(int quoteId)
     {
         using var activity = ActivitySource.StartActivity("GetAnalyticsForQuote", ActivityKind.Internal);
-        var safeQuoteId = SanitizeForLog(quoteId);
-        activity?.SetTag("quote.id", safeQuoteId);
+        activity?.SetTag("quote.id", quoteId);
+        var quoteIdStr = quoteId.ToString();
 
         try
         {
             // Check cache first
-            if (_analyticsCache.TryGetValue(quoteId, out var cachedAnalytics))
+            if (_analyticsCache.TryGetValue(quoteIdStr, out var cachedAnalytics))
             {
-                _logger.LogInformation("Returning cached analytics for quote {QuoteId}", safeQuoteId);
+                _logger.LogInformation("Returning cached analytics for quote {QuoteId}", quoteId);
                 activity?.SetTag("cache.hit", true);
                 return cachedAnalytics;
             }
 
             activity?.SetTag("cache.hit", false);
-            _logger.LogInformation("Fetching quote {QuoteId} from backend", safeQuoteId);
+            _logger.LogInformation("Fetching quote {QuoteId} from backend", quoteId);
 
-            var response = await _httpClient.GetAsync($"/api/quotes/{quoteId}");
+            var response = await _httpClient.GetAsync($"/api/quotes/{quoteIdStr}");
             response.EnsureSuccessStatusCode();
 
             var quote = await response.Content.ReadFromJsonAsync<Quote>();
 
             if (quote == null)
             {
-                throw new InvalidOperationException($"Quote {quoteId} not found");
+                throw new InvalidOperationException($"Quote {quoteIdStr} not found");
             }
 
             return await AnalyzeQuoteAsync(quote);
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Failed to fetch quote {QuoteId} from backend", safeQuoteId);
+            _logger.LogError(ex, "Failed to fetch quote {QuoteId} from backend", quoteId);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             activity?.AddEvent(new ActivityEvent("exception",
                 tags: new ActivityTagsCollection
@@ -354,6 +354,4 @@ public class QuotesAnalyticsService
         return "General";
     }
 
-    private static string SanitizeForLog(string input) =>
-        string.Concat(input.Where(c => !char.IsControl(c)));
 }
