@@ -2,7 +2,10 @@ package io.nais.quotesbackend
 
 import io.getunleash.DefaultUnleash
 import io.getunleash.Unleash
+import io.getunleash.event.UnleashReady
+import io.getunleash.event.UnleashSubscriber
 import io.getunleash.util.UnleashConfig
+import io.getunleash.variant.Variant
 import org.slf4j.LoggerFactory
 
 object FeatureFlags {
@@ -21,9 +24,17 @@ object FeatureFlags {
         try {
             val config = UnleashConfig.builder()
                 .appName(appName)
-                .unleashAPI("$apiUrl/")
+                .unleashAPI("$apiUrl/api/")
                 .apiKey(apiToken)
                 .environment(environment)
+                .subscriber(object : UnleashSubscriber {
+                    override fun onReady(ready: UnleashReady) {
+                        log.info("Unleash client ready")
+                    }
+                    override fun onError(unleashException: io.getunleash.UnleashException) {
+                        log.warn("Unleash error: {}", unleashException.message)
+                    }
+                })
                 .build()
 
             unleash = DefaultUnleash(config)
@@ -37,11 +48,32 @@ object FeatureFlags {
         return unleash?.isEnabled(flag, default) ?: default
     }
 
-    fun allFlags(): Map<String, Boolean> {
+    fun getVariant(flag: String): Variant {
+        return unleash?.getVariant(flag) ?: Variant.DISABLED_VARIANT
+    }
+
+    fun allFlags(): Map<String, Any> {
         return mapOf(
-            QUOTES_SUBMIT to isEnabled(QUOTES_SUBMIT),
-            QUOTES_ERRORS to isEnabled(QUOTES_ERRORS, default = false),
+            QUOTES_SUBMIT to flagDetail(QUOTES_SUBMIT),
+            QUOTES_ERRORS to flagDetail(QUOTES_ERRORS, default = false),
         )
+    }
+
+    private fun flagDetail(flag: String, default: Boolean = true): Map<String, Any> {
+        val enabled = isEnabled(flag, default)
+        val variant = getVariant(flag)
+        val detail = mutableMapOf<String, Any>("enabled" to enabled)
+        if (variant.name != "disabled") {
+            val variantMap = mutableMapOf<String, Any>(
+                "name" to variant.name,
+                "enabled" to variant.isEnabled
+            )
+            variant.payload.ifPresent { payload ->
+                variantMap["payload"] = mapOf("type" to payload.type, "value" to payload.value)
+            }
+            detail["variant"] = variantMap
+        }
+        return detail
     }
 
     fun shutdown() {

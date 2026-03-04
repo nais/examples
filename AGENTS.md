@@ -171,17 +171,30 @@ FeatureFlags.isEnabled(FeatureFlags.QUOTES_SUBMIT)
 
 // Kotlin: error injection flag, default false (opt-in)
 FeatureFlags.isEnabled(FeatureFlags.QUOTES_ERRORS, default = false)
+
+// Kotlin: get variant for A/B testing
+val variant = FeatureFlags.getVariant(FeatureFlags.QUOTES_SUBMIT)
+if (variant.name != "disabled") { /* use variant */ }
 ```
 
 ```typescript
 // TypeScript (server-side API routes): check flag
-import { isEnabled, FEATURE_FLAGS } from '@/utils/unleash';
+import { isEnabled, getVariant, FEATURE_FLAGS } from '@/utils/unleash';
 isEnabled(FEATURE_FLAGS.QUOTES_SUBMIT);
+
+// TypeScript: get variant
+const variant = getVariant(FEATURE_FLAGS.QUOTES_SUBMIT);
 ```
+
+**Impression data:**
+
+- Impression data and usage metrics are sent to Unleash automatically by the SDK
+- Enable impression data per-toggle in the Unleash admin UI — metrics appear in the Unleash "Metrics" tab
+- `GET /api/features` returns `{ "flag": { "enabled": true, "variant": { "name": "..." } } }`
 
 **Rules:**
 
 - Register flag names as constants in `FeatureFlags.kt` / `unleash.ts`
 - Define per-flag defaults (e.g., `quotes.submit` defaults `true`, `quotes.errors` defaults `false`)
-- Use `GET /api/features` (backend or frontend) to inspect flag states
+- Use `GET /api/features` (backend or frontend) to inspect flag states and variants
 - Local Unleash admin UI: `http://localhost:4242` (started via `mise run infra:up`)

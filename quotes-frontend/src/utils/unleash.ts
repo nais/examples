@@ -1,4 +1,5 @@
 import { initialize, Unleash } from 'unleash-client';
+import logger from '@/utils/logger';
 
 let unleash: Unleash | null = null;
 
@@ -10,10 +11,18 @@ export function getUnleash(): Unleash | null {
   if (!url || !token) return null;
 
   unleash = initialize({
-    url: `${url}/`,
+    url: `${url}/api/`,
     appName: 'quotes-frontend',
     customHeaders: { Authorization: token },
     environment: process.env.UNLEASH_SERVER_API_ENVIRONMENT || 'development',
+  });
+
+  unleash.on('ready', () => {
+    logger.info('Unleash client ready');
+  });
+
+  unleash.on('error', (err: Error) => {
+    logger.warn({ err: err.message }, 'Unleash error');
   });
 
   return unleash;
@@ -38,4 +47,10 @@ export function isEnabled(flag: FeatureFlag, defaultValue?: boolean): boolean {
   const client = getUnleash();
   if (!client) return effectiveDefault;
   return client.isEnabled(flag, undefined, effectiveDefault);
+}
+
+export function getVariant(flag: FeatureFlag) {
+  const client = getUnleash();
+  if (!client) return { name: 'disabled', enabled: false };
+  return client.getVariant(flag);
 }

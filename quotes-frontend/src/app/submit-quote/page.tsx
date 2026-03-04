@@ -14,7 +14,8 @@ export default function SubmitQuote() {
     fetch('/api/features')
       .then((res) => res.json())
       .then((features) => {
-        const enabled = features['quotes.submit'] ?? true;
+        const flag = features['quotes.submit'];
+        const enabled = typeof flag === 'object' ? flag.enabled : (flag ?? true);
         setSubmitEnabled(enabled);
         if (!enabled) setMessage("Submitting new quotes is currently disabled.");
       })
