@@ -43,7 +43,7 @@ describe('unleash', () => {
 
     expect(mockInitialize).toHaveBeenCalledWith(
       expect.objectContaining({
-        url: 'http://unleash/',
+        url: 'http://unleash/api/',
         appName: 'quotes-frontend',
       })
     );
