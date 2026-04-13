@@ -12,14 +12,14 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "axios": "^1.15.0",
-    "next": "16.1.6",
+    "next": "16.2.3",
     "pino": "^10.3.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "unleash-client": "^6.10.1"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "16.1.6",
+    "@next/eslint-plugin-next": "16.2.3",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
