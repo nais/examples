@@ -18,11 +18,11 @@ run = "gradle run --continuous"
 
 [tasks.build]
 description = "Build the Kotlin application"
-run = "gradle build"
+run = "gradle build --quiet"
 
 [tasks.test]
 description = "Run all tests"
-run = "gradle test"
+run = "gradle test --quiet"
 
 [tasks.run]
 description = "Run the application"
@@ -70,7 +70,7 @@ run = "semgrep scan --config p/kotlin --config p/owasp-top-ten --error ."
 
 [tasks.ci]
 description = "Run all CI checks"
-run = ["gradle clean", "gradle check", "gradle build", "mise run security-scan"]
+run = ["gradle clean --quiet", "gradle check --quiet", "gradle build --quiet", "mise run security-scan"]
 
 [tasks."dependencies:check"]
 description = "Check for outdated dependencies"

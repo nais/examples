@@ -11,7 +11,7 @@ run = "dotnet build quotes-analytics.sln"
 
 [tasks.test]
 description = "Run all tests"
-run = "dotnet test quotes-analytics.sln --logger 'console;verbosity=normal'"
+run = "dotnet test quotes-analytics.sln --logger 'console;verbosity=minimal'"
 
 [tasks."test:unit"]
 description = "Run unit tests only"

@@ -7,12 +7,12 @@ using Xunit;
 namespace Nais.QuotesAnalytics.Tests;
 
 [Collection("Integration")]
-public class RoutesIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+public class RoutesIntegrationTests : IClassFixture<TestWebApplicationFactory>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly TestWebApplicationFactory _factory;
     private readonly HttpClient _client;
 
-    public RoutesIntegrationTests(WebApplicationFactory<Program> factory)
+    public RoutesIntegrationTests(TestWebApplicationFactory factory)
     {
         _factory = factory;
         _client = _factory.CreateClient();

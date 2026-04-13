@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Nais.QuotesAnalytics.Tests;
 
-public class AnalyticsControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class AnalyticsControllerTests : IClassFixture<TestWebApplicationFactory>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -19,7 +19,7 @@ public class AnalyticsControllerTests : IClassFixture<WebApplicationFactory<Prog
         new { Id = "2", Text = "Kubernetes is complex but Nais makes it simple", Author = "Platform Engineer" },
     });
 
-    public AnalyticsControllerTests(WebApplicationFactory<Program> factory)
+    public AnalyticsControllerTests(TestWebApplicationFactory factory)
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {

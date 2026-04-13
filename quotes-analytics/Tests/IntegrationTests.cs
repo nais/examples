@@ -5,11 +5,11 @@ using Xunit;
 namespace Nais.QuotesAnalytics.Tests;
 
 [Trait("Category", "Integration")]
-public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+public class IntegrationTests : IClassFixture<TestWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public IntegrationTests(WebApplicationFactory<Program> factory)
+    public IntegrationTests(TestWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
