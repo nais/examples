@@ -51,7 +51,10 @@ run = "dotnet clean quotes-analytics.sln"
 
 [tasks.restore]
 description = "Restore NuGet packages"
-run = "dotnet restore quotes-analytics.sln"
+run = [
+  "dotnet restore quotes-analytics.csproj",
+  "dotnet restore Tests/Tests.csproj",
+]
 
 [tasks.format]
 description = "Format code"
@@ -64,7 +67,9 @@ run = "dotnet format quotes-analytics.sln --verify-no-changes"
 [tasks.lint]
 description = "Run linting (format check + build)"
 run = [
-  "dotnet format quotes-analytics.sln --verify-no-changes",
+  "dotnet restore quotes-analytics.csproj",
+  "dotnet restore Tests/Tests.csproj",
+  "dotnet format quotes-analytics.sln --verify-no-changes --no-restore",
   "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
 ]
 
@@ -87,8 +92,9 @@ run = "semgrep scan --config p/csharp --config p/owasp-top-ten --error ."
 [tasks.ci]
 description = "Run all CI checks"
 run = [
-  "dotnet restore quotes-analytics.sln",
-  "dotnet format quotes-analytics.sln --verify-no-changes",
+  "dotnet restore quotes-analytics.csproj",
+  "dotnet restore Tests/Tests.csproj",
+  "dotnet format quotes-analytics.sln --verify-no-changes --no-restore",
   "dotnet build quotes-analytics.sln --no-restore /p:TreatWarningsAsErrors=true",
   "dotnet test quotes-analytics.sln --no-build --logger 'console;verbosity=normal'",
   "mise run security-scan",

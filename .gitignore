@@ -448,3 +448,8 @@ gradle-app.setting
 # */build/test-results
 # */build/tmp
 # */build/libs
+
+# IDE and tool artifacts
+.vscode/
+.dccache
+.local/

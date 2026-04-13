@@ -46,7 +46,7 @@ run = "gradle dependencyUpdates"
 
 [tasks.lint]
 description = "Run Kotlin linting (using check task)"
-run = "gradle check"
+run = "gradle check --quiet"
 
 [tasks.format]
 description = "Format Kotlin code"

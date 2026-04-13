@@ -251,67 +251,55 @@ run = "cd quotes-loadgen && mise run security-scan"
 [tasks.build]
 description = "Build all services"
 run = [
-  "echo '🔨 Building all services...'",
   "mise run backend:build",
   "mise run frontend:build",
   "mise run analytics:build",
   "mise run loadgen:build",
-  "echo '✅ All services built successfully'",
 ]
 
 [tasks.test]
 description = "Run tests for all services"
 run = [
-  "echo '🧪 Running tests for all services...'",
   "mise run backend:test",
   "mise run frontend:test",
   "mise run analytics:test",
   "mise run loadgen:test",
-  "echo '✅ All tests completed'",
 ]
 
 [tasks.lint]
 description = "Run linting for all services"
 run = [
-  "echo '🔍 Running linting for all services...'",
   "mise run backend:lint",
   "mise run frontend:lint",
   "mise run analytics:lint",
   "mise run loadgen:lint",
-  "echo '✅ All linting completed'",
 ]
 
 [tasks.clean]
 description = "Clean all services"
 run = [
-  "echo '🧹 Cleaning all services...'",
   "mise run backend:clean",
   "mise run frontend:clean",
   "mise run analytics:clean",
   "mise run loadgen:clean",
-  "echo '✅ All services cleaned'",
 ]
 
 [tasks."security-scan"]
 description = "Run security scanning for all services"
 run = [
-  "echo '🔒 Running security scans for all services...'",
   "mise run backend:security-scan",
   "mise run frontend:security-scan",
   "mise run analytics:security-scan",
   "mise run loadgen:security-scan",
-  "echo '✅ All security scans completed'",
 ]
 
 [tasks.ci]
 description = "Run full CI pipeline"
 run = [
-  "echo '🏗️ Running full CI pipeline...'",
   "mise run lint",
   "mise run test",
   "mise run build",
   "mise run security-scan",
-  "echo '✅ CI pipeline completed successfully'",
 ]
 
 [tasks."dependencies:update"]
