@@ -50,9 +50,9 @@ jobs:
       MISE_NODE_VERIFY: false
 
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # ratchet:actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6.0.2
 
-      - uses: jdx/mise-action@e79ddf65a11cec7b0e882bedced08d6e976efb2d # ratchet:jdx/mise-action@v3
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # ratchet:jdx/mise-action@v3
         with:
           version: 2024.12.18
           install: true
@@ -68,7 +68,7 @@ jobs:
         run: mise run test:coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # ratchet:codecov/codecov-action@v5
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # ratchet:codecov/codecov-action@v5
         if: ${{ inputs.enable-coverage && always() }}
         with:
           files: ${{ inputs.service-path }}/coverage/**/coverage.cobertura.xml
@@ -84,7 +84,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # ratchet:actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6.0.2
       - uses: nais/platform-build-push-sign@f276e60f3898b076a67bfc94b52ffbdb885224a7 # ratchet:nais/platform-build-push-sign@main
         id: image
         with:
@@ -105,8 +105,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # ratchet:actions/checkout@v5
-      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6.0.2
+      - uses: nais/deploy/actions/deploy@2f28259ff29ea37915f5a0c9e2a8e3542c429df7 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           TEAM: examples
