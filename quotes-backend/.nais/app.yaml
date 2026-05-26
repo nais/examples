@@ -31,6 +31,12 @@ spec:
       value: "true"
     - name: OTEL_METRICS_EXEMPLAR_FILTER
       value: ALWAYS_ON
+    - name: DB_JDBC_URL
+      value: "$(PGJDBCURL)"
+    - name: DB_USERNAME
+      value: "$(PGUSER)"
+    - name: DB_PASSWORD
+      value: "$(PGPASSWORD)"
   envFrom:
     - secret: quotes-backend-unleash-api-token
   liveness:
@@ -69,19 +75,8 @@ spec:
     - emptyDir:
         medium: Memory
       mountPath: /app/docs
-  gcp:
-    sqlInstances:
-      - name: quotes-backend
-        type: POSTGRES_16
-        databases:
-          - name: quotes
-            envVarPrefix: DB
-        tier: db-f1-micro
-        flags:
-          - name: cloudsql.enable_pgaudit
-            value: "on"
-          - name: pgaudit.log
-            value: "all"
+  postgres:
+    clusterName: quotes-backend-db
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}

@@ -1,0 +1,14 @@
+apiVersion: data.nais.io/v1
+kind: Postgres
+metadata:
+  name: quotes-backend-db
+  namespace: examples
+spec:
+  cluster:
+    majorVersion: "17"
+    resources:
+      cpu: 100m
+      diskSize: 2Gi
+      memory: 1Gi
+  database:
+    collation: nb_NO
