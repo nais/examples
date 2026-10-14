@@ -1,5 +1,5 @@
 [tools]
-node = "25.2.1"
+node = "25.9.0"
 "npm:pnpm" = "10"
 
 [env]

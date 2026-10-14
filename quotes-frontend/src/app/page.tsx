@@ -23,27 +23,42 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch('/api/features')
-      .then((res) => res.json())
-      .then((features) => {
-        setSubmitEnabled(features['quotes.submit'] ?? true);
-      })
-      .catch(() => setSubmitEnabled(true));
+    let cancelled = false;
 
-    const pathSegments = window.location.pathname.split('/');
-    const quoteId = pathSegments[pathSegments.length - 1];
+    const loadFeatures = async () => {
+      try {
+        const res = await fetch('/api/features');
+        const features = await res.json();
+        if (!cancelled) setSubmitEnabled(features['quotes.submit'] ?? true);
+      } catch {
+        if (!cancelled) setSubmitEnabled(true);
+      }
+    };
 
-    if (quoteId && quoteId !== '') {
-      fetch(`/api/quotes/${quoteId}`)
-        .then((response) => response.json())
-        .then((data) => setQuote({ id: data.id, text: data.text, author: data.author }))
-        .catch((error) => {
-          console.error('Failed to fetch quote by ID:', error);
-          fetchQuote();
-        });
-    } else {
-      fetchQuote();
-    }
+    const loadQuote = async () => {
+      try {
+        const pathSegments = window.location.pathname.split('/');
+        const quoteId = pathSegments[pathSegments.length - 1];
+
+        if (quoteId && quoteId !== '') {
+          const response = await fetch(`/api/quotes/${quoteId}`);
+          const data = await response.json();
+          if (!cancelled) setQuote({ id: data.id, text: data.text, author: data.author });
+        } else {
+          await fetchQuote();
+        }
+      } catch (error) {
+        console.error('Failed to fetch quote by ID:', error);
+        if (!cancelled) await fetchQuote();
+      }
+    };
+
+    void loadFeatures();
+    void loadQuote();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleThumbsUp = () => {

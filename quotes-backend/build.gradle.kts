@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.3.20"
-    kotlin("plugin.serialization") version "2.3.20"
-    id("io.ktor.plugin") version "3.4.2"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.serialization") version "2.4.21"
+    id("io.ktor.plugin") version "3.6.0"
     application
-    id("com.github.ben-manes.versions") version "0.53.0"
+    id("com.github.ben-manes.versions") version "0.66.0"
 }
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
@@ -29,16 +29,16 @@ repositories {
     maven("https://jitpack.io") // For Ktor-OpenAPI-Generator
 }
 
-val ktorVersion = "3.4.2"
+val ktorVersion = "3.6.0"
 val kotlinxSerializationVersion = "1.11.0"
-val logbackVersion = "1.5.32"
+val logbackVersion = "1.6.5"
 val logstashLogbackEncoderVersion = "9.0"
-val opentelemetryVersion = "2.26.1-alpha"
-val kotlinTestVersion = "2.3.20"
-val exposedVersion = "1.2.0"
-val postgresqlVersion = "42.7.10"
-val hikariVersion = "7.0.2"
-val unleashVersion = "12.2.0"
+val opentelemetryVersion = "2.32.0-alpha"
+val kotlinTestVersion = "2.4.21"
+val exposedVersion = "1.5.1"
+val postgresqlVersion = "42.7.14"
+val hikariVersion = "7.1.0"
+val unleashVersion = "12.3.0"
 
 dependencies {
     // Ktor
@@ -78,7 +78,7 @@ dependencies {
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinTestVersion")
-    testImplementation("com.h2database:h2:2.4.240")
+    testImplementation("com.h2database:h2:2.5.252")
 }
 
 tasks.withType<Test> {

@@ -1,6 +1,6 @@
 [tools]
 # Root tools for the entire project (kept minimal, each service manages its own)
-watchexec = "2.3.2"
+watchexec = "2.8.0"
 "pipx:semgrep" = "latest"
 # Note: ratchet can be installed separately with: go install github.com/sethvargo/ratchet@latest
 
