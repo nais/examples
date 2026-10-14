@@ -27,5 +27,6 @@ jobs:
       service-path: ./quotes-backend
       enable-tests: true
       enable-coverage: false
+      extra-resources: ./quotes-backend/.nais/postgres.yaml
     secrets:
       NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}

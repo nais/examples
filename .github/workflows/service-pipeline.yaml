@@ -26,6 +26,11 @@ on:
         required: false
         type: string
         default: ''
+      extra-resources:
+        description: 'Comma-separated list of additional resource files to deploy'
+        required: false
+        type: string
+        default: ''
     secrets:
       CODECOV_TOKEN:
         description: 'Codecov token for coverage uploads'
@@ -111,6 +116,6 @@ jobs:
           CLUSTER: dev-gcp
           TEAM: examples
           PRINT_PAYLOAD: "true"
-          RESOURCE: "${{ inputs.service-path }}/.nais/unleash.yaml,${{ inputs.service-path }}/.nais/app.yaml"
+          RESOURCE: "${{ inputs.service-path }}/.nais/unleash.yaml,${{ inputs.service-path }}/.nais/app.yaml${{ inputs.extra-resources != '' && format(',{0}', inputs.extra-resources) || '' }}"
           VARS: ${{ inputs.service-path }}/.nais/dev.yaml
           VAR: image=europe-north1-docker.pkg.dev/nais-io/nais/images/${{ inputs.service-name }}:${{ needs.build_push_sign.outputs.version }},namespace=examples
