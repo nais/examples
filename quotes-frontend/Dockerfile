@@ -1,4 +1,4 @@
-FROM node:25 AS base
+FROM node:26 AS base
 RUN npm install -g pnpm@10
 
 FROM base AS deps
