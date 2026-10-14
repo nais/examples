@@ -1,6 +1,6 @@
 [tools]
 go = "latest"
-watchexec = "2.3.2"
+watchexec = "2.8.0"
 
 [env]
 GO111MODULE = "on"
