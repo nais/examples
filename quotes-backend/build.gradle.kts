@@ -30,15 +30,15 @@ repositories {
 }
 
 val ktorVersion = "3.6.0"
-val kotlinxSerializationVersion = "1.11.0"
-val logbackVersion = "1.6.5"
+val kotlinxSerializationVersion = "1.12.0"
+val logbackVersion = "1.6.6"
 val logstashLogbackEncoderVersion = "9.0"
-val opentelemetryVersion = "2.32.0-alpha"
+val opentelemetryVersion = "2.33.1-alpha"
 val kotlinTestVersion = "2.4.21"
-val exposedVersion = "1.5.1"
+val exposedVersion = "1.6.0"
 val postgresqlVersion = "42.7.14"
 val hikariVersion = "7.1.0"
-val unleashVersion = "12.3.0"
+val unleashVersion = "12.3.1"
 
 dependencies {
     // Ktor
